@@ -17,7 +17,9 @@ rm -f $B/* # alte Kompilate werden entfernt
 
 
 # Definition Modules :
-for d in LINALG.def  RRADOM.def  RRINT.def  RRUADOM.def  RRUINT.def
+for d in ADTOOLS.def  CGBFUNC.def  CGBSYS.def   DIPDCGB.def  DIPTOOLS.def  DOMC.def   DOMIP.def  DOMO.def   DOMRN.def \
+CGBAPPL.def  CGBMAIN.def  DIPADOM.def  DIPDDGB.def  DOMAF.def     DOMFF.def  DOMMD.def  DOMQ.def   DOMRP.def\
+CGBDSTR.def  CGBMISC.def  DIPAGB.def   DIPGB.def    DOMAPF.def    DOMI.def   DOMMI.def  DOMRF.def  MASADOM.def
 do
  echo $d
  m=${d%.def}
@@ -25,7 +27,9 @@ do
 done
 
 # Implementation Modules: 
-for d in   LINALG.mod  RRADOM.mod  RRINT.mod  RRUADOM.mod  RRUINT.mod
+for d in  ADTOOLS.mod  DIPDCGB.mod  DIPTOOLS.mod  DOMC.mod   DOMIP.mod  DOMO.mod   DOMRN.mod \
+DIPADOM.mod  DIPDDGB.mod  DOMAF.mod     DOMFF.mod  DOMMD.mod  DOMQ.mod   DOMRP.mod \
+DIPAGB.mod   DIPGB.mod    DOMAPF.mod    DOMI.mod   DOMMI.mod  DOMRF.mod  MASADOM.mod
 do
  echo $d
  m=${d%.mod}

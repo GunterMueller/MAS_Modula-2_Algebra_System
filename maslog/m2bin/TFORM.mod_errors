@@ -1,0 +1,16 @@
+40,6 Cannot find symbol file for module 'MASLISPU'
+41,6 Cannot find symbol file for module 'MASLOG'
+44,6 Cannot find symbol file for module 'MASSET'
+47,6 Cannot find symbol file for module 'MASSYM'
+48,6 Cannot find symbol file for module 'MASSYM2'
+55,6 Cannot find symbol file for module 'MLOGIO'
+63,6 Cannot find symbol file for module 'SACSET'
+1,1 Cannot find symbol file for module 'TFORM'
+126,22 'PROCF1' not declared
+582,28 'TfClass' not declared
+594,34 'TfClass' not declared
+616,32 'TfClass' not declared
+666,35 'TfClass' not declared
+672,16 'TfClass' not declared
+792,16 'TfClass' not declared
+793,26 'TfClass' not declared

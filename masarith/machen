@@ -17,7 +17,8 @@ rm -f $B/* # alte Kompilate werden entfernt
 
 
 # Definition Modules :
-for d in LINALG.def  RRADOM.def  RRINT.def  RRUADOM.def  RRUINT.def
+for d in MASAPF.def  MASCOMB.def  MASI.def  MASQ.def   MASSET.def   SACCOMB.def  SACI.def  SACPRIM.def  SACSET.def \
+MASC.def    MASF.def     MASO.def  MASRN.def  MathLib.def  SACD.def     SACM.def  SACRN.def
 do
  echo $d
  m=${d%.def}
@@ -25,7 +26,8 @@ do
 done
 
 # Implementation Modules: 
-for d in   LINALG.mod  RRADOM.mod  RRINT.mod  RRUADOM.mod  RRUINT.mod
+for d in  MASAPF.mod  MASCOMB.mod  MASI.mod  MASQ.mod   MASSET.mod   SACCOMB.mod  SACI.mod  SACPRIM.mod  SACSET.mod \
+MASC.mod    MASF.mod     MASO.mod  MASRN.mod  MathLib.mod  SACD.mod     SACM.mod  SACRN.mod
 do
  echo $d
  m=${d%.mod}

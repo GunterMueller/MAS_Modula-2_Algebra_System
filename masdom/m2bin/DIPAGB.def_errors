@@ -1,0 +1,13 @@
+31,6 Cannot find symbol file for module 'MASLISPU'
+290,28 'PROCF2' not declared
+294,29 'PROCF1' not declared
+298,29 'PROCF2' not declared
+302,29 'PROCP1V2' not declared
+306,27 'PROCP1' not declared
+310,33 'PROCF2' not declared
+314,34 'PROCF2' not declared
+318,33 'PROCF1' not declared
+322,28 'PROCP1' not declared
+326,25 'PROCP1V2' not declared
+330,26 'PROCP1V2' not declared
+334,40 'PROCP0' not declared

@@ -17,7 +17,8 @@ rm -f $B/* # alte Kompilate werden entfernt
 
 
 # Definition Modules :
-for d in LINALG.def  RRADOM.def  RRINT.def  RRUADOM.def  RRUINT.def
+for d in GSYMFUIN.def  GSYMINP.def  LINALGRN.def  SACLDIO.def  SYMMFU.def   SYZGB.def   SYZMAIN.def \
+GSYMFURN.def  LINALGI.def  NOETHER.def   SUBST.def    SYZFUNC.def  SYZHLP.def  TIPRNGB.def
 do
  echo $d
  m=${d%.def}
@@ -25,7 +26,8 @@ do
 done
 
 # Implementation Modules: 
-for d in   LINALG.mod  RRADOM.mod  RRINT.mod  RRUADOM.mod  RRUINT.mod
+for d in  GSYMFUIN.mod  GSYMINP.mod  LINALGRN.mod  SACLDIO.mod  SYMMFU.mod   SYZGB.mod   SYZMAIN.mod \
+GSYMFURN.mod  LINALGI.mod  NOETHER.mod   SUBST.mod    SYZFUNC.mod  SYZHLP.mod  TIPRNGB.mod
 do
  echo $d
  m=${d%.mod}

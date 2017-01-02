@@ -17,7 +17,8 @@ rm -f $B/* # alte Kompilate werden entfernt
 
 
 # Definition Modules :
-for d in LINALG.def  RRADOM.def  RRINT.def  RRUADOM.def  RRUINT.def
+for d in SACANF.def   SACEXT2.def  SACEXT4.def  SACEXT6.def  SACEXT8.def   SACPFAC.def  SACROOT.def \
+SACEXT1.def  SACEXT3.def  SACEXT5.def  SACEXT7.def  SACMUFAC.def  SACPGCD.def  SACUPFAC.def
 do
  echo $d
  m=${d%.def}
@@ -25,7 +26,8 @@ do
 done
 
 # Implementation Modules: 
-for d in   LINALG.mod  RRADOM.mod  RRINT.mod  RRUADOM.mod  RRUINT.mod
+for d in SACANF.mod   SACEXT2.mod  SACEXT4.mod  SACEXT6.mod  SACEXT8.mod   SACPFAC.mod  SACROOT.mod \
+SACEXT1.mod  SACEXT3.mod  SACEXT5.mod  SACEXT7.mod  SACMUFAC.mod  SACPGCD.mod  SACUPFAC.mod
 do
  echo $d
  m=${d%.mod}

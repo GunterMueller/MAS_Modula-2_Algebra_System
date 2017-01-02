@@ -1,6 +1,6 @@
 	.comm SYSINFO_s, 4
 	.text
-	.stabs "/home/gunter/GM_MATH/MAS_CAS/gm_mas-1.01/maskern/",100,0,0,.LBB0
+	.stabs "/home/gunter/GM_MATH/MAS_Modula-2_Algebra_System/maskern/",100,0,0,.LBB0
 	.stabs "SYSINFO.mod",100,0,0,.LBB0
 .LBB0:
 	.stabs "BOOLEAN:t1=eTRUE:1,FALSE:0,;",0x80,0,0,0

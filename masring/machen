@@ -17,7 +17,8 @@ rm -f $B/* # alte Kompilate werden entfernt
 
 
 # Definition Modules :
-for d in LINALG.def  RRADOM.def  RRINT.def  RRUADOM.def  RRUINT.def
+for d in  DIPDEC0.def  DIPGCD.def    DIPIDGB.def  DIPRF.def    DIPROOT.def  MASFF.def    MASUGB.def \
+DIPDIM.def   DIPIDEAL.def  DIPIGB.def   DIPRNGB.def  DIPZ.def     MASPGCD.def
 do
  echo $d
  m=${d%.def}
@@ -25,7 +26,8 @@ do
 done
 
 # Implementation Modules: 
-for d in   LINALG.mod  RRADOM.mod  RRINT.mod  RRUADOM.mod  RRUINT.mod
+for d in DIPDEC0.mod  DIPGCD.mod    DIPIDGB.mod  DIPRF.mod    DIPROOT.mod  MASFF.mod    MASUGB.mod \
+DIPDIM.mod   DIPIDEAL.mod  DIPIGB.mod   DIPRNGB.mod  DIPZ.mod     MASPGCD.mod
 do
  echo $d
  m=${d%.mod}

@@ -1,0 +1,11 @@
+25,6 Cannot find symbol file for module 'DIPADOM'
+27,6 Cannot find symbol file for module 'DIPC'
+29,6 Cannot find symbol file for module 'DIPCJ'
+37,6 Cannot find symbol file for module 'MASLISPU'
+42,6 Cannot find symbol file for module 'SACI'
+47,7 Identifier 'rcsidi' already declared
+48,7 Identifier 'copyrighti' already declared
+53,28 'PROCF2' not declared
+103,5 procedure identifiers do not match
+248,20 Identifier 'h' already declared
+1,1 missing redeclaration for 'DILNFJ'

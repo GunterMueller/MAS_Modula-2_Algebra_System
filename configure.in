@@ -1,0 +1,453 @@
+dnl --------------------------------------------------------------------------
+dnl $Id: configure.in,v 1.13 1998/03/09 15:45:15 pesch Exp $
+dnl --------------------------------------------------------------------------
+dnl configure.in for MAS
+dnl Process this file with autoconf to produce a configure script.
+dnl --------------------------------------------------------------------------
+dnl This file is part of MAS.
+dnl --------------------------------------------------------------------------
+dnl Copyright (c) 1995 - 1998 Universitaet Passau
+dnl --------------------------------------------------------------------------
+dnl $Log: configure.in,v $
+dnl Revision 1.13  1998/03/09 15:45:15  pesch
+dnl Corrected test whether CFLAGSOPT is set.
+dnl
+dnl Revision 1.12  1998/03/06 15:44:32  pesch
+dnl Version 1.01
+dnl
+dnl Revision 1.11  1997/08/29 17:51:28  pesch
+dnl Added more quotes.
+dnl
+dnl Revision 1.10  1997/08/29 17:08:51  pesch
+dnl Removed obsolete AC_C_CROSS.
+dnl
+dnl Revision 1.9  1997/08/29 17:01:44  pesch
+dnl Added missing quotes. Fixed $reuse = ...
+dnl
+dnl Revision 1.8  1996/07/19 20:58:02  pesch
+dnl Version set to 1.00.
+dnl
+dnl Revision 1.7  1996/06/08 14:58:39  pesch
+dnl Use new stack direction check.
+dnl
+dnl Revision 1.6  1995/11/05 10:51:28  kredel
+dnl Version 1.00
+dnl
+dnl Revision 1.5  1995/10/24  14:28:01  pesch
+dnl New variable CFLAGSOPT for compiling mas-opt.
+dnl Check for various kpathsea functions.
+dnl
+dnl Revision 1.4  1995/09/13  14:39:06  pesch
+dnl Uncommented AC_CANOICAL_HOST.
+dnl
+dnl Revision 1.3  1995/09/12  17:08:04  pesch
+dnl Added test for stack direction, termcap, atexit, raise.
+dnl
+dnl Revision 1.2  1995/03/08  14:04:41  pesch
+dnl Added check for ln -s
+dnl
+dnl Revision 1.1  1995/03/06  17:01:16  pesch
+dnl New files to make mas using GNU autoconf and GNU make. This replaces
+dnl the old Makefiles.
+dnl
+dnl --------------------------------------------------------------------------
+
+dnl Write revision in configure
+AC_REVISION($Id: configure.in,v 1.13 1998/03/09 15:45:15 pesch Exp $)
+
+dnl Check for this file
+AC_INIT(masmain/MAS.mi)
+
+dnl config file
+AC_CONFIG_HEADER(config.h)
+
+PRODUCT=MAS
+VERSION=1.01
+AC_DEFINE_UNQUOTED(PRODUCT, "$PRODUCT")
+AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
+AC_SUBST(PRODUCT)
+AC_SUBST(VERSION)
+
+dnl Get the canonical hostname
+AC_CANONICAL_HOST
+
+dnl Set program name transformation rule
+AC_ARG_PROGRAM
+
+dnl Checks for programs.
+AC_PROG_AWK
+AC_PROG_CC
+AC_PROG_CPP
+
+dnl Set CFLAGS if not given by user.
+dnl if test "${CFLAGS+set}" != set ; then
+dnl autoconf makes configure set CFLAGS
+if test set = set ; then
+	if test "$GCC"="yes"; then
+		CFLAGS="-finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2"
+	else
+		CFLAGS=
+	fi
+	if test "$ac_cv_prog_gcc_g" = yes; then
+		CFLAGS="-g $CFLAGS"
+	fi
+fi
+
+dnl Set CFLAGSOPT if not given by user.
+if test "${CFLAGSOPT+set}" != set ; then
+	if test "$GCC"="yes"; then
+		CFLAGSOPT="-fomit-frame-pointer -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2"
+	else
+		CFLAGSOPT=
+	fi
+	if test "$ac_cv_prog_gcc_g" = yes; then
+		CFLAGSOPT="-g $CFLAGSOPT"
+	fi
+fi
+AC_SUBST(CFLAGSOPT)
+
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_RANLIB
+
+dnl Set MTCCPPFLAGS
+: ${MTCCPPFLAGS=-P}
+AC_SUBST(MTCCPPFLAGS)
+
+dnl Find cpp for MODULA-2 files
+OLDPATH="$PATH"
+PATH="$PATH:/lib:/usr/lib:/usr/local/lib"
+AC_PATH_PROG(MTCCPP,cpp,none)
+PATH=$OLDPATH
+if test "$MTCCPP" = none; then
+	AC_MSG_ERROR(Sorry can not find cpp in your PATH. Please install cpp and set your PATH appropriately.)
+fi
+
+dnl Find mtc
+OLDPATH="$PATH"
+PATH="$PATH:/usr/local/bin:/usr/local/gmd/bin:/public/gmd/bin"
+AC_PATH_PROG(MTC,mtc,none)
+PATH="$OLDPATH"
+if test "$MTC" = none; then
+	AC_MSG_ERROR('Sorry can not find mtc in your PATH. Please install mtc and set your PATH appropriately.')
+fi
+AC_SUBST(MTCFLAGS)
+
+dnl Find GetImports
+OLDPATH="$PATH"
+PATH="$PATH:/usr/local/lib/makemake:/usr/local/gmd/lib/makemake:/public/gmd/lib/makemake"
+AC_PATH_PROG(GETIMPORTS,GetImports,none)
+PATH="$OLDPATH"
+if test "$GETIMPORTS" = none; then
+	AC_MSG_WARN(Sorry can not find GetImports in your PATH. MAS will compile but you will not be able to use makemake.)
+else
+	GETIMPORTS="$GETIMPORTS -l`echo $GETIMPORTS | sed 's%/GetImports$%%'`"
+fi
+
+dnl find reuse
+AC_MSG_CHECKING(for prefix for reuse)
+AC_CACHE_VAL(mas_cv_path_reuse_prefix,
+	if test "${reuse_prefix+set}" != set; then
+		reuse_prefix=/public/gmd
+		if test ! -d $reuse_prefix; then 
+			reuse_prefix=/usr/local
+			if test ! -d $reuse_prefix; then 
+				reuse_prefix=none;
+			fi
+		fi
+	fi
+	mas_cv_path_reuse_prefix=$reuse_prefix
+)
+: ${reuse_prefix=$mas_cv_path_reuse_prefix}
+AC_MSG_RESULT($reuse_prefix)
+
+if test "$reuse_prefix" != none; then
+	AC_MSG_CHECKING(for path to reuse definition modules)
+	AC_CACHE_VAL(mas_cv_path_reuse_md,
+		if test "${reuse_md+set}" != set; then
+			reuse_md=$reuse_prefix/lib/reuse
+			if test ! -d $reuse_md; then
+				reuse_md=none;
+			fi
+		fi
+		mas_cv_path_reuse_md=$reuse_md
+	)
+	: ${reuse_md=$mas_cv_path_reuse_md}
+
+	if test "$reuse_md" != none; then
+		MTCFLAGS="$MTCFLAGS -d$reuse_md"
+	fi
+	AC_MSG_RESULT($reuse_md)
+
+	AC_MSG_CHECKING(for path to reuse C header files)
+	AC_CACHE_VAL(mas_cv_path_reuse_h,
+		if test "${reuse_h+set}" != set; then
+			reuse_h=$reuse_prefix/lib/include
+			if test ! -f $reuse_h/System.h; then
+				reuse_h=$reuse_prefix/include/m2c
+				if test ! -f $reuse_h/System.h; then
+					reuse_h=none
+				fi
+			fi
+		fi
+		mas_cv_path_reuse_h=$reuse_h
+	)	
+	: ${reuse_h=$mas_cv_path_reuse_h}
+
+
+	if test "$reuse_h" != none; then
+		CPPFLAGS="$CPPFLAGS -I$reuse_h"
+	fi
+
+	AC_MSG_RESULT($reuse_h)
+
+	AC_MSG_CHECKING(for path to libreuse.a)
+	AC_CACHE_VAL(mas_cv_lib_reuse_a,
+		if test "${reuse_a+set}" != set; then
+			reuse_a=$reuse_prefix/lib
+			if test ! -f $reuse_a/libreuse.a; then
+				reuse_a=$reuse_prefix/lib/mtc
+				if test ! -f $reuse_a/libreuse.a; then
+					reuse_a=none
+				fi
+			fi
+		fi	
+		mas_cv_lib_reuse_a=$reuse_a
+	)	
+	: ${reuse_a=$mas_cv_lib_reuse_a}
+
+	if test "$reuse_a" != none; then
+		LIBS="$LIBS -L$reuse_a"
+	fi
+	AC_MSG_RESULT($reuse_a)
+fi
+
+cat >mtctest.md <<\EOF
+DEFINITION MODULE mtctest;
+FROM Strings IMPORT AssignEmpty;
+END mtctest.
+EOF
+
+$MTC $MTCFLAGS mtctest.md 1>&4 2>&5
+if test $? != 0; then
+	rm -f mtctest.*
+	AC_MSG_ERROR("Sorry can not find reuse definition modules. Please install them and set MTCFLAGS appropriately.");
+fi;
+
+rm -f mtctest.*
+
+AC_CHECK_HEADERS(System.h,,
+	AC_MSG_ERROR("Sorry can not find reuse C header files. Please install them and set CPPFLAGS appropriately.");
+)
+
+AC_CHECK_LIB(reuse,main,,
+	AC_MSG_ERROR("Sorry can not find the reuse library. Please install it and set LIBS appropriately.");
+)
+
+
+AC_MSG_CHECKING(the version of reuse)
+AC_CACHE_VAL(mas_cv_version_reuse,
+	cat >mtctest.md <<\EOF
+DEFINITION MODULE mtctest;
+FROM SysCalls IMPORT System;
+END mtctest.
+EOF
+	$MTC $MTCFLAGS mtctest.md 2>&5 1>&4
+	if test $? != 0; then
+		if test -f $reuse_md/SysCalls.md; then
+			mas_cv_version_reuse=old
+		else
+			mas_cv_version_reuse=new
+		fi
+	fi
+	rm -f mtctest.*
+	if test "$mas_cv_version_reuse" = old; then
+		MTCCPPFLAGS="$MTCCPPFLAGS -DOLD_MTC"
+		AC_DEFINE("OLD_MTC")
+	fi
+)
+AC_MSG_RESULT($mas_cv_version_reuse)
+
+dnl look for kpathsea
+AC_MSG_CHECKING(for prefix for kpathsea)
+AC_CACHE_VAL(mas_cv_path_kpathsea_prefix,
+	if test "${kpathsea_prefix+set}" != set; then
+		kpathsea_prefix=/public/TeX
+		if test ! -d $kpathsea_prefix; then 
+			kpathsea_prefix=/usr/local
+		fi
+	fi
+	mas_cv_path_kpathsea_prefix=$kpathsea_prefix
+)
+: ${kpathsea_prefix=$mas_cv_path_kpathsea_prefix}
+AC_MSG_RESULT($kpathsea_prefix)
+
+if test "$kpathsea_prefix" != none; then
+	AC_MSG_CHECKING(for path to kpathsea C header files)
+	AC_CACHE_VAL(mas_cv_path_kpathsea_h,
+		if test "${kpathsea_h+set}" != set; then
+			kpathsea_h=$kpathsea_prefix/include
+			if test ! -f $kpathsea_h/kpathsea/pathsearch.h; then
+				kpathsea_h=$kpathsea_prefix/lib/include
+				if test ! -f $kpathsea_h/kpathsea/pathsearch.h; then
+					kpathsea_h=none
+				fi
+			fi
+		fi
+		mas_cv_path_kpathsea_h=$kpathsea_h
+	)
+	: ${kpathsea_h=$mas_cv_path_kpathsea_h}
+	if test "$kpathsea_h" != none; then
+		CPPFLAGS="$CPPFLAGS -I$kpathsea_h"
+	fi
+	AC_MSG_RESULT($kpathsea_h)
+
+	AC_MSG_CHECKING(for path to libkpathsea.a)
+	AC_CACHE_VAL(mas_cv_lib_kpathsea_a,
+		if test "${kpathsea_a+set}" != set; then
+			kpathsea_a=$kpathsea_prefix/lib
+			if test ! -f $kpathsea_a/libkpathsea.a; then
+				kpathsea_a=$kpathsea_prefix/lib/kpathsea
+				if test ! -f $kpathsea_a/libkpathsea.a; then
+					kpathsea_a=none
+				fi
+			fi
+		fi
+		mas_cv_lib_kpathsea_a=$kpathsea_a
+	)
+	: ${kpathsea_a=$mas_cv_lib_kpathsea_a}
+	if test "$kpathsea_a" != none; then
+		LIBS="$LIBS -L$kpathsea_a"
+	fi
+
+	if test "$kpathsea_a" != none; then
+		MTCCPPFLAGS="$MTCCPPFLAGS -DHAS_KPATHSEA"
+	fi
+
+	AC_MSG_RESULT($kpathsea_a)
+fi
+
+lkpse=1
+AC_CHECK_LIB(kpathsea, kpse_path_search,,lkpse=0)
+if test "$lkpse" = 1; then
+	AC_CHECK_HEADERS(kpathsea/pathsearch.h,
+		MTCCPPFLAGS="$MTCCPPFLAGS -DHAVE_LIBKPATHSEA"
+
+	)
+	AC_CHECK_FUNCS(kpse_init_path kpse_set_progname make_suffix extend_filename kpse_path_search)
+	AC_CHECK_HEADERS(kpathsea/init_path.h kpathsea/progname.h kpathsea/lib.h)
+fi
+
+dnl look for readline
+AC_MSG_CHECKING(for prefix for readline)
+AC_CACHE_VAL(mas_cv_path_readline_prefix,
+	if test "${readline_prefix+set}" != set; then
+		readline_prefix=/public/gnu
+		if test ! -d $readline_prefix; then 
+			readline_prefix=/usr/local
+		fi
+	fi
+	mas_cv_path_readline_prefix=$readline_prefix
+)
+: ${readline_prefix=$mas_cv_path_readline_prefix}
+AC_MSG_RESULT($readline_prefix)
+
+if test "$readline_prefix" != none; then
+	AC_MSG_CHECKING(for path to readline C header files)
+	AC_CACHE_VAL(mas_cv_path_readline_h,
+		if test "${readline_h+set}" != set; then
+			readline_h=$readline_prefix/include
+			if test ! -f $readline_h/readline/readline.h; then
+				readline_h=$readline_prefix/lib/include
+				if test ! -f $readline_h/readline/readline.h; then
+					readline_h=none
+				fi
+			fi
+		fi
+		mas_cv_path_readline_h=$readline_h
+	)
+	: ${readline_h=$mas_cv_path_readline_h}
+	if test "$readline_h" != none; then
+		CPPFLAGS="$CPPFLAGS -I$readline_h"
+	fi
+	AC_MSG_RESULT($readline_h)
+
+	AC_MSG_CHECKING(for path to libreadline.a)
+	AC_CACHE_VAL(mas_cv_lib_readline_a,
+		if test "${readline_a+set}" != set; then
+			readline_a=$readline_prefix/lib
+			if test ! -f $readline_a/libreadline.a; then
+				readline_a=$readline_prefix/lib/readline
+				if test ! -f $readline_a/libreadline.a; then
+					readline_a=none
+				fi
+			fi
+		fi
+		mas_cv_lib_readline_a=$readline_a
+	)
+	: ${readline_a=$mas_cv_lib_readline_a}
+	if test "$readline_a" != none; then
+		LIBS="$LIBS -L$readline_a"
+	fi
+
+	if test "$readline_a" != none; then
+		MTCCPPFLAGS="$MTCCPPFLAGS -DHAS_READLINE"
+	fi
+
+	AC_MSG_RESULT($readline_a)
+fi
+
+AC_CHECK_LIB(termcap, tgetflag)
+AC_CHECK_HEADERS(termcap.h)
+
+lreadline=1
+AC_CHECK_LIB(readline, readline,,lreadline=0,-ltermcap)
+if test "$lreadline" = 1; then
+	AC_CHECK_HEADERS(readline/readline.h,
+		MTCCPPFLAGS="$MTCCPPFLAGS -DHAVE_LIBREADLINE"
+	)
+fi
+
+
+dnl How to generate dependencies for c-files
+MKDEP="$CC $CPPFLAGS -MM"
+AC_SUBST(MKDEP)
+
+dnl makemake
+MAKEMAKE="makemake"
+MAKEMAKEAWK="makemake.awk"
+AC_SUBST(MAKEMAKE)
+AC_SUBST(MAKEMAKEAWK)
+
+dnl stack direction
+
+AC_CACHE_CHECK(stack direction, ac_cv_c_stack_direction,
+[AC_TRY_RUN([find_stack_direction ()
+{
+  static char *addr = 0;
+  auto char dummy;
+  if (addr == 0)
+    {
+      addr = &dummy;
+      return find_stack_direction ();
+    }
+  else
+    return (&dummy > addr) ? 1 : -1;
+}
+main ()
+{
+  exit (find_stack_direction() < 0);
+}], ac_cv_c_stack_direction=1, ac_cv_c_stack_direction=-1,
+  ac_cv_c_stack_direction=0)])
+AC_DEFINE_UNQUOTED(STACK_DIRECTION, $ac_cv_c_stack_direction)
+
+dnl Check for ANSI C library functions which are missing on SUNs:
+dnl atexit (on_exit on SUNs) and raise (missing on SUNs)
+AC_CHECK_FUNCS(atexit on_exit raise)
+
+dnl Files to create
+AC_OUTPUT(Makefile $MAKEMAKE)
+
+chmod +x $MAKEMAKE
+
+dnl -EOF-

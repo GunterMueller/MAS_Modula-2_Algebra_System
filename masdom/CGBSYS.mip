@@ -1,0 +1,1533 @@
+(* ----------------------------------------------------------------------------
+ * $Id: CGBSYS.mip,v 1.16 1996/06/08 16:47:15 pesch Exp $
+ * ----------------------------------------------------------------------------
+ * This file is part of MAS.
+ * ----------------------------------------------------------------------------
+ * Copyright (c) 1989 - 1996 Universitaet Passau
+ * ----------------------------------------------------------------------------
+ * $Log: CGBSYS.mip,v $
+ * Revision 1.16  1996/06/08 16:47:15  pesch
+ * Reformatted, removed obsolete procedures.
+ *
+ * Revision 1.15  1996/04/23 14:52:16  pesch
+ * Corrected previous fix.
+ *
+ * Revision 1.14  1996/04/23 13:53:18  pesch
+ * Fixed problems with zero polynomials for factorised GS, too.
+ *
+ * Revision 1.13  1996/04/16 19:18:25  pesch
+ * Fixed three bugs, which caused zero (completely "green") polynomials
+ * to be added to polynomial lists unneccessarily.
+ *
+ * Revision 1.12  1995/11/04 20:39:32  pesch
+ * Renamed massignal.m? to massig.m? because of conflict with MASSIGNAL.m?
+ * on certain OS.
+ *
+ * Revision 1.11  1995/09/12  17:35:57  pesch
+ * Use massignal instead of mpsignal.
+ *
+ * Revision 1.10  1995/09/12  17:11:12  pesch
+ * Fixed typos.
+ *
+ * Revision 1.9  1995/03/23  16:05:47  pesch
+ * Added new data structure Colp for coloured polynomials.
+ *
+ * Revision 1.8  1995/03/06  15:49:38  pesch
+ * Added new procedure GSYSF, Groebner system with factorization. This uses
+ * the new procedures GBSYSF and CONSGBF (also added).
+ *
+ * Added new procedures DIP2AD, AD2DIP and DIPPFACTAV.
+ *
+ * Fixed error in CHECK.
+ *
+ * New option for factorization of conditions: factorize with optimization
+ * of variable ordering.
+ *
+ * Revision 1.7  1994/04/14  16:46:13  dolzmann
+ * Syntactical errors (founded by Mocka) corrected.
+ *
+ * Revision 1.6  1994/04/14  12:42:23  pesch
+ * Defined Action according to POSIX.
+ *
+ * Revision 1.5  1994/04/12  13:41:57  pesch
+ * Made signal handler for consgb a global procedure.
+ * (Subprocedures cannot be used as arguments e.g. to signal.)
+ *
+ * Revision 1.4  1994/04/10  16:57:42  pesch
+ * Modified CONSGB. Returns its result now. When a condition is ramified,
+ * we continue with this new case distinction first. This is useful to
+ * have the generic case computed first.
+ *
+ * Revision 1.3  1994/04/09  18:06:02  pesch
+ * Reformatted parts of the CGB sources. Updated comments in CGB*.md.
+ *
+ * Revision 1.2  1994/03/14  16:43:00  pesch
+ * Minor changes requested by A. Dolzmann
+ *
+ * Revision 1.1  1994/03/11  15:58:19  pesch
+ * Major changes to CGB.
+ * C-Preprocessor now used for .mip files. The corresponding .mi files have
+ * been removed.
+ * Many new CGB-Functions and fixes of old ones.
+ *
+ * Revision 1.2  1992/02/12  17:31:19  pesch
+ * Moved CONST definition to the right place
+ *
+ * Revision 1.1  1992/01/22  15:09:31  kredel
+ * Initial revision
+ *
+ * ----------------------------------------------------------------------------
+ *)
+
+#include "debug.h"
+
+IMPLEMENTATION MODULE CGBSYS;
+
+(* Comprehensive-Groebner-Bases System Implementation Module. *)
+
+(* Derived from an ALDES program written by Elke Schoenfeld,
+   Universitaet Passau, 1991. *)
+
+(* Import lists and declarations. *)
+
+
+FROM CGBDSTR	IMPORT	CdWrite, ColCons, ColConsCond, ColEmpty, ColIsEmpty,
+			ColParts, ColWhite, ColpCol, ColpCons, ColpConsCond,
+			ColpHT, ColpIsCnst, ColpIsZero, ColpParts, ColpPol,
+			CondEmpty, CondIsEmpty, CondParts, CondWrite;
+
+FROM CGBFUNC	IMPORT	ADDCON, AINB, CGBFRM, CGBLM, CGBLPM, DCLWR, DET,
+			DETPOL, DWRIT, EQPLCL, FINDBC, FINDCP, FINDRM,
+			GREPOL, MKPOL, REDSRT, SETCOL, VERIFY, WMEMB; 
+
+FROM CGBMAIN	IMPORT	WRGBS;
+
+FROM CGBMISC	IMPORT	CGBPAR, COLOUR, FLWRITE, PAR;
+
+FROM DIPADOM	IMPORT	DIFIP, DILRD, DILWR, DIPBCP, DIPDIF, DIPEXP, DIPNEG,
+			DIPROD, DIPSUM, DIREAD, DIWRIT;
+
+FROM DIPC	IMPORT	DIPEVL, DIPFMO, DIPLBC, DIPLPM, DIPMAD, DIPMCP,
+			DIPTDG, EVCOMP, EVDIF, EVLCM, EVMT, EVORD, EVSIGN,
+			EVSUM, VALIS;
+
+FROM DIPRNGB	IMPORT	EVPLM, EVPLSO;
+
+FROM MASADOM	IMPORT	ADCNST, ADDDREAD, ADDDWRIT, ADDIF, ADEXP, ADFACT,
+			ADFI, ADFIP, ADGCD, ADGCDC, ADINV, ADINVT, ADLCM,
+			ADNEG, ADONE, ADPROD, ADQUOT, ADREAD, ADSIGN, ADSUM,
+			ADTOIP, ADVLDD, ADWRIT, DomSummary;
+
+FROM MASBIOS	IMPORT	BKSP, BLINES, CREAD, CREADB, CUNIT, DIGIT, LETTER,
+			LISTS, MASORD, SOUNIT, SWRITE;
+
+FROM MASERR	IMPORT	ERROR, fatal, harmless, severe, spotless;
+
+FROM massig	IMPORT	Action, SIGUSR1, SIG_IGN, SIG_IGN, signal;
+
+FROM MASSIGNAL  IMPORT	SigUsr1HandleDefault; (* MASSIGNAL must be
+     	       	    	      	   	     	 initialized*)
+
+FROM MASSTOR	IMPORT	ADV, COMP, FIRST, INV, LIST, LIST1, RED, SFIRST, SIL,
+			SRED, TIME;
+
+FROM SACLIST	IMPORT	ADV2, ADV3, AREAD, AWRITE, CINV, CLOUT, COMP2, COMP3,
+			CONC, EQUAL, FIRST2, FIRST3, FIRST4, LAST, LIST2,
+			LIST3, LIST4, LIST5, LWRITE, MEMBER, OWRITE, RED2,
+			SECOND, THIRD;
+
+FROM SYSTEM     IMPORT  ADR;
+
+CONST rcsidi = "$Id: CGBSYS.mip,v 1.16 1996/06/08 16:47:15 pesch Exp $";
+CONST copyrighti = "Copyright (c) 1989 - 1996 Universitaet Passau";
+
+
+PROCEDURE GRED(COND,PCO,PCI,RE: LIST; VAR RCO,HA: LIST); 
+(*Parametric reduction. COND is a condition, PCO and PCI are coloured
+polynomials. PCI is determined by cond. RE is a term in PCO coloured
+red or white by COND. RE is a multiple of the headterm (wrt cond) of PCI.
+RCO is the result
+of one step reduction of PCO ( by PCI ) to eliminate the term RE. HA
+is the multiple factor of PCO. *)
+VAR   AL, ALIST, AP, APP, C, EL, FCOL, FL, FPOL, GCOL, GPOL, HE,
+      KEY, Q, RA, RAL, RAP, RCOLS, RPOL, TL: LIST; 
+BEGIN
+      DEB_BEGIN(GRED);
+(*1*) (*Get polynomials and colours. Update colouring of PCI. *) 
+      ColpParts(PCO, FPOL,FCOL);
+      ColpParts(PCI, GPOL,GCOL); 
+      IF NOT CondIsEmpty(COND) THEN GCOL:=SETCOL(COND,GCOL); END; 
+      HE:=ColpHT(PCI);
+      KEYCOL(RE,FCOL, KEY,ALIST);
+      RCO:=SIL; Q:=SIL; 
+(*2*) (*Prepare PCO and PCI for reduction. *)
+      RA:=FINDBC(RE,FPOL); 
+      IF HE = SIL THEN 	     	   (* ---to do---: ok? *)
+        HA:=ADFI(RA,0);
+     	EL:=RE;
+      ELSE
+        HA:=FINDBC(HE,GPOL);
+	EL:=EVDIF(RE,HE);
+      END;
+      ADV(RA, RAL,RAP); 
+      FL:=FIRST(RAP); 
+      TL:=EVSIGN(EL); 
+(*3*) (*If RA is coloured red reduce with gcd of RA and HA.
+        If RA is coloured white reduce with product of RA and HA. *) 
+      IF ALIST <> SIL THEN
+        AP:=DIPFMO(RA,EL);
+        APP:=DIPROD(GPOL,AP); 
+        FPOL:=DIPBCP(FPOL,HA);
+        GCOL:=WHSRT(GCOL,EL,ALIST);
+       ELSE
+         ADGCDC(RA,HA, C,RA,HA);
+         AP:=DIPFMO(RA,EL); 
+         (* Note: if gcd is not defined for the current domain, AL and BL
+            remain unchanged by definiton of ADGCDC *)
+         APP:=DIPROD(GPOL,AP);
+         FPOL:=DIPBCP(FPOL,HA); 
+         IF TL <> 0 THEN GCOL:=COLPRD(GCOL,EL); END; 
+       END; 
+       GBDIFF(COND,FPOL,FCOL,APP,GCOL, RPOL,RCOLS); 
+       IF RPOL <> 0 THEN
+         AL:=DIPLBC(RPOL);
+         IF ADSIGN(AL) = -1 THEN RPOL:=DIPNEG(RPOL); END; 
+         IF NOT ColIsEmpty(RCOLS) THEN RCO:=ColpCons(RPOL,RCOLS); END; 
+       END; 
+(*6*) RETURN;
+END GRED; 
+
+
+PROCEDURE GBDIFF(COND,A,ACOLS,B,BCOLS: LIST; VAR C,CCOLS: LIST); 
+(*Parametric difference. COND is a condition. A and B are polynomials.
+ACOLS is the colouring of A wrt cond, BCOLS is the colouring of B wrt
+COND. C=A-B. CCOLS is the colouring of C wrt COND. *)
+VAR   AKEY, AL, ALIST, APP, BKEY, BL, BLIST, CL, CP,
+      CPP, EL, FL, R, SL, W: LIST; 
+BEGIN
+      DEB_BEGIN(GBDIFF);
+(*1*) (*A or B zero. *) 
+      IF A = 0 THEN C:=B; CCOLS:=BCOLS; RETURN; END; 
+      IF B = 0 THEN C:=A; CCOLS:=ACOLS; RETURN; END; 
+(*2*) (*Match coefficients. *)
+      CP:=SIL; R:=SIL; W:=SIL; 
+      REPEAT
+            EL:=DIPEVL(A);
+            FL:=DIPEVL(B);
+            SL:=EVCOMP(EL,FL); 
+            IF SL = 1 THEN
+                 DIPMAD(A, AL,EL,A); 
+                 COLDIF(EL,ACOLS,R,W, R,W);
+                 CP:=DIPMCP(EL,AL,CP);
+            ELSIF SL = -1 THEN
+                 DIPMAD(B, BL,FL,B); 
+                 COLDIF(FL,BCOLS,R,W, R,W);
+                 CL:=ADNEG(BL); 
+                 CP:=DIPMCP(FL,CL,CP);
+            ELSE 
+                 DIPMAD(A, AL,EL,A); 
+                 DIPMAD(B, BL,FL,B);
+                 CL:=ADDIF(AL,BL); 
+                 IF ADSIGN(CL) <> 0 THEN
+                   CP:=DIPMCP(EL,CL,CP); 
+                   KEYCOL(EL,ACOLS, AKEY,ALIST); 
+                   KEYCOL(FL,BCOLS, BKEY,BLIST); 
+                   IF (AKEY <> 0) AND (BKEY = 0) THEN
+                     MKACOL(ALIST,EL,R,W, R,W); END; 
+                   IF (AKEY = 0) AND (BKEY <> 0) THEN
+                     MKACOL(BLIST,EL,R,W, R,W); END; 
+                   IF (AKEY <> 0) AND (BKEY <> 0) THEN
+                      MKCOL(COND,CL,EL,R,W, R,W); END; 
+                 END; 
+            END; 
+      UNTIL (A = SIL) OR (B = SIL); 
+(*3*) (*Finish. *) 
+      APP:=A; 
+      IF A <> SIL THEN FINCOL(A,ACOLS,R,W, R,W); END; 
+      IF B <> SIL THEN FINCOL(B,BCOLS,R,W, R,W); END; 
+      IF A = SIL THEN IF B <> SIL THEN APP:=DIPNEG(B); END; END; 
+      IF CP = SIL THEN C:=APP; ELSE CPP:=CP; C:=INV(CP); SRED(CPP,APP); END; 
+
+(*4*)(* IF C = SIL THEN
+        C:=0;
+        CCOLS:=SIL;
+      ELSE
+        IF (R <> SIL) OR (W <> SIL) THEN
+          IF R <> SIL THEN R:=INV(R); END;
+          IF W <> SIL THEN W:=INV(W); END;
+          CCOLS:=LIST2(R,W); ELSE CCOLS:=SIL;
+        END;
+      END;
+
+*)
+(*4*) IF C = SIL THEN 
+        C:=0;
+        CCOLS:=ColEmpty(); (* ---CHANGED--- *)
+      ELSE
+          IF R <> SIL THEN R:=INV(R); END; (* ---CHANGED--- *)
+          IF W <> SIL THEN W:=INV(W); END; 
+          CCOLS:=ColCons(R,W);
+      END; 
+
+(*7*) RETURN;
+END GBDIFF; 
+
+
+PROCEDURE COLPRD(COL1,TTERM: LIST): LIST; 
+(*Colour product. COL1 contains a list of red terms and a list of white
+terms. TTERM is a term. Every term in COL1 is multiplied with TTERM.*)
+VAR   CRED, CWHITE: LIST; 
+BEGIN
+      DEB_BEGIN(COLPRD);
+(*1*) (*Case COL1 empty. *)
+      IF ColIsEmpty(COL1) THEN RETURN(ColEmpty()); END; 
+(*2*) (*Multiplication. *)
+      ColParts(COL1, CRED,CWHITE); 
+      IF CRED <> SIL THEN CRED:=CMULT(CRED,TTERM,1); END; 
+      IF CWHITE <> SIL THEN CWHITE:=CMULT(CWHITE,TTERM,2); END; 
+(*3*) (*Finish. *) 
+      RETURN(ColCons(CRED,CWHITE));
+END COLPRD; 
+
+
+PROCEDURE CMULT(ONECL,TTERM,B: LIST): LIST; 
+(*Colour multiplication.
+If B=1 then ONECL is a list of (red) terms.
+If B=2 then ONECL is a list of pairs, each containing a (white) term
+and the white part of its coefficient.
+TTERM is a term. Every term in ONECL is multiplicated with TTERM.
+CCOL is the result. *)
+VAR   CCOL, CELEM, QLIST, T, TELEM: LIST; 
+BEGIN
+      DEB_BEGIN(CMULT);
+(*1*) CCOL:=SIL; 
+(*2*) (*Multiplication of terms. *) 
+      WHILE ONECL <> SIL DO
+           ADV(ONECL, TELEM,ONECL); 
+           IF B = 2 THEN FIRST2(TELEM, T,QLIST); ELSE T:=TELEM; END; 
+           T:=EVSUM(TTERM,T); 
+           IF B = 2 THEN CELEM:=LIST2(T,QLIST); CCOL:=COMP(CELEM,CCOL);
+                    ELSE CCOL:=COMP(T,CCOL); END; 
+      END; 
+(*6*) RETURN(INV(CCOL));
+END CMULT; 
+
+
+PROCEDURE WHSRT(COL,TTERM,ALIST: LIST): LIST; 
+(*White sort. COL contains a list of red terms and a list of white terms.
+The form of COL is
+((r1,... ,rn),((w1,(wp11,; ,wp1s)),... ,(wm,(wpm1,; ,wpms)))).
+TTERM is a term. ALIST is a list of coefficients.
+The form of ALIST is (a1,... ,at).
+Every term of COL is multiplied with TTERM. The resulting terms are
+coloured white by adding ALIST to its white part. The list of red terms
+is empty. The list of white terms z is as follows
+( (r1*tterm,(a1,... ,at)),... ,(rn*tterm,(a1,... ,at)),
+(w1*tterm,(a1,... ,at,wp11,... ,wp1s)),... ,
+(wm*tterm,(a1,... ,at,wpm1,... ,wpms)) ).
+CWHIT0  contains the same terms as z in a nondecreasing order.
+COLS is pair containg an empty list of red terms and the list CWHIT0. *)
+VAR   AL, BL, BLIST, CP, CRED, CWHIT0, CWHITE, CWHITP, SL: LIST; 
+BEGIN
+      DEB_BEGIN(WHSRT);
+(*1*) (*Get red and white terms. *)
+      IF ColIsEmpty(COL) THEN RETURN(ColEmpty()); END;
+      FIRST2(COL, CRED,CWHITE);
+      CWHIT0:=SIL; 
+(*2*) (*Match terms. *) 
+      IF (CWHITE <> SIL) AND (CRED <> SIL) THEN (* --- to do ---: OK? *)
+        REPEAT
+              ADV(CRED, AL,CRED);
+              REPEAT
+                    ADV(CWHITE, CP,CWHITP);
+                    FIRST2(CP, BL,BLIST); 
+                    SL:=EVCOMP(AL,BL); 
+                    IF SL = 1 THEN
+                      CWHIT0:=COMP(LIST2(EVSUM(TTERM,AL),ALIST),CWHIT0);
+                    ELSE
+                      CWHIT0:=COMP(LIST2(EVSUM(TTERM,BL),WUPD(ALIST,BLIST)),
+                                   CWHIT0);
+                      CWHITE:=CWHITP;
+                    END; 
+              UNTIL (SL = 1) OR (CWHITE = SIL); 
+              IF SL <= 0
+                THEN CWHIT0:=COMP(LIST2(EVSUM(TTERM,AL),ALIST),CWHIT0); END; 
+         UNTIL (CRED = SIL) OR (CWHITE = SIL); 
+      END; 
+(*3*) (*No more terms left. *) 
+      IF (CWHITE=SIL) AND (CRED=SIL) THEN RETURN(LIST2(SIL,INV(CWHIT0))); END; 
+(*4*) (*Red terms left. *) 
+      WHILE CRED <> SIL DO 
+           ADV(CRED, AL,CRED);
+           CWHIT0:=COMP(LIST2(EVSUM(TTERM,AL),ALIST),CWHIT0);
+      END; 
+(*5*) (*White terms left. *) 
+      WHILE CWHITE <> SIL DO
+           ADV(CWHITE, CP,CWHITE);
+           FIRST2(CP, BL,BLIST);
+           CWHIT0:=COMP(LIST2(EVSUM(TTERM,BL),WUPD(ALIST,BLIST)),CWHIT0);
+       END; 
+(*9*) RETURN(LIST2(SIL,INV(CWHIT0)));
+END WHSRT; 
+
+
+PROCEDURE WUPD(ALIST,BLIST: LIST): LIST; 
+(*White part update. ALIST and BLIST are sets of coefficients.
+Returns the union of ALIST and BLIST. *)
+VAR   A, CLIST, SL: LIST; 
+BEGIN
+      DEB_BEGIN(WUPD);
+(*1*) IF ALIST = BLIST THEN RETURN(BLIST); END; 
+      IF BLIST = SIL THEN RETURN(ALIST) END;
+      CLIST:=BLIST;
+(*2*) WHILE ALIST <> SIL DO
+           ADV(ALIST, A,ALIST);
+           IF MEMBER(A,BLIST) = 0 THEN CLIST:=COMP(A,CLIST); END; 
+      END; 
+(*5*) RETURN(CLIST);
+END WUPD; 
+
+
+PROCEDURE COLDIF(T,ACOLS,COLR,COLW: LIST; VAR CRED,CWHITE: LIST); 
+(*Colour difference. T is term. ACOLS contains a list of red terms
+and a list of white terms. COLR is a list of red terms. COLW is
+a list of white terms.
+If T is member of the red terms in ACOLS, it is added to COLR. The
+result is CRED.
+If T is member of the white terms in ACOLS, it is added to COLW with
+its white part. The result is CWHITE. *)
+VAR   ACRED, ACWHIT, CP: LIST; 
+BEGIN
+      DEB_BEGIN(COLDIF);
+(*1*) FIRST2(ACOLS, ACRED,ACWHIT);
+      CRED:=COLR;
+      CWHITE:=COLW; 
+(*2*) IF MEMBER(T,ACRED)=1 THEN CRED:=COMP(T,CRED); RETURN; END;
+      CP:=FINDCP(T,ACWHIT);
+      IF CP <> SIL THEN CWHITE:=COMP(CP,CWHITE); END; 
+(*5*) RETURN;
+END COLDIF; 
+
+
+PROCEDURE KEYCOL(EL,ACOLS: LIST; VAR KEY,ALIST: LIST); 
+(*Key colour. EL is a term.
+ACOLS contains a list of red terms and a list of white terms.
+If EL is member of the red terms in ACOLS then KEY=1 and ALIST is empty.
+If EL is member of the white terms in ACOLS then KEY=2 and ALIST is
+the white part of EL.
+If EL is not in ACOLS (EL is coloured green) then KEY=0 and ALIST is empty. *)
+VAR   ACRED, ACWHIT, CP: LIST; 
+BEGIN
+      DEB_BEGIN(KEYCOL);
+(*1*) ALIST:=SIL; KEY:=0; 
+(*2*) FIRST2(ACOLS, ACRED,ACWHIT);
+      IF MEMBER(EL,ACRED) = 1 THEN KEY:=1; RETURN; END;
+      CP:=FINDCP(EL,ACWHIT); 
+      IF CP <> SIL THEN KEY:=2; ALIST:=SECOND(CP); END; 
+(*5*) RETURN;
+END KEYCOL; 
+
+
+PROCEDURE MKACOL(ALIST,EL,COLR,COLW: LIST; VAR CRED,CWHITE: LIST); 
+(*Make colour. ALIST is a list of coefficients. EL is a term.
+COLR is a list of red terms. COLW is a list of white terms.
+If ALIST is empty, EL is added to COLR. The result is CRED.
+If ALIST is not empty, the pair of EL and ALIST is added to COLW. the
+result is CWHITE. *)
+BEGIN
+      DEB_BEGIN(MKACOL);
+(*1*) CRED:=COLR; CWHITE:=COLW; 
+(*2*) IF ALIST = SIL THEN CRED:=COMP(EL,CRED); RETURN; END;
+      CWHITE:=COMP(LIST2(EL,ALIST),CWHITE);
+(*5*) RETURN;
+END MKACOL; 
+
+
+PROCEDURE MKCOL(COND,CA,CE,COLR,COLW: LIST; VAR CRED,CWHITE: LIST); 
+(*Make new colour. COND is a condition. CA is a coefficient. CE is
+a term. COLR is a list of red terms. COLW is a list of white terms.
+If CA is coloured red by COND, CE is added to COLR. the result is CRED.
+If CA is coloured white by COND, the pair with CE and the white factors
+of CA are added to COLW. the result is CWHITE. *)
+VAR   A, CL, PACK, QALIST, WFACTS: LIST;
+      C: COLOUR;
+BEGIN
+      DEB_BEGIN(MKCOL);
+(*1*) CRED:=COLR; CWHITE:=COLW; 
+(*2*) (*CA is a constant. *)
+      IF PAR.IsCnst(CA) THEN CRED:=COMP(CE,CRED); RETURN; END; 
+(*3*) (*Factorization of CA. *) 
+      QALIST:=PAR.Factorize(CA);
+      WFACTS:=SIL; CL:=0; 
+(*4*) (*Check factors of CA. *) 
+      WHILE (QALIST <> SIL) AND (CL = 0) DO
+            ADV(QALIST, A,QALIST); 
+            IF NOT PAR.IsCnst(A) THEN 
+	      C:=PAR.CondEval(COND,A);
+     	      IF    C=unknown THEN WFACTS:=COMP(A,WFACTS);
+     	      ELSIF C=zero    THEN CL:=1;  END;
+            END; 
+      END; 
+(*5*) (*Finish. *) 
+      IF CL = 0 THEN
+         IF WFACTS = SIL 
+           THEN CRED:=COMP(CE,CRED);
+           ELSE PACK:=LIST2(CE,WFACTS); CWHITE:=COMP(PACK,CWHITE); END; 
+      END; 
+(*8*) RETURN;
+END MKCOL; 
+
+
+PROCEDURE FINCOL(APP,ACOLS,COLR,COLW: LIST; VAR CRED,CWHITE: LIST); 
+(*Finish colouring. APP is a polynomial.
+ACOLS contains a list of red terms and a list of white terms.
+COLR is a list of red terms. COLW is a list of white terms.
+The red terms of APP are added to COLR. the result is CRED.
+The white terms of APP are added to COLW with their white part.
+The result is CWHITE. *)
+VAR   AL, EL: LIST; 
+BEGIN
+      DEB_BEGIN(FINCOL);
+(*1*) CRED:=COLR; CWHITE:=COLW; 
+(*2*) WHILE APP <> SIL DO
+            DIPMAD(APP, AL,EL,APP); 
+            COLDIF(EL,ACOLS,CRED,CWHITE, CRED,CWHITE);
+      END; 
+(*5*) RETURN;
+END FINCOL; 
+
+
+PROCEDURE NFORM(GA,FCO,P: LIST; VAR N0,N1: LIST); 
+(*Parametric normalform.
+GA is a condition. FCO is a polynomial coloured wrt GA.
+P is a list of polynomials coloured wrt GA.
+FCO is reduced modulo P wrt GA. N0 is the set of tripel of the form
+(cond,pco,c), where cond is a condition, pco is a normalform of fco
+coloured completely green by cond and c is a multiplicative factor.
+N1 is the set of tripel of the form
+(cond,pco,c), where cond is a condition, pco is a normalform of fco
+not coloured completely green by cond and c is a multiplicative
+factor. *)
+(* ---to do---: this "multiplicative factor" is useless, remove! *)
+VAR   C, CCL, COL, COND, D, DCOND, DL, F, PCI, PCO, POL, QC, RE: LIST; 
+BEGIN
+      DEB_BEGIN(NFORM);
+(*1*) (*Prepare c=1. *)
+      N0:=SIL; N1:=SIL;
+      IF FCO = SIL THEN RETURN; END; 
+      COND:=GA; 
+      F:=ColpPol(FCO); 
+      C:=ADFI(DIPLBC(F),1);
+(*2*) (*Case FCO is zero (completely coloured green) or P is empty. *) 
+      IF ColpIsZero(FCO) THEN N0:=LIST3(COND,FCO,C); RETURN; END; 
+      IF P = SIL THEN N1:=LIST3(COND,FCO,C); RETURN; END; 
+      PCO:=FCO;
+(*4*) (*Reduction. *) 
+      LOOP
+          IF ColpIsZero(PCO) THEN N0:=LIST3(COND,PCO,C); EXIT; END;
+          FINDPI(PCO,P, PCI,RE); 
+          IF PCI = SIL THEN EXIT; END;
+          GRED(COND,PCO,PCI,RE, PCO,QC); 
+          C:=ADPROD(C,QC);
+      END;
+      IF N0 <> SIL THEN RETURN END;
+(*4*) (*Get headterm wrt. COND. *) 
+      IF ColpHT(PCO) <> SIL THEN N1:=LIST3(COND,PCO,C); RETURN; END;
+(*5*) (*Determine. *)
+      ColpParts(PCO, POL,COL);
+      DETPOL(COND,POL,COL, DL,CCL); 
+      WHILE CCL <> SIL DO
+           ADV2(CCL, DCOND,PCO,CCL); 
+     	       	    	      	     (* ---to do---: OK? *)
+           IF ColpIsZero(PCO) THEN N0:=COMP3(DCOND,PCO,C,N0); 
+                              ELSE N1:=COMP3(DCOND,PCO,C,N1); END;
+      END;
+(*7*) RETURN;
+END NFORM; 
+
+
+PROCEDURE NFTOP(GA,FCO,P: LIST; VAR N0,N1: LIST); 
+(*Normalform by topreduction.
+GA is a condition. FCO is a polynomial coloured wrt GA.
+P is a list of polynomials coloured wrt GA.
+FCO is reduced modulo P wrt GA. N0 is the set of tripel of the form
+(cond,pco,c), where cond is a condition, pco is a normalform of fco
+coloured completely green by cond and c is a multiplicative factor.
+N1 is the set of tripel of the form
+(cond,pco,c), where cond is a condition, pco is a normalform of fco
+not coloured completely green by cond and c is a multiplicative
+factor. *)
+(* ---to do---: this "multiplicative factor" is useless, remove! *)
+VAR   AL, C, CCL, COL, D, DCOND, DL, F, N, NL, PCI, PCO, 
+      POL, QC, RE: LIST; 
+BEGIN
+      DEB_BEGIN(NFTOP);
+(*1*) (*Prepare c=1. *) 
+      N0:=SIL; N1:=SIL;
+      IF FCO = SIL THEN RETURN; END; 
+      F:=ColpPol(FCO);
+      C:=ADFI(DIPLBC(F),1);
+(*2*) (*Case FCO is zero (completely coloured green) or P is empty. *) 
+      IF ColpIsZero(FCO) THEN N0:=LIST3(GA,FCO,C); RETURN; END; 
+      IF P = SIL THEN N1:=LIST3(GA,FCO,C); RETURN; END; 
+(*3*) N:=LIST2(C,LIST2(GA,FCO)); 
+(*4*) (*Reduction. *) 
+      WHILE N <> SIL DO
+           ADV2(N, C,NL,N); 
+           WHILE NL <> SIL DO
+                ADV2(NL, GA,PCO,NL); 
+                LOOP
+                    IF ColpIsZero(PCO) THEN N0:=COMP3(GA,PCO,C,N0); EXIT; END;
+                    FINDPITOP(PCO,P, PCI,RE); 
+                    IF PCI <> SIL THEN
+                      GRED(GA,PCO,PCI,RE, PCO,QC);
+                      C:=ADPROD(C,QC);
+                    ELSE
+                      IF ColpHT(PCO) <> SIL
+                        THEN N1:=COMP3(GA,PCO,C,N1);
+                        ELSE ColpParts(PCO, POL,COL);
+			     DETPOL(GA,POL,COL, DL,CCL);
+                             N:=COMP2(C,CCL,N);
+                      END; 
+                      EXIT;
+                    END; 
+                END;
+           END; 
+      END; 
+(*7*) RETURN;
+END NFTOP; 
+
+
+PROCEDURE FINDPI(PCO,P: LIST; VAR PCI,RE: LIST); 
+(*Find polynomial.
+PCO is a coloured polynomial.
+P is a list of coloured polynomials. 
+A polynomial for the reduction over all terms of PCO modulo P
+is searched.
+PCI is emtpy if no polynomial is found, else PCI is the found
+polynomial and RE is the term of PCO to be eliminated. *)
+VAR   ALIST, COL, HE, KEY, POL, PP, RA: LIST; 
+BEGIN
+     DEB_BEGIN(FINDPI);
+     ColpParts(PCO, POL,COL);
+     WHILE (POL <> SIL) DO
+          DIPMAD(POL, RA,RE,POL);
+          KEYCOL(RE,COL, KEY,ALIST); 
+          IF KEY <> 0 THEN (* RE not zero (green) *)
+     	    PP:=P;
+            REPEAT
+                  ADV(PP, PCI,PP);
+                  HE:=ColpHT(PCI);
+                  IF HE <> SIL THEN IF EVMT(RE,HE)=1 THEN RETURN; END;
+     	       	    	       ELSE ERROR(severe,
+			           "Error in FINDPI, this cannot happen.");
+     	                      (* --- to do ---: HE=SIL cannot happen ?? *)
+                  END;
+            UNTIL PP = SIL; 
+           END; 
+      END; 
+      PCI:=SIL;
+END FINDPI; 
+
+PROCEDURE FINDPITOP(PCO,P: LIST; VAR PCI,RE: LIST); 
+(*Find polynomial.
+PCO is a non-zero coloured polynomial.
+P is a list of coloured polynomials.
+A polynomial for the topreduction of PCO modulo P is searched.
+PCI is emtpy if no polynomial is found, else PCI is the found
+polynomial and RE is the term of PCO to be eliminated. *)
+VAR   ALIST, HE, PI, RA: LIST; 
+BEGIN
+     DEB_BEGIN(FINDPITOP);
+     RE:=ColpHT(PCO); 
+     IF RE = SIL THEN RE:=FIRST(FIRST(ColWhite(ColpCol(PCO)))); END; 
+     REPEAT
+           ADV(P, PCI,P);
+           HE:=ColpHT(PCI); 
+           IF HE <> SIL THEN IF EVMT(RE,HE)=1 THEN RETURN; END;
+     	       	    	ELSE ERROR(severe,
+			           "Error in FINDPITOP, this cannot happen.");
+     	       	    	 (* --- to do ---: HE=SIL cannot happen ?? *)
+     	   END;
+     UNTIL(P = SIL); 
+     PCI:=SIL;
+END FINDPITOP; 
+
+
+PROCEDURE SPOL(COND,HA,HB: LIST): LIST; 
+(*Parametric s-polynomial.
+COND is a condition.
+HA and HB are coloured polynomials.
+Return SIL if the spolynomial of HA, HB need not be considered else returns
+the s-polynomial of HA and HB with colouring. *)
+VAR   A, ACOL, AL, APP, B, BCOL, BL, BPP, CL, DL, DL1, EL, EL1,
+      GL, H, HCOLS, RAL, RAP, SL: LIST; 
+BEGIN
+      DEB_BEGIN(SPOL);
+      IF (HA = SIL) OR (HB = SIL) THEN RETURN SIL; END; 
+      ColpParts(HA, A,ACOL); ColpParts(HB, B,BCOL);
+(*3*) EL:=ColpHT(HA);
+      DL:=ColpHT(HB);
+      GL:=EVLCM(EL,DL);
+      IF EQUAL(GL,EVSUM(EL,DL)) = 1 THEN RETURN SIL; END;
+        (* Buchbergers first criterion: disjoint head terms *)
+(*4*) ACOL:=SETCOL(COND,ACOL); AL:=FINDBC(EL,A); ADV(AL, RAL,RAP); 
+      BCOL:=SETCOL(COND,BCOL); BL:=FINDBC(DL,B);
+(*5*) ADGCDC(AL,BL, CL,AL,BL);
+      (* Note: if gcd is not defined for the current domain, AL and BL
+         remain unchanged by definiton of ADGCDC *)
+      EL1:=EVDIF(GL,EL); DL1:=EVDIF(GL,DL);
+      APP:=DIPFMO(BL,EL1);
+      BPP:=DIPFMO(AL,DL1);
+      IF EVSIGN(EL1) <> 0 THEN ACOL:=COLPRD(ACOL,EL1); END; 
+      APP:=DIPROD(A,APP);
+      IF EVSIGN(DL1) <> 0 THEN BCOL:=COLPRD(BCOL,DL1); END; 
+      GBDIFF(COND,APP,ACOL,DIPROD(B,BPP),BCOL, H,HCOLS); 
+      IF H <> 0 THEN 
+         IF ADSIGN(DIPLBC(H)) = -1 THEN H:=DIPNEG(H); END; 
+         IF NOT ColIsEmpty(HCOLS) THEN RETURN ColpCons(H,HCOLS); END; 
+      END; 
+(*8*) RETURN SIL;
+END SPOL; 
+
+
+PROCEDURE GBSYS(CNDS,P: LIST): LIST;
+(*Groebner system.
+CNDS is a case distinction.
+P is a list of polynomials.
+Returns a Groebner-system for P relative to CNDS. *)
+VAR   BB, COND, CONDS, GSYS, PAIRS, PCO, PELEM, PL, PP: LIST; 
+BEGIN
+      DEB_BEGIN(GBSYS);
+(*1*) (*Case P is empty. *)
+      IF P = SIL THEN RETURN(SIL); END; 
+(*2*) (*Determine P relative to CNDS. *)
+      DET(CNDS,P, CONDS,PL); 
+      IF PAR.outputlevel>0 THEN
+	SWRITE("The polynomial system is determined by: "); BLINES(0); 
+        DWRIT(CONDS); BLINES(1);
+      END;
+(*3*) (*Check degree of polynomials and construct pairs. *)
+      BB:=SIL; GSYS:=SIL;
+      WHILE PL <> SIL DO
+           ADV(PL, PELEM,PL); FIRST2(PELEM, COND,PP); 
+           PCO:=CHDEGL(PP); 
+           IF PCO <> SIL THEN
+             GSYS:=GBUPD(COND,LIST1(PCO),GSYS);
+           ELSE
+             PAIRS:=MKPAIR(PP); 
+(*             IF PAIRS <> SIL THEN BB:=COMP3(COND,PP,PAIRS,BB); *)
+             IF PAIRS <> SIL THEN BB:=COMP3(COND,REXTP(PP),PAIRS,BB); 
+     	       (* ---to do---: Removing extraneous polynomials should be
+     	       	    	       done here, too??? *)
+                             ELSE GSYS:=GBUPD(COND,PP,GSYS); END; 
+           END; 
+      END; 
+(*4*) (*Construct groebner-system. *)
+(*7*) RETURN(CONSGB(BB,GSYS));
+END GBSYS;
+
+VAR pGSYS, pCOND: POINTER TO LIST;
+
+PROCEDURE SigUsr1HandleCONSGB(signo:INTEGER);
+(* Handler for sigusr1 in CONSGB. *)
+VAR dummy: Action;
+    Dummy: LIST;
+BEGIN
+     dummy:=signal(SIGUSR1,SIG_IGN);
+     Dummy:=SOUNIT("CON:x");
+     BLINES(0);
+     SWRITE("______________________________________________________________________________"); BLINES(0);
+     SWRITE("SIGUSR1 received in CONSGB:"); BLINES(1);
+     SWRITE("Groebner system at the moment:"); BLINES(1);
+     WRGBS(pGSYS^); BLINES(1);
+     SWRITE("Actual condition:"); BLINES(1);
+     CondWrite(pCOND^); BLINES(0);
+     SWRITE("______________________________________________________________________________"); BLINES(0);
+     Dummy:=CUNIT("CON:x");
+     dummy:=signal(SIGUSR1,SigUsr1HandleCONSGB);
+END SigUsr1HandleCONSGB;
+
+
+PROCEDURE CONSGB(BB,GSYS: LIST): LIST;
+(*Construct groebner-system. BB is a list of the form
+(cond1,p1,pairs1,... ,condn,pn,pairsn),
+where condi is a condition, pi is a polynomials list determined by condi
+and pairsi is the polynomials pairs list of pi for i= 1; n.
+GSYS is the actual groebner-system.
+GSYS is completed. The result is returned. *)
+VAR   COND, GS1, HCO, HCOL, N0, N1, P, PAIR, PAIRS, PLIST,
+      PRSL: LIST; 
+VAR sighandleold: Action;
+
+BEGIN
+     DEB_BEGIN(CONSGB);
+     PLIST:=BB;
+     COND:=CondEmpty(); (* Initialization necessary for signal handler only *)
+     pGSYS:=ADR(GSYS);
+     pCOND:=ADR(COND);
+     sighandleold:=signal(SIGUSR1,SigUsr1HandleCONSGB);
+(*2*) (*S-polynomials and normalforms. *) 
+      WHILE PLIST <> SIL DO
+           ADV3(PLIST, COND,P,PAIRS,PLIST); 
+           WHILE PAIRS <> SIL DO
+                ADV(PAIRS, PAIR,PAIRS); 
+                PRSL:=SIL; GS1:=SIL;
+                HCO:=SPOL(COND,SECOND(PAIR),THIRD(PAIR));
+                IF HCO = SIL THEN (* s-polynomial is zero. *)
+                  IF PAIRS = SIL THEN GSYS:=GBUPD(COND,P,GSYS); END;
+                ELSE
+                  IF ColpIsCnst(HCO) THEN (* s-polynomial is a constant *)
+                    PAIRS:=SIL; 
+                    GSYS:=GBUPD(COND,LIST1(HCO),GSYS); 
+                  ELSE
+     	       	    PAR.NormalForm(COND,HCO,P, N0,N1); 
+                    VRNORM(COND,P,N0,N1,PAIRS, P,PAIRS,PRSL,GS1);
+                  END; 
+                END; 
+     	        IF PRSL<>SIL THEN PLIST:=CONC(PRSL,PLIST); END;
+     	       	    	      	   	 (* PRSL first, we want ramifications
+     	       	    	      	   	    of COND to be treated first, esp.
+					    to have the generic case first. *)
+                GSYS:=CONC(GSYS,GS1);
+           END; 
+      END; 
+      sighandleold:=signal(SIGUSR1,sighandleold);
+      RETURN(GSYS);
+END CONSGB; 
+
+(**********************************************************************
+FACTORIZING
+**********************************************************************)
+
+PROCEDURE GBSYSF(CNDS,P: LIST): LIST;
+(*Groebner system with factorization.
+CNDS is a case distinction.
+P is a list of polynomials.
+Returns a Groebner-system for P relative to CNDS. *)
+VAR   BB, COND, CONDS, GSYS, PAIRS, PCO, PELEM, PL, PP, p, FL, F, f, tmpFL, tmpF, fl, pl: LIST; 
+BEGIN
+      DEB_BEGIN(GBSYSF);
+(*1*) (*Case P is empty. *)
+      IF P = SIL THEN RETURN(SIL); END; 
+      FL:=SIL;
+      WHILE P<>SIL DO
+      	   ADV(P, p,P);
+     	   F:=PAR.Factors(p);
+     	   IF FL=SIL THEN
+     	       WHILE F<>SIL DO ADV(F, f,F); FL:=COMP(LIST1(f),FL); END;
+     	   ELSE
+     	       tmpFL:=FL;
+     	       FL:=SIL;
+     	       WHILE tmpFL<>SIL DO
+	            ADV(tmpFL, fl,tmpFL);
+		    tmpF:=F;
+		    WHILE tmpF<>SIL DO
+		    	 ADV(tmpF, f,tmpF); FL:=COMP(COMP(f,fl),FL); END;
+     	       END;
+     	    END;
+      END;
+     	   
+(*2*) (*Determine P relative to CNDS. *)
+      PL:=SIL;
+      WHILE FL<>SIL DO
+      	   ADV(FL, fl,FL);
+	   DET(CNDS,fl, CONDS,pl); 
+     	   PL:=CONC(pl,PL);
+      END;
+ 
+      IF PAR.outputlevel>0 THEN
+	SWRITE("The polynomial system is determined by: "); BLINES(0); 
+        CdWrite(CONDS); BLINES(1);
+      END;
+(*3*) (*Check degree of polynomials and construct pairs. *)
+      BB:=SIL; GSYS:=SIL;
+      WHILE PL <> SIL DO
+           ADV(PL, PELEM,PL); FIRST2(PELEM, COND,PP); 
+           PCO:=CHDEGL(PP); 
+           IF PCO <> SIL THEN
+             GSYS:=GBUPD(COND,LIST1(PCO),GSYS);
+           ELSE
+             PAIRS:=MKPAIR(PP); 
+             IF PAIRS <> SIL THEN BB:=COMP3(COND,REXTP(PP),PAIRS,BB); 
+     	       (* ---to do---: Removing extraneous polynomials should be
+     	       	    	       done here, too??? *)
+                             ELSE GSYS:=GBUPD(COND,PP,GSYS); END; 
+           END; 
+      END; 
+(*4*) (*Construct groebner-system. *)
+(*7*) RETURN(CONSGBF(BB,GSYS));
+END GBSYSF;
+
+PROCEDURE SigUsr1HandleCONSGBF(signo:INTEGER);
+(* Handler for sigusr1 in CONSGBF. *)
+VAR dummy: Action;
+    Dummy: LIST;
+BEGIN
+     dummy:=signal(SIGUSR1,SIG_IGN);
+     Dummy:=SOUNIT("CON:x");
+     BLINES(0);
+     SWRITE("______________________________________________________________________________"); BLINES(0);
+     SWRITE("SIGUSR1 received in CONSGB:"); BLINES(1);
+     SWRITE("Groebner system at the moment:"); BLINES(1);
+     WRGBS(pGSYS^); BLINES(1);
+     SWRITE("Actual condition:"); BLINES(1);
+     CondWrite(pCOND^); BLINES(0);
+     SWRITE("______________________________________________________________________________"); BLINES(0);
+     Dummy:=CUNIT("CON:x");
+     dummy:=signal(SIGUSR1,SigUsr1HandleCONSGBF);
+END SigUsr1HandleCONSGBF;
+
+
+PROCEDURE CONSGBF(BB,GSYS: LIST): LIST;
+(*Construct groebner-system. BB is a list of the form
+(cond1,p1,pairs1,... ,condn,pn,pairsn),
+where condi is a condition, pi is a polynomials list determined by condi
+and pairsi is the polynomials pairs list of pi for i= 1; n.
+GSYS is the actual groebner-system.
+GSYS is completed. The result is returned. *)
+VAR   COND, GS1, HCO, HCOL, N0, N1, P, PAIR, PAIRS, PLIST,
+      PRSL, tmpN1, con, cond, pcol, c, p, col, FL, f, CD, CL, con, pol : LIST; 
+VAR sighandleold: Action;
+
+BEGIN
+     DEB_BEGIN(CONSGBF);
+     PLIST:=BB;
+     COND:=CondEmpty(); (* Initialization necessary for signal handler only *)
+     pGSYS:=ADR(GSYS);
+     pCOND:=ADR(COND);
+     sighandleold:=signal(SIGUSR1,SigUsr1HandleCONSGBF);
+(*2*) (*S-polynomials and normalforms. *) 
+      WHILE PLIST <> SIL DO
+           ADV3(PLIST, COND,P,PAIRS,PLIST); 
+           WHILE PAIRS <> SIL DO
+                ADV(PAIRS, PAIR,PAIRS); 
+                PRSL:=SIL; GS1:=SIL;
+                HCO:=SPOL(COND,SECOND(PAIR),THIRD(PAIR));
+                IF HCO = SIL THEN (* s-polynomial is zero. *)
+                  IF PAIRS = SIL THEN GSYS:=GBUPD(COND,P,GSYS); END;
+                ELSE
+                  IF ColpIsCnst(HCO) THEN (* s-polynomial is a constant. *)
+                    PAIRS:=SIL; 
+                    GSYS:=GBUPD(COND,LIST1(HCO),GSYS); 
+                  ELSE
+     	       	    PAR.NormalForm(COND,HCO,P, N0,N1); 
+     	       	    tmpN1:=N1;
+     	       	    N1:=SIL;
+		    WHILE tmpN1<>SIL DO
+		    	 ADV3(tmpN1, cond,pcol,c,tmpN1);
+     	       	    	 FIRST2(pcol, p,col);
+     	       	    	 FL:=PAR.Factors(p);
+			 WHILE FL<>SIL DO
+			      ADV(FL, f,FL);
+(*			      DETPOL(COND,f,INICOL(COND,f), CD,CL);*)
+			      DETPOL(COND,f,ColConsCond(f,COND), CD,CL);
+     	       	    	      WHILE CL<>SIL DO
+			      	   ADV2(CL, con,pol,CL);
+     	       	    	      	   IF ColpIsZero(pol)
+				      THEN N0:=COMP3(con,pol,1, N0);
+     	       	    	      	      ELSE N1:=COMP3(con,pol,1, N1);
+     	       	    	      	   END;
+     	       	    	      END;
+     	       	    	 END;
+	       	    END;
+
+                    VRNORM(COND,P,N0,N1,PAIRS, P,PAIRS,PRSL,GS1);
+                  END; 
+                END; 
+     	        IF PRSL<>SIL THEN PLIST:=CONC(PRSL,PLIST); END;
+     	       	    	      	   	 (* PRSL first, we want ramifications
+     	       	    	      	   	    of COND to be treated first, esp.
+					    to have the generic case first. *)
+                GSYS:=CONC(GSYS,GS1);
+           END; 
+      END; 
+      sighandleold:=signal(SIGUSR1,sighandleold);
+      RETURN(GSYS);
+END CONSGBF; 
+
+(**********************************************************************
+END FACTORIZING
+**********************************************************************)
+
+PROCEDURE VRNORM(COND,PP,N0,N1,PPAIRS: LIST;
+                 VAR P,PAIRS,PAIRSL,GSYS: LIST);
+(*Verify normalforms. 
+COND is a condition.
+PP is a polynomials list determined by COND.
+N0 is a set of tripel (ga,pco,c), where ga is
+a condition, pco is a normalform determined and coloured completely
+green (=0) by ga and c is a multiplicative factor.
+N1 is a set of tripel
+(ga,pco,c), where ga is a condition, pco is a normalform determined and
+not coloured completely green (=0) by ga and c is a multiplicative factor.
+PPAIRS is the polynomials pairs list of PP.
+The normalforms are checked.
+PP is updated to P.
+PPAIRS is updated to PAIRS. 
+PAIRSL is a list of the form
+(cond1,p1,pairs1,... ,condn,pn,pairsn) constructed from the information
+of the N0 and N1.
+GSYS is a list of pairs, each containing a condition and a groebner
+base wrt. this condition. *)
+VAR   C, GSYS0, GSYS1, N1P, NCO, NPCOND, PRS0, PRS1: LIST; 
+BEGIN
+      DEB_BEGIN(VRNORM);
+(*1*) PAIRSL:=SIL; GSYS:=SIL; PRS0:=SIL; PRS1:=SIL; 
+      GSYS0:=SIL; GSYS1:=SIL; P:=PP; PAIRS:=SIL; 
+(*2*) IF N1 = SIL THEN (* all normal forms are zero *)
+     	IF PPAIRS = SIL THEN (* no more pairs *)
+     	  GSYS:=GBUPD(COND,P,GSYS);  (* this case is finished, add to GSYS *)
+     	ELSE
+          PAIRS:=PPAIRS;
+     	END;
+        RETURN;
+      END; 
+(*3*) (*Check N0. *) 
+      IF N0 <> SIL THEN (* there are zero and non-zero normal forms *)
+        IF PPAIRS = SIL (* no more pairs *)
+          THEN GSYSN0(N0,P, GSYS0); (* this cases are finished,
+     	       	    	      	       add them to GSYS0 *)
+          ELSE MKN0(N0,P,PPAIRS, PRS0); (* generate new pairs lists *)
+        END; 
+      END; 
+(*4*) (*Check N1 (<>SIL here). *) 
+      ADV3(N1, NPCOND,NCO,C,N1P); 
+      IF (N1P = SIL) AND (N0 = SIL) THEN (* Only one normal form which is 
+                                            not zero *)
+        
+        IF ColpIsCnst(NCO) THEN (* It is a constant. *)
+     	  GSYS:=GBUPD(COND,LIST1(NCO),GSYS); RETURN; (* Case closed *)
+        ELSE (* It is not a constant. *)
+          PAIRS:=MKNEWP(P,NCO,PPAIRS); 
+          P:=MINPP(P,NCO);
+        END; 
+      ELSE (* There are more then one normal forms *)
+        MKN1(N1,P,PPAIRS, PRS1,GSYS1);
+      END; 
+(*5*) (*Update PAIRSL. *)
+      PAIRSL:=CONC(PRS0,PRS1);
+(*6*) (*Update GSYS. *)
+      GSYS:=CONC(GSYS0,GSYS1);
+      RETURN;
+END VRNORM; 
+
+PROCEDURE CHDEGL(PLIST: LIST): LIST; 
+(* Check degree of polynomial list.
+PLIST is a list of coloured polynomials. 
+Returns an element of PLIST, such that the degree wrt the colouring of
+the polynomial is 0, or emtpy if no such polynomial exists. *)
+VAR   PCO: LIST; 
+BEGIN
+     DEB_BEGIN(CHDEGL);
+     IF PLIST = SIL THEN RETURN(SIL); END; 
+     REPEAT
+           ADV(PLIST, PCO,PLIST);
+           IF ColpIsCnst(PCO) THEN RETURN(PCO); END;
+     UNTIL (PLIST = SIL);
+     RETURN(SIL);
+END CHDEGL; 
+
+
+PROCEDURE MKN1(NN1,P,PAIRS: LIST; VAR PPLIST,GSYS: LIST); 
+(* Make n1.
+NN1 is a set of tripel of the form
+(ga,pco,c), where ga is a condition, pco is a normalform determined and
+not coloured completely green by ga and c is a multiplicative
+factor.
+P is a list of coloured polynomials.
+PAIRS is the polynomials pairs list of P.
+PPLIST is a list of the form
+(cond1,p1,pairs1,... ,condn,pn,pairsn) constructed from the information
+of the NN1.
+GSYS is a list of pairs, each containing a condition and a groebner
+basis wrt this condition. *)
+VAR   C, NPCOND, PCO, PP: LIST; 
+BEGIN
+      DEB_BEGIN(MKN1);
+(*1*) PPLIST:=SIL; GSYS:=SIL; 
+(*2*) (*Check degree of normalforms. Update Groebner-System and pairslist. *)
+      WHILE NN1 <> SIL DO
+           ADV3(NN1, NPCOND,PCO,C,NN1);
+           IF ColpIsCnst(PCO) THEN
+             GSYS:=GBUPD(NPCOND,LIST1(PCO),GSYS);
+           ELSE
+             PP:=MINPP(P,PCO);
+             PPLIST:=COMP3(NPCOND,PP,MKNEWP(P,PCO,PAIRS),PPLIST); 
+             IF PAR.outputlevel = 1 THEN 
+     	       SWRITE("New case"); BLINES(0); CondWrite(NPCOND);
+               BLINES(1); DCLWR(PP,0); END; 
+           END; 
+      END; 
+(*5*) RETURN;
+END MKN1; 
+
+
+PROCEDURE MKN0(NN0,P,PAIRS: LIST; VAR PPLIST: LIST); 
+(*Make n0.
+NN0 is a set of tripel of the form
+(ga,pco,c), where ga is a condition, pco is a normalform determined and
+coloured completely green by ga and c is a multiplicative
+factor.
+P is a list of coloured polynomials.
+PAIRS is the polynomials pairs list of P.
+PPLIST is a list of the form
+(cond1,p1,pairs1,... ,condn,pn,pairsn) constructed from the information
+of the NN0. *)
+VAR   C, NPCOND, PCO: LIST; 
+BEGIN
+      DEB_BEGIN(MKN0);
+(*1*) PPLIST:=SIL;
+(*2*) WHILE NN0 <> SIL DO
+           ADV3(NN0, NPCOND,PCO,C,NN0); 
+           PPLIST:=COMP3(NPCOND,P,PAIRS,PPLIST);
+      END; 
+(*5*) RETURN;
+END MKN0; 
+
+
+PROCEDURE GSYSN0(NN0,P: LIST; VAR GSYS: LIST); 
+(*Groebner-System n0 update.
+NN0 is a set of tripel of the form
+(ga,pco,c), where ga is a condition, pco is a normalform determined and
+coloured completely green by ga and c is a multiplicative
+factor.
+P is a list of coloured polynomials.
+for each GA in NN0, the pair of the form (ga,p) is added to GSYS. *)
+VAR   C, NPCOND, PCO: LIST; 
+BEGIN
+      DEB_BEGIN(GSYSN0);
+(*1*) GSYS:=SIL; 
+(*2*) (*Update GSYS. *)
+      WHILE NN0 <> SIL DO
+           ADV3(NN0, NPCOND,PCO,C,NN0); 
+           GSYS:=GBUPD(NPCOND,P,GSYS);
+      END; 
+(*5*) RETURN;
+END GSYSN0; 
+
+
+PROCEDURE MINPP(PP,PCO: LIST): LIST; 
+(*Minimize polynomials list. PP is a list of coloured polynomials.
+PCO is a coloured polynomial.
+P is a list of PCO and those polynomials in PP, such that their
+headterms wrt the colouring can not be divided by the headterm of PCO
+relative to its colouring. *)
+VAR  EI, P, PCI: LIST; 
+BEGIN
+      DEB_BEGIN(MINPP);
+(*1*) (*Get headterm of PCO. *)
+      P:=SIL; 
+      EI:=ColpHT(PCO); 
+      IF EI=SIL THEN ERROR(severe,
+		           "Error in MINPP, this cannot happen."); END;
+     	                   (* --- to do ---: EI=SIL cannot happen ?? *)
+
+      (* RETURN (INV(COMP(PCO,PP))); END;*) (* ---CHANGED--- *)
+(*2*) (*Check headterms of PP. *) 
+      WHILE PP <> SIL DO
+           ADV(PP, PCI,PP);
+           IF EVMT(ColpHT(PCI),EI) = 0 THEN P:=COMP(PCI,P); END; 
+      END; 
+(*3*) (*Get PCO. *) 
+(*6*) RETURN(INV(COMP(PCO,P)));
+END MINPP;
+
+
+PROCEDURE UPDPP(COND,P: LIST): LIST; 
+(*Update polynomials. COND is a condition. P is a list of polynomials
+determined and coloured wrt a predecessor of COND. The colouring of
+each polynomial is updated. The result is the polynomial-list PP. *)
+VAR   COL, PCO, POL, PP: LIST; 
+BEGIN
+      DEB_BEGIN(UPDPP);
+(*1*) IF P = SIL THEN RETURN(SIL); END; 
+      PP:=SIL;
+(*2*) (*Update. *) 
+      REPEAT
+            ADV(P, PCO,P);
+            FIRST2(PCO, POL,COL); 
+            PP:=COMP(LIST2(POL,SETCOL(COND,COL)),PP);
+      UNTIL P=SIL;
+(*6*) RETURN(INV(PP));
+END UPDPP; 
+
+
+PROCEDURE GBUPD(COND,P,GBSYS: LIST): LIST; 
+(*Groebner-system update. COND is a condition. P is a list of polynomials
+determined and coloured wrt a predecessor of COND. GBSYS is the actual
+Groebner-system. The colouring of each polynomial
+in P is updated relative to COND. Extraneous polynomials are eliminated.
+The condititon and the resulting polynomials list are added to GBSYS.
+The result is GSYS. *)
+VAR   ELEM, PP: LIST; 
+BEGIN
+      DEB_BEGIN(GBUPD);
+(*1*) (* PP:=UPDPP(COND,REXTP(P)); *)
+      PP:=REXTP(UPDPP(COND,P));
+     	  (* ---to do---: Colouring should be updated before extraneous
+                          polynomials are removed ... correct???
+                          What happens if PP is SIL ??? *)
+      GBSYS:=COMP(LIST2(COND,PP),GBSYS); 
+      IF PAR.outputlevel = 1 THEN 
+        SWRITE("New Groebner-Basis: "); BLINES(0); CondWrite(COND); BLINES(1);
+        DCLWR(PP,0);
+      END; 
+(*4*) RETURN(GBSYS);
+END GBUPD; 
+
+
+PROCEDURE MKPAIR(PP: LIST): LIST; 
+(*Make pairs. PP is a list of coloured polynomials. The polynomials
+pairs list is constructed containing those polynomials whose headterm
+relative to the colouring is defined. The list pairs is in a
+nondecreasing order. *)
+VAR   ELI, ELJ, PI, PJ, QP, PAIRS: LIST; 
+BEGIN
+      DEB_BEGIN(MKPAIR);
+(*1*) IF (PP = SIL) THEN RETURN(SIL); END;
+      IF (RED(PP) = SIL) THEN RETURN(SIL); END;
+      PAIRS:=SIL;
+(*2*) (*Construct pairs. *) 
+      REPEAT
+            ADV(PP, PI,QP);
+            ELI:=ColpHT(PI); 
+            IF ELI <> SIL THEN
+              WHILE QP <> SIL DO 
+                   ADV(QP, PJ,QP);
+                   ELJ:=ColpHT(PJ); 
+                   IF ELJ <> SIL THEN
+                     PAIRS:=COMP(LIST3(EVLCM(ELI,ELJ),PI,PJ),PAIRS); 
+                   END; 
+              END; 
+           END; 
+           PP:=RED(PP); 
+      UNTIL PP = SIL; 
+(*3*) (*Merge. *) 
+      IF PAIRS <> SIL THEN RETURN(EVPLSO(PAIRS)); END; 
+(*6*) RETURN(SIL);
+END MKPAIR; 
+
+
+PROCEDURE PRSCOP(PAIRS: LIST): LIST; 
+(*Pairs copy. PAIRS is a polynomials pairs list. PPAIRS is a copy of PAIRS. *)
+VAR   PAIR, PPAIRS: LIST; 
+BEGIN
+      DEB_BEGIN(PRSCOP);
+(*1*) IF PAIRS = SIL THEN RETURN(SIL); END; 
+      PPAIRS:=SIL;
+(*2*) WHILE PAIRS <> SIL DO
+           ADV(PAIRS, PAIR,PAIRS); 
+           PPAIRS:=COMP(PAIR,PPAIRS);
+      END; 
+(*5*) RETURN(INV(PPAIRS));
+END PRSCOP; 
+
+
+PROCEDURE MKNEWP(P,POL,PRS: LIST): LIST; 
+(*Make new pairs. P is a list of coloured polynomials. POL is a
+coloured polynomial. PRS is the polynomials pairslist of P. The new
+pairs between POL and P are constructed and added to PRS. The result
+is PPAIRS. *)
+VAR   ELI, ELJ, PLI, PPAIRS: LIST; 
+BEGIN
+      DEB_BEGIN(MKNEWP);
+(*1*) (*Prepare input. *) 
+      PPAIRS:=SIL;
+(*2*) (*Update pairs. *)
+      ELI:=ColpHT(POL); 
+      WHILE P <> SIL DO
+           ADV(P, PLI,P);
+           ELJ:=ColpHT(PLI); 
+           IF ELJ <> SIL THEN
+             PPAIRS:=COMP(LIST3(EVLCM(ELI,ELJ),POL,PLI),PPAIRS);
+           END; 
+      END;
+(*3*) (*Copy and merge. *)
+      PPAIRS:=EVPLSO(PPAIRS); 
+      IF PRS <> SIL THEN RETURN(EVPLM(PRSCOP(PRS),PPAIRS)); END; 
+(*6*) RETURN(PPAIRS);
+END MKNEWP; 
+
+
+PROCEDURE MKCGB(PL: LIST; VAR X,I: LIST); 
+(*Make Comprehensive-Groebner-Basis. PL is a Groebner-System.
+X is the Comprehensive-Groebner-Basis from PL. I is the number of
+conditions in PL. *)
+VAR   PCO, PELEM, PLIST: LIST; 
+BEGIN
+      DEB_BEGIN(MKCGB);
+(*1*) X:=SIL; I:=0; 
+      IF PL = SIL THEN RETURN; END; 
+      ADV(PL, PELEM,PL); 
+(*2*) (*Get first groebner basis. *)
+      PLIST:=SECOND(PELEM); 
+      WHILE PLIST <> SIL DO
+           ADV(PLIST, PCO,PLIST);
+           X:=COMP(FIRST(PCO),X);
+      END; 
+      I:=1; 
+(*3*) (*Get other bases of PL. *) 
+      WHILE PL <> SIL DO
+           ADV(PL, PELEM,PL);
+           X:=ADDCGB(SECOND(PELEM),X);
+           I:=I+1;
+       END;
+(*4*) (*Merge. *) 
+      IF X <> SIL THEN X:=INV(DIPLPM(X)) END; 
+(*7*) RETURN;
+END MKCGB; 
+
+
+PROCEDURE ADDCGB(PLIST,P: LIST): LIST; 
+(*Add polynomials to comprehensive-groebner-basis. PLIST is
+list of coloured polynomials. P is a list of polynomials.
+Those polynomials that are not in P, are added to P without their
+colouring. the result is PP. *)
+VAR   APCO, APOL: LIST; 
+BEGIN
+      DEB_BEGIN(ADDCGB);
+(*1*) IF PLIST = SIL THEN RETURN(P); END; 
+(*2*) REPEAT
+           ADV(PLIST, APCO,PLIST);
+	   APOL:=FIRST(APCO);
+           IF MEMBER(APOL,P) = 0 THEN P:=COMP(APOL,P); END; 
+      UNTIL PLIST=SIL;
+(*5*) RETURN(P);
+END ADDCGB; 
+
+
+PROCEDURE GSRED(GS: LIST): LIST; 
+(*Groebner-System reduction. GS is a groebner-system. 
+Returns the reduced groebner-system. *)
+VAR   PELEM, RS: LIST; 
+BEGIN
+      DEB_BEGIN(GSRED);
+(*1*) IF GS = SIL THEN RETURN(SIL); END; 
+      RS:=SIL;
+(*2*) REPEAT
+           ADV(GS, PELEM,GS); 
+           RS:=COMP(REDUCT(PELEM),RS);
+      UNTIL GS=SIL;
+(*5*) RETURN(RS);
+END GSRED; 
+
+
+PROCEDURE REDUCT(PELEM: LIST): LIST; 
+(*Reduct. PELEM is a pair containing a condition and a polynomials
+list determined and coloured wrt the condition.
+The polynomials list is to be reduced.
+The result together with the condition is R. *)
+VAR   COND, J1Y, NCO, PCO, PLIST, QP, RLIST: LIST; 
+BEGIN
+      DEB_BEGIN(REDUCT);
+(*1*) (*Get polynomials list. *)
+      FIRST2(PELEM, COND,PLIST);	(* --- to do --- : <>SIL ?*)
+      IF PLIST = SIL THEN RETURN(LIST2(COND,SIL)); END; 
+                                        (* --- to do --- : =PELEM?*)
+(*2*) (*Check degree and remove extraneous polynomials. *) 
+      PCO:=CHDEGL(PLIST); 
+      IF PCO <> SIL THEN RETURN(LIST2(COND,LIST1(PCO)));
+                    ELSE PLIST:=REXTP(PLIST); END; 
+      IF (PLIST = SIL) THEN RETURN(LIST2(COND,PLIST)); END; 
+      IF (RED(PLIST) = SIL) THEN RETURN(LIST2(COND,PLIST)); END; 
+      QP:=PLIST; RLIST:=SIL; 
+(*3*) (*Reduction. *) 
+      REPEAT
+            ADV(PLIST, PCO,PLIST); 
+            RDNORM(COND,PCO,QP, NCO); 
+            IF NCO <> SIL THEN RLIST:=COMP(NCO,RLIST); END; 
+      UNTIL PLIST=SIL;
+(*7*) RETURN(LIST2(COND,INV(RLIST)));
+END REDUCT; 
+
+
+PROCEDURE REXTP(P: LIST): LIST; 
+(*Remove extraneous polynomials. P is a list of coloured polynomials.
+extraneous polynomials relative to their colouring are to be removed.
+PP is the resulting list. *)
+VAR   EI, EJ, PB, PCI, PCO, PS, QP, TL: LIST;
+BEGIN
+      DEB_BEGIN(REXTP);
+(*1*) (*Length P <= 1. *)
+      IF (P = SIL) THEN RETURN(P); END; 
+      (* IF (RED(P) = SIL) THEN RETURN(P); END;*)
+         (* ---to do---: This single pol. could be 
+                         zero wrt. the new condition!
+                         Is this beeing handled correctly??*)
+(*2*) (*Remove extraneous polynomials. *) 
+      QP:=SIL; 
+      REPEAT 
+            ADV(P, PCO,P);
+            EI:=ColpHT(PCO); 
+            IF EI <> SIL THEN
+              PB:=P; TL:=0; 
+              WHILE (PB <> SIL) AND (TL = 0) DO 
+                   ADV(PB, PCI,PB);
+                   EJ:=ColpHT(PCI); 
+(* --- to do ---: check EVMT, case EJ=SIL *)
+                   IF EJ <> SIL THEN TL:=EVMT(EI,EJ); END; 
+              END; 
+              PB:=QP; 
+              WHILE (PB <> SIL) AND (TL = 0) DO
+                   ADV(PB, PCI,PB);
+                   EJ:=ColpHT(PCI); 
+                   IF EJ <> SIL THEN TL:=EVMT(EI,EJ); END;
+              END; 
+              IF TL = 0 THEN QP:=COMP(PCO,QP); END; 
+            END; 
+      UNTIL P = SIL; 
+(*5*) RETURN(INV(QP));
+END REXTP; 
+
+
+PROCEDURE RDNORM(COND,FCO,P: LIST; VAR NCO: LIST);
+(*Reduction normalform. COND is a condition. FCO is a coloured
+polynomial. P is a list of polynomials determined and coloured by COND.
+NCO is the normalform of fco modulo P relative to COND. *)
+VAR   PCI, QC, RE: LIST; 
+BEGIN
+      DEB_BEGIN(RDNORM);
+(*1*) NCO:=FCO;
+      LOOP
+          REFIND(NCO,P, PCI,RE); 
+          IF PCI = SIL THEN EXIT; END;
+          GRED(COND,NCO,PCI,RE, NCO,QC);
+      END;
+(*4*) RETURN;
+END RDNORM; 
+
+
+PROCEDURE REFIND(PCO,P: LIST; VAR PLI,RE: LIST); 
+(*Reduction find polynomial. PCO is a coloured polynomial.
+P is a list of determined and coloured polynomials.
+A polynomial for the reduction of PCO modulo P is searched.
+PLI is emtpy if no polynomial is found. Else PLI is the found
+polynomial and RE is the term of PCO to be eliminated. *)
+VAR   ALIST, HE, HT, KEY, POL, PP, RA, SL: LIST;
+BEGIN
+     DEB_BEGIN(REFIND);
+     RE:=SIL; PLI:=SIL; 
+     IF (PCO = SIL) OR (P = SIL) THEN RETURN; END; 
+     POL:=ColpPol(PCO);
+     (*Get headterm of PCO. *)
+     HT:=ColpHT(PCO); 
+     (*Find PLI. *) 
+     SL:=0;
+     WHILE (POL <> SIL) AND (SL = 0) DO
+          DIPMAD(POL, RA,RE,POL);
+          KEYCOL(RE,ColpCol(PCO), KEY,ALIST); 
+          IF (KEY<>0) AND (EQUAL(HT,RE)=0) THEN (* RE not zero (green)
+     	       	    	      	   	     	   and not headterm *)
+            PP:=P;
+            REPEAT
+                  ADV(PP, PLI,PP);
+                  HE:=ColpHT(PLI); 
+                  IF HE<>SIL THEN IF EVMT(RE,HE)=1 THEN RETURN; END; END;
+            UNTIL (PP=SIL); 
+          END; 
+     END; 
+     PLI:=SIL;
+END REFIND; 
+
+
+PROCEDURE RMGRT(COND,PP: LIST): LIST; 
+(*Remove green terms. COND is a condition. PP is a list of polynomials
+determined and coloured relative to COND. If COND contains coefficients
+to be zero, all green monomials of the polynomials in PP are removed.
+P is the resulting polynomials list. *)
+VAR   COL, COND0, COND1, P, PCO, PPCO, PPOL: LIST; 
+BEGIN
+      DEB_BEGIN(RMGRT);
+(*1*) (*Check condition. *)
+      IF CondIsEmpty(COND) THEN RETURN(PP); END; 
+      CondParts(COND, COND0,COND1); 
+      IF COND0 = SIL THEN RETURN(PP); END; 
+      P:=SIL; 
+(*2*) (*Remove green monomials. *) 
+      WHILE PP <> SIL DO
+           ADV(PP, PCO,PP);
+           COL:=SECOND(PCO); 
+           PPOL:=MKPOL(PCO);
+           BLINES(0); 		(* --- to do --- ??? *)
+           IF NOT ColIsEmpty(COL) THEN P:=COMP(LIST2(PPOL,COL),P); END; 
+      END; 
+(*6*) RETURN(INV(P));
+END RMGRT; 
+
+
+PROCEDURE GLOBRE(COND,P: LIST): LIST; 
+(*Global reduction. COND is a condition. P is a list of polynomials.
+CGB is the coloured polynomials list after global reduction. *)
+VAR   CGB, COL, NCO, PCO, PLIST, POL, QP: LIST; 
+BEGIN
+      DEB_BEGIN(GLOBRE);
+(*1*) IF P = SIL THEN RETURN(SIL); END; 
+(*2*) (*Colour P relative to COND. *)
+      PLIST:=SIL; 
+      REPEAT
+            ADV(P, POL,P);
+            PLIST:=COMP(ColpConsCond(POL,COND),PLIST);
+      UNTIL P=SIL;
+      PLIST:=INV(PLIST); 
+(*3*) (*Check degree and remove green monomials. *)
+      PCO:=CHDEGL(PLIST); 
+      IF PCO <> SIL THEN RETURN(LIST1(PCO)); END; 
+(*4*) (*Remove extraneous polynomials. *)
+      PLIST:=GLEXTP(RMGRT(COND,PLIST)); 
+      IF (PLIST = SIL) THEN RETURN(SIL); END; 
+      IF (RED(PLIST) = SIL) THEN RETURN(PLIST); END; 
+      QP:=PLIST; 
+(*5*) (*Global reduction. *) 
+      CGB:=SIL; 
+      WHILE PLIST <> SIL DO
+           ADV(PLIST, PCO,PLIST); 
+           RDNORM(COND,PCO,QP, NCO);
+           RDNORM(COND,NCO,CGB, NCO); 
+           IF (NCO <> SIL) AND (WMEMB(ColpPol(NCO),CGB) = 0)
+             THEN CGB:=COMP(NCO,CGB); END; 
+      END;
+(*6*) (*Merge. *) 
+      RETURN(CGBLPM(CGB)); 
+END GLOBRE; 
+
+
+PROCEDURE GLEXTP(P: LIST): LIST; 
+(*Global extraneous polynomials remove. P is a list of
+coloured polynomials. Determined polynomials that are extraneous, are
+removed. The resulting polynomials list is PP. *)
+VAR   EI, EJ, PB, PCI, PCO, PP, TL: LIST; 
+BEGIN
+      DEB_BEGIN(GLEXTP);
+(*1*) (*Length P <= 1. *)
+      IF (P = SIL)  THEN RETURN(P); END; 
+      IF (RED(P) = SIL) THEN RETURN(P); END; 
+      PP:=SIL; 
+(*2*) (*Remove extraneous polynomials. *) 
+      REPEAT
+            ADV(P, PCO,P);
+            EI:=ColpHT(PCO); 
+            TL:=0; 
+            IF EI <> SIL THEN 
+              PB:=P; 
+              WHILE (PB <> SIL) AND (TL = 0) DO
+                   ADV(PB, PCI,PB);
+                   EJ:=ColpHT(PCI); 
+                   IF EJ <> SIL THEN TL:=EVMT(EI,EJ); END; 
+              END; 
+              PB:=PP;
+              WHILE (PB <> SIL) AND (TL = 0) DO
+                   ADV(PB, PCI,PB);
+                   EJ:=ColpHT(PCI); 
+                   IF EJ <> SIL THEN TL:=EVMT(EI,EJ); END; 
+             END; 
+           END; 
+           IF TL = 0 THEN PP:=COMP(PCO,PP); END; 
+      UNTIL P = SIL; 
+(*6*) RETURN(INV(PP));
+END GLEXTP; 
+
+
+END CGBSYS.
+
+(* -EOF- *)

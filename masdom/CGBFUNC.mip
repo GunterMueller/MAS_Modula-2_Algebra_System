@@ -1,0 +1,862 @@
+(* ----------------------------------------------------------------------------
+ * $Id: CGBFUNC.mip,v 1.9 1996/06/08 16:47:10 pesch Exp $
+ * ----------------------------------------------------------------------------
+ * This file is part of MAS.
+ * ----------------------------------------------------------------------------
+ * Copyright (c) 1989 - 1996 Universitaet Passau
+ * ----------------------------------------------------------------------------
+ * $Log: CGBFUNC.mip,v $
+ * Revision 1.9  1996/06/08 16:47:10  pesch
+ * Reformatted, removed obsolete procedures.
+ *
+ * Revision 1.8  1996/04/16 19:18:23  pesch
+ * Fixed three bugs, which caused zero (completely "green") polynomials
+ * to be added to polynomial lists unneccessarily.
+ *
+ * Revision 1.7  1995/03/23  16:05:43  pesch
+ * Added new data structure Colp for coloured polynomials.
+ *
+ * Revision 1.6  1994/04/12  13:38:24  pesch
+ * Fixed bug in DETPOL (introduced in the last revision).
+ *
+ * Revision 1.5  1994/04/10  17:58:37  pesch
+ * Added option to compute generic case (coeficients are considered
+ * rational functions, the necessary non-zero conditions are collected) only.
+ *
+ * Revision 1.4  1994/04/10  16:53:33  pesch
+ * ADDCON now puts inequalities first. This ise useful to compute the
+ * generic case first.
+ *
+ * Revision 1.3  1994/04/09  18:05:56  pesch
+ * Reformatted parts of the CGB sources. Updated comments in CGB*.md.
+ *
+ * Revision 1.2  1994/03/14  16:42:55  pesch
+ * Minor changes requested by A. Dolzmann
+ *
+ * Revision 1.1  1994/03/11  15:58:11  pesch
+ * Major changes to CGB.
+ * C-Preprocessor now used for .mip files. The corresponding .mi files have
+ * been removed.
+ * Many new CGB-Functions and fixes of old ones.
+ *
+ * Revision 1.2  1992/02/12  17:31:14  pesch
+ * Moved CONST definition to the right place
+ *
+ * Revision 1.1  1992/01/22  15:09:26  kredel
+ * Initial revision
+ *
+ * ----------------------------------------------------------------------------
+ *)
+
+#include "debug.h"
+
+IMPLEMENTATION MODULE CGBFUNC;
+
+(* Comprehensive-Groebner-Bases Utility Functions Implementation Module. *)
+
+(* Derived from an ALDES program written by Elke Schoenfeld,
+   Universitaet Passau, 1991. *)
+
+
+(* Import lists and declarations. *)
+
+FROM CGBDSTR	IMPORT	CdWrite, ColCons, ColConsCond, ColEmpty, ColIsEmpty,
+			ColParts, ColpCons, ColpConsCond, ColpHT, ColpPol,
+			CondCons, CondEmpty, CondIsEmpty, CondParts,
+			CondZero;
+
+FROM CGBMISC    IMPORT 
+#ifdef DEBUG
+     	       	        FLWRITE,
+#endif
+     	       	        CGBPAR, COLOUR, PAR, PFWRITE;
+
+FROM DIPADOM	IMPORT	DIFIP, DILRD, DILWR, DIPBCP, DIPDIF, DIPEXP, DIPNEG,
+			DIPROD, DIPSUM, DIREAD, DIWRIT;
+
+FROM DIPC	IMPORT	DIPEVL, DIPFMO, DIPLBC, DIPLPM, DIPMAD, DIPMCP,
+			DIPTDG, EVCOMP, EVDIF, EVLCM, EVMT, EVORD, EVSIGN,
+			EVSUM, VALIS;
+
+FROM MASADOM	IMPORT	ADCNST, ADDDREAD, ADDDWRIT, ADDIF, ADEXP, ADFACT,
+			ADFI, ADFIP, ADGCD, ADGCDC, ADINV, ADINVT, ADLCM,
+			ADNEG, ADONE, ADPROD, ADQUOT, ADREAD, ADSIGN, ADSUM,
+			ADTOIP, ADVLDD, ADWRIT, DomSummary;
+
+FROM MASBIOS	IMPORT	BLINES, SWRITE;
+
+FROM MASSTOR	IMPORT	ADV, COMP, FIRST, INV, LIST, LIST1, RED, SFIRST, SIL,
+			SRED, TIME; 
+
+FROM SACLIST	IMPORT	ADV2, ADV3, AREAD, AWRITE, CINV, CLOUT, COMP2, COMP3,
+			CONC, EQUAL, FIRST2, FIRST3, FIRST4, LAST, LIST2,
+			LIST3, LIST4, LIST5, LWRITE, MEMBER, OWRITE, RED2,
+			SECOND, THIRD;
+
+CONST rcsidi = "$Id: CGBFUNC.mip,v 1.9 1996/06/08 16:47:10 pesch Exp $";
+CONST copyrighti = "Copyright (c) 1989 - 1996 Universitaet Passau";
+
+
+PROCEDURE WRCOL(COL,POL: LIST); 
+(*Write colour.
+POL is a polynomial.
+COL contains the red and the white coloured terms of POL.
+The red and white monomials of POL are written on the output stream. *)
+VAR   COLR, COLW, PACK, QA, QALIST, QQ, T, TERM, TT, V,
+      var: LIST; 
+BEGIN
+     DEB_BEGIN(WRCOL);
+     BLINES(1);
+     SWRITE("Colours: "); 
+     IF ColIsEmpty(COL) THEN SWRITE("Empty."); BLINES(0); RETURN; END;
+     FIRST2(COL, COLR,COLW);
+     V:=VALIS; TT:=SIL; 
+     WHILE V <> SIL DO ADV(V, var,V); TT:=COMP(0,TT); END; 
+     IF COLR <> SIL THEN SWRITE("Red terms: "); END; 
+     BLINES(0); 
+     WHILE COLR <> SIL DO
+          ADV(COLR, T,COLR);
+          TERM:=FINDRM(T,POL); 
+          DIWRIT(TERM,VALIS); BLINES(1);
+     END; 
+     BLINES(0); 
+     IF COLW = SIL THEN RETURN; END; 
+     SWRITE("White terms: "); BLINES(0); 
+     WHILE COLW <> SIL DO
+          ADV(COLW, PACK,COLW);
+          FIRST2(PACK, T,QALIST);
+          TERM:=FINDRM(T,POL);
+          DIWRIT(TERM,VALIS); 
+          BLINES(0); SWRITE("List of factors: "); 
+          WHILE QALIST <> SIL DO
+              ADV(QALIST, QA,QALIST); 
+              QQ:=DIPFMO(QA,TT);
+              DIWRIT(QQ,VALIS);
+              BLINES(1);
+          END; 
+     END; 
+     BLINES(0); 
+END WRCOL; 
+
+PROCEDURE WRTERM(TERM,V: LIST); 
+(*Write term.
+TERM is a term.
+V is the variable list.
+Term is written on the output stream. *)
+VAR   E, EL, ES, SL, VL, VS: LIST; 
+BEGIN
+      DEB_BEGIN(WRTERM);
+(*1*) E:=TERM; 
+(*2*) SL:=EVSIGN(E); 
+      IF SL = 0 THEN 
+        SWRITE("DEG=0"); BLINES(0);
+      ELSE
+        ES:=CINV(E); 
+        VS:=V; 
+        REPEAT 
+             ADV(ES, EL,ES); ADV(VS, VL,VS); 
+             IF EL > 0 THEN
+               SWRITE(" "); CLOUT(VL); 
+               IF EL > 1 THEN SWRITE("**"); AWRITE(EL); END; 
+             END; 
+        UNTIL ES = SIL; 
+      END; 
+      BLINES(0); 
+(*5*) RETURN;
+END WRTERM; 
+
+PROCEDURE DWRIT(DE: LIST); 
+(*Distinction write.
+DE is a case distinction. DE is written on the output stream. *)
+BEGIN
+     DEB_BEGIN(DWRIT);
+     SWRITE("Case Distinction: ");
+     CdWrite(DE); 
+END DWRIT; 
+
+PROCEDURE CGBCOL(COND,PL: LIST): LIST; 
+(*Write coloured polynomials without green monomials. COND is a
+condition. PL is a list of polynomials coloured wrt the condition.
+If the condition contains coefficients to be 0,
+each polynomial is written on the output stream without the green
+coloured monomials. *)
+BEGIN
+     DEB_BEGIN(CGBCOL);
+     PL:=GREPOL(PL); (*Eliminate green monomials. *)
+     (*Output. *) 
+     IF NOT CondIsEmpty(COND) THEN
+       IF CondZero(COND) <> SIL THEN
+         SWRITE("Basis without green terms: "); 
+         IF PL = SIL THEN SWRITE("Empty.");
+                     ELSE DILWR(PL,VALIS); END; 
+       END; 
+       BLINES(0);
+     END; 
+     RETURN(PL);
+END CGBCOL; 
+
+PROCEDURE DCLWR(PL,B: LIST); 
+(*Coloured polynomials list write. PL is a list of coloured polynomials.
+If B = 0 the polynomial list is written on the output stream.
+If B = 1 the polynomials and the red and white monomials are
+written on the output stream. *)
+VAR   COLS, PLIST, POL, X: LIST; 
+BEGIN
+      DEB_BEGIN(DCLWR);
+(*1*) (*case PL empty. *) 
+      IF PL = SIL THEN SWRITE("Empty."); BLINES(1); RETURN; END; 
+(*2*) (*case PL not empty. *)
+      PLIST:=PL; 
+      WHILE PLIST <> SIL DO
+           ADV(PLIST, X,PLIST); 
+           IF X = SIL THEN
+             SWRITE("PCO empty.");
+           ELSE
+             FIRST2(X, POL,COLS);
+             DILWR(LIST1(POL),VALIS); 
+             IF B = 1 THEN WRCOL(COLS,POL); END; 
+           END; 
+      END; 
+      BLINES(0); 
+(*5*) RETURN;
+END DCLWR; 
+
+PROCEDURE FINDCP(TTERM,WHITE: LIST): LIST; 
+(*Find white factors. TTERM is a term, WHITE is a list of pairs,
+containing a white coloured term and his list of white coloured
+factors of the coefficient. If white contains tterm, CP is the list of
+TTERM and the white factors. else CP is empty. *)
+VAR   CWHITE, SL, WPACK: LIST; 
+BEGIN
+      DEB_BEGIN(FINDCP);
+(*1*) (*Case TTERM or WHITE is empty. *)
+      IF ((TTERM = 0) OR (TTERM = SIL)) OR (WHITE = SIL) THEN RETURN(SIL); END;
+(*2*) (*Case TTERM and WHITE not empty. *)
+      CWHITE:=WHITE; 
+      REPEAT
+            ADV(CWHITE, WPACK,CWHITE);
+            IF EQUAL(TTERM,FIRST(WPACK))=1 THEN RETURN(WPACK); END;
+      UNTIL CWHITE = SIL; 
+(*5*) RETURN(SIL);
+END FINDCP; 
+
+PROCEDURE FINDBC(RE,POL: LIST): LIST; 
+(*Find base coefficient. RE is a term. POL is a polynomial, where
+RE is one of the terms of POL. PA is the base coefficient of RE in
+POL. *)
+VAR   PA, PE: LIST; 
+BEGIN
+     DEB_BEGIN(FINDBC);
+     REPEAT DIPMAD(POL, PA,PE,POL); UNTIL EQUAL(RE,PE) = 1; 
+     RETURN(PA);
+END FINDBC; 
+
+PROCEDURE FINDRM(RE,POL: LIST): LIST; 
+(*Find monomial. RE is a term. POL is a polynomial, where
+RE is one of the terms of POL. RPOL is the polynonomial, containing
+only the monomial with RE in POL. *)
+VAR   PA, PE: LIST; 
+BEGIN
+      DEB_BEGIN(FINDRM);
+(*1*) (*Find base coefficient. *)
+      REPEAT DIPMAD(POL, PA,PE,POL); UNTIL EQUAL(RE,PE) = 1; 
+(*2*) (*Form polynomial. *) 
+(*5*) RETURN(DIPFMO(PA,PE));
+END FINDRM; 
+
+PROCEDURE CGBFRM(CGBL: LIST): LIST; 
+(*Comprehensive-Groebner-Basis from coloured basis. CGBL is a list of
+coloured polynomials. CGB is a list of the polynomials in CGBL
+(without colours). *)
+VAR   CGB, PCO: LIST; 
+BEGIN
+      DEB_BEGIN(CGBL);
+(*1*) IF CGBL = SIL THEN RETURN(SIL); END; 
+      CGB:=SIL;
+(*2*) REPEAT
+           ADV(CGBL, PCO,CGBL);
+           CGB:=COMP(FIRST(PCO),CGB);
+      UNTIL CGBL=SIL;
+(*5*) RETURN(CGB);
+END CGBFRM; 
+
+PROCEDURE MKPOL(PCO: LIST): LIST; 
+(*Make polynomial without green monomials. PCO is a coloured polynomial.
+PPOL is the polynomial without green monomials. If the polynomial is
+completely coloured green, PPOL is empty. *)
+VAR   CRED, CWHITE, PCOL, POL, PPOL, RA, RE, SL: LIST; 
+BEGIN
+      DEB_BEGIN(MKPOL);
+(*1*) (*Case all terms are coloured green. *)
+      FIRST2(PCO, POL,PCOL); 
+      IF PCOL = SIL THEN RETURN(0); END; 
+(*2*) (*Case not all terms are coloured green. Construct PPOL. *) 
+      PPOL:=SIL;
+      FIRST2(PCOL, CRED,CWHITE); 
+      WHILE POL <> SIL DO
+           DIPMAD(POL, RA,RE,POL); 
+           IF MEMBER(RE,CRED)=1 
+             THEN PPOL:=DIPMCP(RE,RA,PPOL);
+             ELSE IF WMEMB(RE,CWHITE)=1 THEN PPOL:=DIPMCP(RE,RA,PPOL); END;
+           END;
+      END; 
+(*3*) IF PPOL = SIL THEN RETURN(0); ELSE RETURN(INV(PPOL)); END; 
+END MKPOL; 
+
+PROCEDURE GREPOL(PL: LIST): LIST; 
+(*Get polynomials without green monomials. PL is a list of coloured
+polynomials. X is a list of the polynomials in PL without green
+monomials. *)
+VAR   PCO, PPOL, X: LIST; 
+BEGIN
+      DEB_BEGIN(GREPOL);
+(*1*) (*Case pl empty. *)
+      IF PL = SIL THEN RETURN(SIL); END; 
+      X:=SIL; 
+      BLINES(0);
+(*2*) (*Case PL not empty. *) 
+      REPEAT
+            ADV(PL, PCO,PL);
+            PPOL:=MKPOL(PCO); 
+            IF PPOL <> 0 THEN X:=COMP(PPOL,X); END; 
+      UNTIL PL=SIL;
+(*3*) IF X <> SIL THEN RETURN(INV(X)); END; 
+(*6*) RETURN(SIL);
+END GREPOL; 
+
+PROCEDURE WMEMB(TTERM,WHITE: LIST): LIST; 
+(*White term member. TTERM is a term, white is a list of pairs,
+containing a white coloured term and his list of white coloured
+factors of the coefficient. SL=1 if white contains TTERM,
+else SL=0. *)
+VAR   SL, WPACK, WTERM: LIST; 
+BEGIN
+      DEB_BEGIN(WMEMB);
+(*1*) IF ((TTERM = 0) OR (TTERM = SIL)) OR (WHITE = SIL) THEN RETURN(0); END; 
+(*2*) REPEAT
+             ADV(WHITE, WPACK,WHITE);
+             WTERM:=FIRST(WPACK); 
+             SL:=EQUAL(TTERM,WTERM);
+      UNTIL (SL = 1) OR (WHITE = SIL); 
+(*5*) RETURN(SL);
+END WMEMB; 
+
+PROCEDURE EQPLCL(ALIST,BLIST: LIST): LIST; 
+(*Equal lists of coloured polynomials. ALIST and BLIST are lists
+of coloured polynomials. SL = 1 if the polynomials in ALIST and BLIST
+are the same. Else SL = 0. *)
+VAR   APCO, BPCO, SL: LIST; 
+BEGIN
+      DEB_BEGIN(EQPLCL);
+(*1*) IF (ALIST = SIL) OR (BLIST = SIL) THEN RETURN(0); END; 
+(*2*) (*Compare polynomials. *)
+      REPEAT
+            ADV(ALIST, APCO,ALIST); ADV(BLIST, BPCO,BLIST);
+            SL:=EQUAL(FIRST(APCO),FIRST(BPCO)); 
+      UNTIL ((ALIST = SIL) OR (BLIST = SIL)) OR (SL = 0); 
+      IF (ALIST = SIL) AND (BLIST <> SIL) THEN RETURN(0); END; 
+      IF (ALIST <> SIL) AND (BLIST = SIL) THEN RETURN(0); END; 
+(*5*) RETURN(SL);
+END EQPLCL; 
+
+PROCEDURE CGBLM(L1,L2: LIST): LIST; 
+(*CGB coloured distributive polynomial list merge.
+L1 and L2 are lists of coloured distributive polynomials in non decreasing
+order.  The merger of L1 and L2 is returned. 
+(This procedure is a modified version of DIPLM from DIPC.MOD which does
+the same for - not coloured - distributive polynomials.)*)
+VAR EL1, EL2, L, LP, LP1, LP2, PC1, PC2, PL1, PL2: LIST; 
+    gt: BOOLEAN;
+BEGIN
+      DEB_BEGIN(CGBLM);
+(*1*) (*Case L1 empty or L2 empty. *) 
+      IF L1 = SIL THEN RETURN(L2); END; 
+      IF L2 = SIL THEN RETURN(L1); END; 
+(*2*) (*Initialize. *) 
+      LP1:=L1;
+      PC1:=FIRST(L1);
+      PL1:=ColpPol(PC1);
+      EL1:=ColpHT(PC1); IF EL1 = SIL THEN EL1:=DIPEVL(PL1); END; 
+
+      LP2:=L2;
+      PC2:=FIRST(L2);
+      PL2:=ColpPol(PC2);
+      EL2:=ColpHT(PC2); IF EL2 = SIL THEN EL2:=DIPEVL(PL2); END; 
+
+      IF EVCOMP(EL1,EL2) <= 0 
+        THEN L:=L1; LP:=L1; LP1:=RED(L1); gt:=TRUE;  (*goto 3*)
+        ELSE L:=L2; LP:=L2; LP2:=RED(L2); gt:=FALSE; (*goto 4*)
+      END;
+
+(*The following LOOP is the result of eliminating "overlaping" GOTOs.
+gt=true  <-> goto 3
+gt=false <-> goto 4
+(This may probably be done more elegant.)
+*)
+      LOOP IF gt THEN
+(*3*) (*Last element of L1. *) 
+              IF LP1 = SIL THEN SRED(LP,LP2); EXIT; END; (*leave loop*)
+              PC1:=FIRST(LP1); 
+     	      PL1:=ColpPol(PC1);
+              EL1:=ColpHT(PC1); IF EL1 = SIL THEN EL1:=DIPEVL(PL1); END; 
+              IF EVCOMP(EL1,EL2) <= 0 
+                THEN LP:=LP1; LP1:=RED(LP1);               gt:=TRUE; (*goto 3*)
+                ELSE SRED(LP,LP2); LP:=LP2; LP2:=RED(LP2); gt:=FALSE;(*goto 4*)
+              END; 
+          ELSE (*IF gt*)
+(*4*) (*Last element of L2. *) 
+              IF LP2 = SIL THEN SRED(LP, LP1); EXIT END; (*leave loop*)
+              PC2:=FIRST(LP2);
+              PL2:=ColpPol(PC2);
+              EL2:=ColpHT(PC2); IF EL2 = SIL THEN EL2:=DIPEVL(PL2); END; 
+              IF EVCOMP(EL1,EL2) <= 0
+                THEN SRED(LP,LP1); LP:=LP1; LP1:=RED(LP1); gt:=TRUE; (*goto 3*)
+                ELSE LP:=LP2; LP2:=RED(LP2);               gt:=FALSE;(*goto 4*)
+              END; 
+          END; (*IF gt*)
+      END; (*LOOP*)
+
+      RETURN(L); 
+(*8*) END CGBLM; 
+
+PROCEDURE CGBLPM(A: LIST): LIST; 
+(*CGB list merge. A is a list of couloured polynomials. B contains
+the coloured polynomials in a in nondecreasing order wrt to their
+colour. See DIPLPM. *)
+VAR  AP, APP, APPP, B, BP, BPP, C, CP, CPP, CS, EL1, EL2, PCO, PCI, PLI: LIST; 
+BEGIN
+      DEB_BEGIN(CGBLPM);
+(*1*) (*Nothing to do. *) 
+      IF (A = SIL) THEN RETURN(A); END;
+      IF (RED(A) = SIL) THEN RETURN(A);  END; 
+(*2*) (*Construct b. *)
+      C:=LIST1(0); CS:=C; AP:=A; 
+      REPEAT
+            ADV(AP, PCO,APP);
+             IF APP = SIL THEN
+               BP:=AP;
+             ELSE
+               ADV(APP, PCI,APPP); 
+               EL1:=ColpHT(PCO);
+	       IF EL1=SIL THEN EL1:=DIPEVL(ColpPol(PCO)); END; 
+               EL2:=ColpHT(PCI);
+	       IF EL2=SIL THEN EL2:=DIPEVL(ColpPol(PCI)); END; 
+               IF EVCOMP(EL1,EL2)<=0 THEN 
+                 BP:=AP;
+                 SRED(APP,SIL);
+               ELSE
+                 BP:=APP; 
+                 SRED(APP,AP);
+                 SRED(AP,SIL);
+               END; 
+             END; 
+             C:=COMP(BP,C);
+             AP:=APPP; 
+      UNTIL (APP = SIL) OR (AP = SIL); 
+(*3*) (*Circle and merge. *)
+      ADV(C, BP,C);
+      SFIRST(CS,BP); SRED(CS,C); 
+      ADV(C, B,CP); 
+      WHILE C <> CP DO
+           ADV(CP, BP,CPP);
+           BPP:=CGBLM(B,BP); 
+           SFIRST(C,BPP); SRED(C,CPP);
+           C:=CPP;
+           ADV(C, B,CP);
+      END; 
+(*7*) RETURN(INV(B));
+END CGBLPM; 
+
+PROCEDURE ADDCON(COEFL,COND: LIST): LIST;
+(*Add to condition.
+COEFL is a list of coefficients.
+COND is a condition.
+Returns a case distinction covering COND containing all possible cases
+for COEFL *)
+VAR COEF, CONDZ, CONDN, CDIST1, CDIST2: LIST;
+BEGIN
+DEB_BEGIN(ADDCON);
+     IF COEFL=SIL THEN RETURN(LIST1(COND)); END;
+     ADV(COEFL, COEF,COEFL);
+     IF PAR.CondEval(COND,COEF)<>unknown THEN RETURN(LIST1(COND)); END;
+     PAR.CondRamif(COEF,COND, CONDZ,CONDN);
+     CDIST1:=SIL; CDIST2:=SIL;
+     IF NOT CondIsEmpty(CONDZ) THEN CDIST1:=ADDCON(COEFL,CONDZ); END;
+     IF NOT CondIsEmpty(CONDN) THEN CDIST2:=ADDCON(COEFL,CONDN); END;
+     RETURN(CONC(CDIST2,CDIST1)); (* We want inequalities first. *)
+END ADDCON;
+
+(*
+PROCEDURE ADDCON(ALIST,GAMMA,GNEU,B: LIST; VAR DEL,DNEU: LIST); 
+(*Add to condition. ALIST is a list of coefficients. GAMMA is a
+condition. GNEU is a condition. DEL is a case distinction, which is
+cover over GAMMA and contains the elements of ALIST in each condition.
+DNEU is a cover over GNEU and contains the elements of ALIST in each
+condition. If B = 1 every element in ALIST is checked. *)
+VAR   A, COEF, D0, D0P, D0N, D1, D1P, D1N, DELTA0, DELTA1, DNEU0, DNEU1, G0, 
+      G0P, G1, G1P, GAMMA0, GAMMA1, GNEU0, GNEU1, QALIST, SL, NF,
+      X: LIST; 
+      ONE, ZERO: BOOLEAN;
+BEGIN
+      DEB_BEGIN(ADDCON);
+(*1*) (*Get coefficient from ALIST. *)
+      QALIST:=ALIST; A:=ALIST; 
+      SL:=0;
+      D0:=CondEmpty(); D1:=CondEmpty();
+      G0:=CondEmpty(); G1:=CondEmpty();
+      ADV(A, COEF,A); 
+(*2*) (*Check, if GAMMA contains coefficient. *) 
+#ifndef COEFF_GB
+      IF NOT CondIsEmpty(GAMMA) AND (B = 1) THEN
+        CondParts(GAMMA, GAMMA0,GAMMA1);
+        SL:=MEMBER(COEF,GAMMA0); 
+        IF SL = 0 THEN SL:=MEMBER(COEF,GAMMA1); END; 
+        IF SL = 1 THEN
+          IF A = SIL THEN
+            DEL:=LIST1(GAMMA); 
+            IF NOT CondIsEmpty(GNEU) THEN DNEU:=LIST1(GNEU);
+                                      ELSE DNEU:=SIL; END;
+            RETURN;
+          ELSE
+            D0:=GAMMA;
+            G0:=GNEU;
+          END; 
+        END; 
+      END; 
+#endif
+#ifdef COEFF_GB
+      IF NOT CondIsEmpty(GAMMA) THEN
+        CondParts(GAMMA, GAMMA0,GAMMA1);
+     	NF:=PFINOR(GAMMA0,COEF);
+        IF (NF=SIL) OR ADCNST(NF) THEN SL:=1; ELSE SL:=0 END; 
+        IF SL = 0 THEN SL:=MEMBER(NF,GAMMA1); END; 
+        IF SL = 1 THEN
+          IF A = SIL THEN
+            DEL:=LIST1(GAMMA); 
+            IF NOT CondIsEmpty(GNEU) THEN DNEU:=LIST1(GNEU);
+                                      ELSE DNEU:=SIL; END;
+            RETURN;
+          ELSE
+            D0:=GAMMA;
+            G0:=GNEU;
+          END; 
+        END; 
+      END; 
+#endif
+(*3*) (*Initialize condition. *) 
+      IF CondIsEmpty(GAMMA) AND (SL = 0) THEN
+#ifdef COEFF_GB
+     	 (* COEF can not be constant! *)
+     	 D0:=CondCons(LIST1(COEF),SIL);  (* One Coeff. is a GB *)
+         D1:=CondCons(SIL,LIST1(PFINOR(SIL,COEF))); 
+#else
+         D0:=CondCons(LIST1(COEF),SIL);
+         D1:=CondCons(SIL,LIST1(COEF)); 
+#endif
+         G0:=D0; G1:=D1; (* ---to do---: correct? *)
+      END; 
+(*4*) (*Refine condition. *) 
+      IF (NOT CondIsEmpty(GAMMA)) AND (SL = 0) THEN
+#ifdef COEFF_GB
+     	 PAR.CondRamif(COEF,GAMMA, D0,D1);
+#else
+         CondParts(GAMMA, GAMMA0,GAMMA1);
+         CondParts(GNEU, GNEU0,GNEU1);
+         D0P:=COMP(COEF,GAMMA0); D1P:=COMP(COEF,GAMMA1); 
+         D0:=CondCons(D0P,GAMMA1); D1:=CondCons(GAMMA0,D1P);
+         G0P:=COMP(COEF,GNEU0); G1P:=COMP(COEF,GNEU1); 
+         G0:=CondCons(G0P,GNEU1); G1:=CondCons(GNEU0,G1P);
+#endif
+      END; 
+(*5*) (*No more coefficients. *) 
+      IF A = SIL THEN
+     	IF CondIsEmpty(D0) THEN IF CondIsEmpty(D1) THEN DEL:=LIST1(GAMMA)
+     	       	    	      	   	     	     ELSE DEL:=LIST1(D1); END;
+     	       	    	    ELSE IF CondIsEmpty(D1) THEN DEL:=LIST1(D0);
+   	       	    	      	   	     	    ELSE DEL:=LIST2(D0,D1);END;
+     	END;
+        DNEU:=LIST2(G0,G1); 
+        RETURN;
+      END; 
+(*6*) (*Call ADDCON. *)
+      ADDCON(A,D0,G0,B, DELTA0,DNEU0);
+      DEL:=DELTA0; 
+      DNEU:=DNEU0; 
+      IF SL = 0 THEN 
+        ADDCON(A,D1,G1,B, DELTA1,DNEU1);
+	DEL:=CONC(DEL,DELTA1);
+	DNEU:=CONC(DNEU,DNEU1);
+      END; 
+(*9*) RETURN;
+END ADDCON; 
+*)
+
+(* obsolete (see ColConsCond)*) PROCEDURE INICOL(COND,PI: LIST): LIST; 
+(*Initialize colour. COND is a condition. PI is a polynomial.
+COL is the list of red terms and white terms ( with white part ) of PI wrt to
+the condition. *)
+VAR   A, ALIST, CRED, CWHITE, PA, PE, NF, WFACTS: LIST;
+      C: COLOUR;
+BEGIN
+      DEB_BEGIN(INICOL);
+(*1*) IF PI = SIL THEN RETURN(ColEmpty()); END; 
+(*2*) CRED:=SIL; CWHITE:=SIL; 
+      REPEAT 
+            DIPMAD(PI, PA,PE,PI);
+            IF PAR.IsCnst(PA) THEN CRED:=COMP(PE,CRED);
+            ELSE 
+     	        ALIST:=PAR.Factorize(PA);
+                C:=nzero; WFACTS:=SIL; 
+                REPEAT 
+                      ADV(ALIST, A,ALIST); 
+                      IF NOT PAR.IsCnst(A) THEN
+     	       	    	  C:=PAR.CondEval(COND,A);
+     	       	    	  IF C=unknown THEN WFACTS:=COMP(A,WFACTS); END;
+                      END; 
+                UNTIL (C = zero) OR (ALIST = SIL); 
+                IF C <> zero THEN
+                  IF WFACTS = SIL 
+                    THEN CRED:=COMP(PE,CRED);
+                    ELSE CWHITE:=COMP(LIST2(PE,WFACTS),CWHITE); 
+                  END; 
+                END; 
+            END; 
+      UNTIL PI = SIL; 
+      IF CRED <> SIL THEN CRED:=INV(CRED); END; 
+      IF CWHITE <> SIL THEN CWHITE:=INV(CWHITE); END; 
+      RETURN(ColCons(CRED,CWHITE));
+END INICOL; 
+
+PROCEDURE SETCOL(COND,COL: LIST): LIST; 
+(*Set colour. COND is a condition. COL is a list of red terms and
+white terms ( with white part) wrt another condition, such that COND is
+a successor of this condition. COL is updated to COLS wrt COND. *)
+VAR   A, ALIST, CP, CRED, CRED1, CWHIT1, CWHITE,
+      T, TT, WFACTS, NF: LIST; 
+      C: COLOUR;
+BEGIN
+      DEB_BEGIN(SETCOL);
+(*1*) (*Case COND or COL is empty. *) 
+      IF CondIsEmpty(COND) OR ColIsEmpty(COL)THEN RETURN(COL); END; 
+(*2*) ColParts(COL, CRED,CWHITE); 
+      IF CWHITE = SIL THEN RETURN(COL); END; 
+      CRED1:=SIL; CWHIT1:=SIL; TT:=0;
+(*3*) WHILE CWHITE <> SIL DO
+           ADV(CWHITE, CP,CWHITE); 
+           FIRST2(CP, T,ALIST); WFACTS:=SIL; C:=nzero;
+           REPEAT 
+                 ADV(ALIST, A,ALIST);
+     	       	 IF NOT PAR.IsCnst(A) THEN
+     	       	   C:=PAR.CondEval(COND,A);
+     	       	   IF C=unknown THEN WFACTS:=COMP(A,WFACTS); END;
+                 END; 
+           UNTIL (C = zero) OR (ALIST = SIL); 
+           IF C = zero THEN TT:=1;
+           ELSE IF WFACTS = SIL THEN CRED1:=COMP(T,CRED1); 
+                                ELSE CWHIT1:=COMP(LIST2(T,WFACTS),CWHIT1); END;
+           END;
+      END; 
+(*4*) (*No change of colouring. *) 
+      IF (TT = 0) AND (CRED1 = SIL) THEN RETURN(COL); END; 
+      IF CWHIT1 <> SIL THEN CWHIT1:=INV(CWHIT1); END; 
+(*5*) (*Update ordering of red terms. *) 
+      IF CRED1 <> SIL THEN
+        IF CRED = SIL THEN CRED:=INV(CRED1);
+                      ELSE CRED:=REDSRT(CRED,INV(CRED1)); END; 
+      END; 
+(*6*) RETURN(ColCons(CRED,CWHIT1));
+END SETCOL; 
+
+PROCEDURE REDSRT(RALT,RNEU: LIST): LIST; 
+(*Red terms sort. RNEU and RALT  are lists of terms in nondecreasing
+order. CRED0 contains the terms of RALT and RNEU in nondecreasing
+order. *)
+VAR   CCR, CRED, CRED0, CRED1, CREDP, SL, T, T1: LIST; 
+BEGIN
+      DEB_BEGIN(REDSRT);
+(*1*) (*Initialize. *)
+      CRED:=RALT; CRED1:=RNEU; CRED0:=SIL; 
+(*2*) (*Sort. *) 
+      REPEAT
+            ADV(CRED1, T1,CRED1); 
+            REPEAT
+                  ADV(CRED, T,CREDP);
+                  SL:=EVCOMP(T1,T); 
+                  IF SL = 1 THEN
+                    CRED0:=COMP(T1,CRED0);
+                  ELSE
+                    CRED0:=COMP(T,CRED0);
+                    CRED:=CREDP;
+                  END; 
+            UNTIL (SL = 1) OR (CRED = SIL); 
+            IF SL <= 0 THEN CRED0:=COMP(T1,CRED0); END; 
+      UNTIL (CRED1 = SIL) OR (CRED = SIL); 
+(*3*) (*Ready. *) 
+      IF (CRED = SIL) AND (CRED1 = SIL) THEN RETURN(INV(CRED0)); END; 
+(*4*) (*Get rest. *) 
+      IF CRED <> SIL THEN CCR:=CRED; ELSE CCR:=CRED1; END; 
+      WHILE CCR <> SIL DO 
+        ADV(CCR, T,CCR);
+        CRED0:=COMP(T,CRED0);
+      END; 
+(*7*) RETURN(INV(CRED0));
+END REDSRT; 
+
+PROCEDURE TESTHT(COL: LIST):LIST;
+(*Test highest term. COL contains a list of red terms and a list of
+white terms. CP contains the highest white term and its white part
+if it is gt the highest red term. Else CP is empty. *)
+VAR   CP, CE, CRED, CWHITE, RE, SL: LIST; 
+BEGIN
+      DEB_BEGIN(TESTHT);
+(*1*) IF ColIsEmpty(COL) THEN RETURN(SIL); END;  (* --- to do ---: remove *)
+      ColParts(COL, CRED,CWHITE); 
+(*2*) (*Case no red terms or no white terms. *) 
+      IF CWHITE = SIL THEN RETURN(SIL); END; 
+      IF CRED = SIL THEN RETURN(FIRST(CWHITE)); END; 
+(*3*) (*Compare. *)
+      CP:=FIRST(CWHITE);
+(* --- to do --- : CP <> SIL ???? *)
+      IF EVCOMP(FIRST(CP),FIRST(CRED)) <= 0 THEN RETURN(SIL); END; 
+(*6*) RETURN(CP);
+END TESTHT; 
+
+PROCEDURE DETPOL(GA,PI,COL: LIST; VAR DLIST,CLIST: LIST); 
+(*Determine polynomial. GA is a condition. PI is a polynomial. COL
+contains the list of the red terms of PI and the list of the white
+terms of PI wrt the condition. DLIST is a case distinction that covers
+GA and determines PI. CLIST is a list of pairs each containing a
+condition of DLIST and PI coloured wrt this condition. *)
+VAR   CCL, CP, DCOND, DD, DL, X, C0, C1: LIST; 
+BEGIN
+     DEB_BEGIN(DETPOL);
+     (*Test if PI is determined by GA.*)
+
+(* mp: changes for generic part only
+IF GA <> SIL THEN IF FIRST(GA) <> SIL THEN 
+   DLIST:=SIL; CLIST:=SIL; RETURN; END; END;
+*)
+     DLIST:=SIL; CLIST:=SIL; 
+     CP:=TESTHT(COL); (* Highest unknow (white) term. *)
+     IF CP = SIL THEN (* Headterm is already known. *)
+(*       IF NOT CondIsEmpty(GA) THEN DLIST:=LIST1(GA); END; *)
+       DLIST:=LIST1(GA);
+       CLIST:=LIST2(GA,ColpCons(PI,COL));
+       RETURN;
+     END; 
+
+     (*Refine GA. *)
+     DD:=ADDCON(SECOND(CP),GA);
+     (* will not work if PAR.COND_... = zero never happens *)
+     WHILE DD <> SIL DO
+     	  ADV(DD, DCOND,DD);
+          DETPOL(DCOND,PI,SETCOL(DCOND,COL), DL,CCL); 
+     	  DLIST:=CONC(DLIST,DL);  
+     	  CLIST:=CONC(CLIST,CCL);
+     END; 
+     RETURN;
+END DETPOL; 
+
+PROCEDURE DET(CONDS,P: LIST; VAR DLIST,PPL: LIST); 
+(*Determine list of polynomials. CONDS is a case distinction. P is a
+list of polynomials. DLIST is a case distinction that covers CONDS and
+determines P. PPL is a list of pairs each containing a condiotion of
+DLIST and P coloured wrt this condition. *)
+VAR   CCL, CLIST, D, DL, GA, PI, X: LIST; 
+BEGIN
+      DEB_BEGIN(DET);
+(*1*) (*Prepare input. *)
+      DLIST:=CONDS; PPL:=SIL; 
+      IF P = SIL THEN RETURN; END; 
+(*2*) (*Construct DLIST. *)
+      CLIST:=SIL; 
+      WHILE P <> SIL DO
+           ADV(P, PI,P); 
+           D:=DLIST;
+           DLIST:=SIL; 
+           IF D = SIL THEN
+             DETPOL(CondEmpty(),PI,ColConsCond(PI,CondEmpty()), DL,CCL);
+(*             DETPOL(CondEmpty(),PI,INICOL(CondEmpty(),PI), DL,CCL);*)
+             DLIST:=DL; 
+	     CLIST:=CONC(CLIST,CCL);
+           ELSE
+             REPEAT
+                  ADV(D, GA,D); 
+(*                  DETPOL(GA,PI,INICOL(GA,PI), DL,CCL); *)
+                  DETPOL(GA,PI,ColConsCond(PI,GA), DL,CCL);
+		  DLIST:=CONC(DLIST,DL);
+		  CLIST:=CONC(CLIST,CCL);
+             UNTIL D= SIL;
+          END; 
+      END;
+(*3*) (*Construct PPL. *)
+      PPL:=VERIFY(DLIST,CLIST);
+(*6*) RETURN;
+END DET; 
+
+PROCEDURE VERIFY(D,CLIST: LIST): LIST; 
+(*Verify conditions and polynomials. D is a case distinction with
+the conditions c1,... ,cn. CLIST is a list of pairs each containg a
+condition and a coloured polynomial. The structure of clist is
+((c11,p1),... ,(cn1,p1), (c12,p2),... ,(cn2,p2), (c1m,pm),... (cnm,pm)).
+p1,... ,pm are coloured polynomials wrt cij. ci is a successor of cij
+and cim=ci for i=1; n, j=1; m. The structure of the result is
+q((c1,(p11,... ,p1m)),... , (c2,(p21,... ,p2m)),... , (cn,(pn1,... ,pnm))),
+where (pi1,... ,pim) is a permutation of (p1,... ,pm), so that the polynomials
+are in nondecreasing order wrt the condition pi for i=1; n. *)
+VAR   CCOND, CCOND0, CCOND1, DCOND, DCOND0, DCOND1, PLIST, PCO, CLIST1,
+      PPL: LIST; 
+BEGIN
+      DEB_BEGIN(VERIFY);
+(*1*) IF CLIST = SIL THEN RETURN(SIL); END; 
+(*2*) (*Case D is empty. *) 
+      IF D = SIL THEN 
+        PLIST:=SIL;
+        REPEAT        
+              ADV2(CLIST, CCOND,PCO,CLIST); 
+              PLIST:=COMP(PCO,PLIST);
+        UNTIL CLIST=SIL;
+        RETURN(COMP(LIST2(SIL,CGBLPM(PLIST)),SIL));
+      END; 
+(*3*) (*Case D not empty. *)
+      PPL:=SIL;
+      WHILE D <> SIL DO
+           ADV(D, DCOND,D);
+           FIRST2(DCOND, DCOND0,DCOND1);
+           PLIST:=SIL;
+           CLIST1:=CLIST;
+           REPEAT
+                 ADV2(CLIST1, CCOND,PCO,CLIST1); 
+                 IF CCOND = SIL THEN 
+                   PLIST:=COMP(PCO,PLIST);
+                 ELSE
+                   FIRST2(CCOND, CCOND0,CCOND1); 
+                   IF AINB(CCOND0,DCOND0)=1 THEN IF AINB(CCOND1,DCOND1)=1 THEN
+                     PLIST:=COMP(PCO,PLIST); 
+                   END; END; 
+                 END; 
+           UNTIL CLIST1=SIL;
+	   PLIST:=CGBLPM(PLIST);
+	   PPL:=COMP(LIST2(DCOND,PLIST),PPL);
+      END; 
+(*6*) RETURN(PPL);
+END VERIFY; 
+
+PROCEDURE AINB(ALIST,BLIST: LIST): LIST; 
+(*A in B. ALIST and BLIST  are  lists of coefficients.
+SL eq 1 if all elements of ALIST are in BLIST. Else SL eq 0. *)
+VAR   A, SL: LIST; 
+BEGIN
+      DEB_BEGIN(AINB);
+(*1*) IF ALIST = SIL THEN RETURN(1); END; 
+      IF BLIST = SIL THEN RETURN(0); END; 
+(*2*) REPEAT
+            ADV(ALIST, A,ALIST);
+            SL:=MEMBER(A,BLIST); 
+      UNTIL (ALIST = SIL) OR (SL = 0); 
+(*5*) RETURN(SL);
+END AINB; 
+
+END CGBFUNC.
+
+(* -EOF- *)

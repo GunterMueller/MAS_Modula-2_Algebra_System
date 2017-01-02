@@ -1,0 +1,987 @@
+(* ----------------------------------------------------------------------------
+ * $Id: CGBDSTR.mip,v 1.11 1996/06/08 16:47:07 pesch Exp $
+ * ----------------------------------------------------------------------------
+ * Copyright (c) 1992-1996 Universitaet Passau
+ * ----------------------------------------------------------------------------
+ * This file is part of MAS.
+ * ----------------------------------------------------------------------------
+ * $Log: CGBDSTR.mip,v $
+ * Revision 1.11  1996/06/08 16:47:07  pesch
+ * Reformatted, removed obsolete procedures.
+ *
+ * Revision 1.10  1995/09/12  17:11:11  pesch
+ * Fixed typos.
+ *
+ * Revision 1.9  1995/03/23  16:05:42  pesch
+ * Added new data structure Colp for coloured polynomials.
+ *
+ * Revision 1.8  1995/03/06  15:49:31  pesch
+ * Added new procedure GSYSF, Groebner system with factorization. This uses
+ * the new procedures GBSYSF and CONSGBF (also added).
+ *
+ * Added new procedures DIP2AD, AD2DIP and DIPPFACTAV.
+ *
+ * Fixed error in CHECK.
+ *
+ * New option for factorization of conditions: factorize with optimization
+ * of variable ordering.
+ *
+ * Revision 1.7  1994/11/28  20:54:44  dolzmann
+ * Procedure import from PQBASE instead of import from PQSMPL.
+ *
+ * Revision 1.6  1994/04/14  16:46:07  dolzmann
+ * Syntactical errors (found by Mocka) corrected.
+ *
+ * Revision 1.5  1994/04/12  14:00:08  pesch
+ * Added blank to argument of CLTIS.
+ *
+ * Revision 1.4  1994/04/11  14:55:52  pesch
+ * Fixed bug in CondPread. Initial case distinction should work again now.
+ *
+ * Revision 1.3  1994/04/09  18:05:54  pesch
+ * Reformatted parts of the CGB sources. Updated comments in CGB*.md.
+ *
+ * Revision 1.2  1994/03/14  16:42:53  pesch
+ * Minor changes requested by A. Dolzmann
+ *
+ * Revision 1.1  1994/03/11  15:58:09  pesch
+ * Major changes to CGB.
+ * C-Preprocessor now used for .mip files. The corresponding .mi files have
+ * been removed.
+ * Many new CGB-Functions and fixes of old ones.
+ *
+ * ----------------------------------------------------------------------------
+ *)
+
+#include "debug.h"
+
+IMPLEMENTATION MODULE CGBDSTR;
+
+(* Comprehensive-Groebner-Bases Data-Structures Implementation Module. *)
+
+FROM CGBMAIN	IMPORT	WRGBS;
+FROM CGBMISC	IMPORT	COLOUR, DIFPF, EvordReset, EvordSet, PAR, PFWRITE,
+			ValisReset, ValisSet;
+FROM DIPADOM	IMPORT	DILRD, DILWR, DIREAD;
+FROM DIPC	IMPORT	DILBSO, DIPLPM, DIPMAD, EVCOMP, EVSIGN;
+FROM MASADOM	IMPORT	ADDDREAD, ADDDWRIT;
+FROM MASBIOS	IMPORT	BKSP, BLINES, CREADB, DIGIT, LISTS, MASORD, SWRITE;
+FROM MASBIOSU	IMPORT	CLTIS;
+FROM MASERR	IMPORT	ERROR, fatal, harmless, severe, spotless;
+FROM MASSTOR	IMPORT	ADV, COMP, FIRST, INV, LIST, LIST1, SIL;
+FROM MASSYM	IMPORT	UWRITE;
+FROM MLOGBASE	IMPORT	ET, FALSUM, FORMKBINOP, FORMKFOR, FORMKUNOP, IMP,
+			NON, VEL, VERUM;
+FROM PQBASE	IMPORT	EQU, NEQ, PQPPRT, PQPRING, PQPRINGWR, pqmkaf;
+FROM SACLIST	IMPORT	AREAD, CONC, FIRST2, FIRST3, FIRST4, FOURTH, LIST2,
+			LIST3, LIST4, OWRITE, SECOND, THIRD;
+FROM SACPOL	IMPORT	VLREAD, VLWRIT;
+
+
+CONST rcsidi = "$Id: CGBDSTR.mip,v 1.11 1996/06/08 16:47:07 pesch Exp $";
+CONST copyrighti = "Copyright (c) 1992-1996 Universitaet Passau";
+
+(******************************************************************************
+Data-Structure: Conditions (Cond)
+=================================
+
+A condition contains information (=0, <>0, unknown) on coefficients. 
+A conditions is implemented as a list containing two lists of coefficients:
+((P_1, ..., P_i), (Q_1, ..., Q_j)) where P_l=0 and Q_k<>0.
+The empty condition is ((), ()).
+******************************************************************************)
+
+PROCEDURE CondZero(Cond: LIST): LIST;
+(* Condition zero part.
+Cond is a condition.
+Returns the list of coefficients =0 in Cond.*)
+BEGIN
+     DEB_BEGIN(CondZero);
+     RETURN(FIRST(Cond));
+END CondZero;
+
+PROCEDURE CondNzero(Cond: LIST): LIST;
+(* Condition non-zero part.
+Cond is a condition.
+Returns the list of coefficients <>0 in Cond.*)
+BEGIN
+     DEB_BEGIN(CondNzero);
+     RETURN(SECOND(Cond));
+END CondNzero;
+
+PROCEDURE CondParts(Cond: LIST; VAR C0, C1:LIST);
+(* Condition parts.
+Cond is a condition.
+C0,C1 need not be initialized.
+Returns the list of coefficients =0 from Cond in C0 and 
+the list of coefficients <>0 from Cond in C1 *)
+BEGIN
+     DEB_BEGIN(CondParts);
+     FIRST2(Cond,C0,C1);
+END CondParts;
+
+PROCEDURE CondCons(C0, C1:LIST):LIST;
+(* Condition construct.
+C0, C1 are lists of coefficients.
+Returns a condition where the coefficients from C0 are =0 and
+the coefficients from C1 are <>0. *)
+BEGIN
+     DEB_BEGIN(CondCons);
+     RETURN(LIST2(C0,C1));
+END CondCons;
+
+PROCEDURE CondIsEmpty(Cond: LIST): BOOLEAN;
+(* Condition is empty.
+Cond is a condition.
+Returns true iff Cond is the empty condition. *)
+BEGIN
+     DEB_BEGIN(CondIsempty);
+     RETURN (CondZero(Cond)=SIL) AND (CondNzero(Cond)=SIL);
+END CondIsEmpty;
+
+PROCEDURE CondEmpty():LIST;
+(* Condition empty.
+Returns the empty condition. *)
+BEGIN
+     DEB_BEGIN(CondEmpty);
+     RETURN(LIST2(SIL, SIL));
+END CondEmpty;
+
+PROCEDURE CondRead(VD: LIST): LIST;
+(* Condition read.
+VD is a list containing a variable list and a domain descriptor.
+Returns a condition read from the input stream. *)
+VAR CD0, CD1: LIST;
+BEGIN
+DEB_BEGIN(CondRead);
+     CD0:=CondPRead(VD,0);
+     CD1:=CondPRead(VD,1);
+     RETURN(CondCons(CD0,CD1));
+END CondRead;
+
+PROCEDURE CondPRead(VD, B: LIST): LIST;
+(* Condition part read.
+VD is a list containing a variable list and a domain descriptor.
+Returns a condition part read from the input stream. *)
+VAR C, C1, CP, V, D, A, AL, AE: LIST;
+BEGIN
+DEB_BEGIN(CondPRead);
+     VdParts(VD, V,D);
+     (* Read input up to list of coefficients. *)
+     C:=CREADB(); 
+     IF DIGIT(C) THEN BKSP(); C:=AREAD(); END; 
+     IF (C <> MASORD("(")) AND (C <> B) THEN
+       ERROR(harmless,"Error1 found by CondPRead."); RETURN(SIL); END; 
+     C1:=CREADB(); 
+     IF (C = MASORD("(")) AND (C1 <> MASORD(")")) THEN
+       ERROR(harmless,"Error2 found by CondPRead."); RETURN(SIL); END; 
+     IF (C = B) AND (C1 <> MASORD("(")) THEN
+       ERROR(harmless,"Error3 found by CondPRead."); RETURN(SIL); END; 
+     IF (C = MASORD("(")) AND (C1 = MASORD(")")) THEN RETURN(SIL); END; 
+     (*Read list of polynomials. Update DNEU. *) 
+     CP:=SIL;
+     IF ((C = MASORD("0")) OR (C = MASORD("1"))) AND (C1 = MASORD("(")) THEN
+       REPEAT
+             C:=CREADB(); 
+             IF C = MASORD(",") THEN C:=CREADB(); END; 
+             IF C <> MASORD(")") THEN
+               BKSP();
+               A:=DIREAD(V,D); 
+               DIPMAD(A, AL,AE,A); 
+    	       CP:=CONC(CP, LIST1(AL));
+     	     END; 
+       UNTIL C = MASORD(")"); 
+     END; 
+     RETURN(CP);
+END CondPRead;
+
+PROCEDURE CondWrite(Cond: LIST); 
+(* Condition write.
+Cond is a condition, which is written to the output stream. *)
+VAR   A, Cond0, Cond1: LIST; 
+BEGIN
+     DEB_BEGIN(CondWrite);
+     SWRITE("Condition: ");
+     (*Case Cond is empty. *) 
+     IF CondIsEmpty(Cond) THEN SWRITE("Empty."); BLINES(0); RETURN; END; 
+     EvordSet(PAR.TermOrderCoef);
+     BLINES(0);
+     (*Case Cond not empty. *)
+     CondParts(Cond, Cond0,Cond1); 
+     (*Write equations. *) 
+     WHILE Cond0 <> SIL DO
+          ADV(Cond0, A,Cond0);
+     	  PFWRITE(A); SWRITE("= 0"); BLINES(0);
+     END; 
+     (*Write inequations. *) 
+     WHILE Cond1 <> SIL DO
+          ADV(Cond1, A,Cond1);
+     	  PFWRITE(A); SWRITE("<> 0"); BLINES(0);
+     END; 
+     BLINES(1); 
+     EvordReset();
+END CondWrite; 
+
+PROCEDURE FormFCond(Cond: LIST; VAR VD: LIST): LIST;
+(* Formula from Condition.
+Cond is a condition.
+DOM and VARL need not be initialized.
+Returns a formula "equivalent" to Cond and its variable list and
+domain descriptor in VD. *)
+VAR C0, C1, P, F, D, DOM, VARL: LIST;
+BEGIN
+DEB_BEGIN(FormFCond);
+     CLTIS(LISTS("RN -1 "));
+     D:=ADDDREAD();
+     VD:=VdCons(SIL,D);
+     IF CondIsEmpty(Cond) THEN RETURN(VERUM); END;
+     EvordSet(PAR.TermOrderCoef);
+     CondParts(Cond, C0,C1);
+     F:=SIL;
+     VARL:=SIL;
+     WHILE C0<>SIL DO
+     	  ADV(C0, P,C0);
+     	  F:=COMP(pqmkaf(EQU,DIFPF(P,D, DOM,VARL)),F);
+     END;
+     WHILE C1<>SIL DO
+     	  ADV(C1, P,C1);
+     	  F:=COMP(pqmkaf(NEQ,DIFPF(P,D, DOM,VARL)),F);
+     END;
+     EvordReset();
+     VD:=VdCons(VARL,D);
+     RETURN(FORMKFOR(ET,F));
+END FormFCond;
+
+(*****************************************************************************
+Data-Structure: Colouring (Col).
+================================
+
+A colouring contains information (=0 (green), <>0 (red), unknown (white))
+about monomials of a polynomial and the unknown factors of an unknown
+coefficient.
+A colouring is implemented as a list containing two lists: (CRED, CWHITE).
+CRED is a sorted (according to the term order, greatest term first)
+list of red terms.
+CWHITE=((T_1, (F_1_1, ..., F_1_n)), ..., (T_m, (F_m_1, ..., F_m_n))) is
+a list sorted by T_i, where T_i are white terms, and F_i_j are white
+factors of the coefficient of T_i.
+The empty colouring is ((), ()).
+******************************************************************************)
+
+PROCEDURE ColRed(Col: LIST): LIST;
+(* Colouring red.
+Col is a Colouring.
+Returns a list of red terms in Col. *)
+BEGIN
+     DEB_BEGIN(ColRed);
+     RETURN(FIRST(Col));
+END ColRed;
+
+PROCEDURE ColWhite(Col: LIST): LIST;
+(* Colouring white.
+Col is a Colouring.
+Returns a list of white terms with white factors in Col. *)
+BEGIN
+     DEB_BEGIN(ColWhite);
+     RETURN(SECOND(Col));
+END ColWhite;
+
+PROCEDURE ColParts(Col: LIST; VAR R, W:LIST);
+(* Colouring parts.
+Col is a Colouring.
+R, W need not be initialized.
+Returns a list of red terms from Col in R and
+a list of white terms with white factors in W. *)
+BEGIN
+     DEB_BEGIN(ColParts);
+     FIRST2(Col, R,W);
+END ColParts;
+
+PROCEDURE ColCons(R, W: LIST): LIST;
+(* Colouring construct.
+R is a (possibly empty) list of red terms.
+W is a (possibly empty) list of white terms.
+Returns a colouring constructed from R an W. *)
+BEGIN
+     RETURN(LIST2(R,W));
+END ColCons;
+
+PROCEDURE ColConsCond(POL,COND: LIST): LIST;
+(* Colouring construct from condition.
+POL is a polynomial.
+COND is a condition.
+Returns a colouring of POL according to COND. *)
+VAR   F, PC, PCF, PE, R, W, WF: LIST;
+      C: COLOUR;
+BEGIN
+     IF POL=SIL THEN RETURN(ColEmpty()); END; 
+     R:=SIL; W:=SIL; 
+     REPEAT 
+           DIPMAD(POL, PC,PE,POL);
+            IF PAR.IsCnst(PC) THEN R:=COMP(PE,R);
+            ELSE 
+     	        PCF:=PAR.Factorize(PC);
+                C:=nzero;
+     	        WF:=SIL; 
+                REPEAT 
+                      ADV(PCF, F,PCF); 
+                      IF NOT PAR.IsCnst(F) THEN
+     	       	    	  C:=PAR.CondEval(COND,F);
+     	       	    	  IF C=unknown THEN WF:=COMP(F,WF); END;
+                      END; 
+                UNTIL (C=zero) OR (PCF=SIL); 
+                IF C<>zero THEN
+                  IF WF = SIL THEN R:=COMP(PE,R);
+                              ELSE W:=COMP(LIST2(PE,WF),W); END;
+                END; 
+            END; 
+      UNTIL POL = SIL; 
+      IF R<>SIL THEN R:=INV(R); END; 
+      IF W<>SIL THEN W:=INV(W); END; 
+      RETURN(ColCons(R,W));
+END ColConsCond;
+
+PROCEDURE ColIsEmpty(Col: LIST): BOOLEAN;
+(* Colouring is empty.
+Col is a Colouring.
+Returns true iff Col is the empty Colouring. *)
+BEGIN
+     DEB_BEGIN(ColIsEmpty);
+     RETURN (ColRed(Col)=SIL) AND (ColWhite(Col)=SIL);
+END ColIsEmpty;
+
+PROCEDURE ColEmpty(): LIST;
+(* Colouring empty.
+Returns the empty Colouring. *)
+BEGIN
+     DEB_BEGIN(ColEmpty);
+     RETURN(LIST2(SIL, SIL));
+END ColEmpty;
+
+PROCEDURE ColHT (COL: LIST): LIST;
+(* Colouring head term.
+COL is a colouring.
+If the highest non-zero (red) term is greater then the highest unknown (white)
+term returns the highest non-zero term else returns SIL. *)
+VAR R, W: LIST;
+BEGIN
+     IF ColIsEmpty(COL) THEN RETURN(SIL); END;
+     ColParts(COL, R,W);
+     IF R=SIL THEN RETURN(SIL); END;
+     IF W=SIL THEN RETURN(FIRST(R)); END;
+     IF EVCOMP(FIRST(R),FIRST(FIRST(W)))<=0 THEN RETURN(SIL); END;
+     (* --- to do --- FIRST(FIRST(W)) safe ? *)
+     RETURN(FIRST(R));
+
+END ColHT;
+
+(*****************************************************************************
+Data-Structure: Coloured polynomial (Colp)
+==========================================
+
+A coloured polynomial contains a a polynomial and information about the
+colouring (=0,<>0,unknown) of its monomials.
+A coloured polynomial is implemented as a list (POL,COL) containing
+a distributive polynomial over the domain IP and a colouring (Col).
+******************************************************************************)
+
+PROCEDURE ColpCons(POL,COL: LIST): LIST;
+(* Coloured polynomial construct.
+POL is a polynomial.
+COL is a colouring.
+Returns a Colp built from POL and COL.*)
+BEGIN
+     RETURN(LIST2(POL,COL));
+END ColpCons;
+
+PROCEDURE ColpConsCond(POL,COND: LIST): LIST;
+(* Coloured polynomial construct from condition.
+POL is a polynomial.
+COND is a condition.
+Returns a Colp by colouring POL according to COND. *)
+BEGIN
+     RETURN(ColpCons(POL,ColConsCond(POL,COND)));     
+END ColpConsCond;
+
+PROCEDURE ColpPol(COLP: LIST): LIST;
+(* Coloured polynomial polynomial part.
+COLP is a coloured polynomial.
+Returns the polynomial in Colp. *)
+BEGIN
+     RETURN(FIRST(COLP));
+END ColpPol;
+
+PROCEDURE ColpCol(COLP: LIST): LIST;
+(* Coloured polynomial colouring part.
+COLP is a coloured polynomial.
+Returns the colouring of COLP. *)
+BEGIN
+     RETURN(SECOND(COLP));
+END ColpCol;
+
+PROCEDURE ColpParts(COLP: LIST; VAR POL,COL: LIST);
+(* Coloured polynomial parts.
+COLP is a coloured polynomial.
+POL, COL need not be initialized.
+Returns the polynomial from COLP in POL and the colouring from COLP in COL.*)
+BEGIN
+     FIRST2(COLP, POL,COL);
+END ColpParts;
+
+PROCEDURE ColpIsCnst(COLP: LIST): BOOLEAN;
+(* Coloured polynomial is (non zero) constant.
+COLP is a coloured polynomial.
+Returns TRUE iff COLP is constant (i.e. its degree is 0) and non zero wrt.
+to its colouring *)
+VAR COL, R, W: LIST;
+BEGIN
+     COL:=ColpCol(COLP);
+     IF ColIsEmpty(COL) THEN RETURN(FALSE); END;
+     ColParts(COL, R,W);
+     IF (R=SIL) OR (W<>SIL) THEN RETURN(FALSE); END;
+     IF EVSIGN(FIRST(R))=0 THEN RETURN(TRUE); END;
+     RETURN(FALSE);
+END ColpIsCnst;
+
+PROCEDURE ColpHT (COLP: LIST): LIST;
+(* Coloured polynomial head term.
+COLP is a coloured polynomial.
+If the head term of COLP is determined by its colouring and non-zero (i.e. the
+highest non-zero (red) term is greater then the highest unknown (white)
+term) returns the head term else returns SIL. *)
+VAR COL, R, W: LIST;
+BEGIN
+     RETURN(ColHT(ColpCol(COLP)));
+END ColpHT;
+
+PROCEDURE ColpIsZero (COLP: LIST): BOOLEAN;
+(* Coloured polynomial is zero.
+COLP is a coloured polynomial.
+Returns TRUE iff all terms of COLP are zero (green) wrt. its colouring. *)
+BEGIN
+     IF COLP=SIL THEN RETURN(TRUE); END;
+     RETURN(ColIsEmpty(ColpCol(COLP)));
+END ColpIsZero;
+
+(*****************************************************************************
+Data-Structure: Case distinction (Cd)
+=====================================
+
+A case distinction is implemented as a list containing conditions.
+-to do-: complete
+******************************************************************************)
+
+PROCEDURE CdRead(VD: LIST): LIST;
+(* Case distinction read.
+VD is a variable list and a domain descriptor.
+Returns a case distinction read from the input stream. *)
+VAR CD: LIST;
+BEGIN
+DEB_BEGIN(CdRead);
+     CD:=SIL;
+     REPEAT
+     	   CD:=CONC(CD,LIST1(CondRead(VD)));
+     UNTIL CREADB()=MASORD(".");
+     RETURN(CD);
+END CdRead;
+
+PROCEDURE CdWrite(CD: LIST); 
+(*Case distinction write.
+CD is a case distinction which is written to the output stream. *)
+VAR   COND: LIST; 
+BEGIN
+     DEB_BEGIN(CdWrite);
+     (*Case DE empty. *) 
+     IF (CD = SIL) OR (CD = 0) THEN SWRITE("Empty."); BLINES(0); RETURN; END; 
+     (*Case CD not empty. *)
+     BLINES(0);
+     REPEAT ADV(CD, COND,CD); CondWrite(COND); BLINES(0); UNTIL CD=SIL;
+END CdWrite; 
+
+(*****************************************************************************
+Data-Structure: Case distinction and polynomial set (Cdp)
+=========================================================
+
+A case distinction and polynomial set is implemented as a list containing
+three elements: (CD,PL,VD) where CD is a case distinction, PL is a
+list of polynomials and VD is a variable list and domain descriptor for PL.
+******************************************************************************)
+
+PROCEDURE CdpCons(CD,PL,VD: LIST): LIST;
+(* Case distinction and polynomial set construct.
+CD is a case distinction.
+PL is a list of Polynomials.
+VD is a varable list and domain descriptor for PL.
+Returns a CDP built from CD,PL,VD.*)
+BEGIN
+     DEB_BEGIN(CdpCons);
+     RETURN(LIST3(CD,PL,VD));
+END CdpCons;
+
+PROCEDURE CdpParts(CDP: LIST; VAR CD,PL,VD: LIST);
+(* Case distinction and polynomial set parts.
+CDP is a case distinction and polynomial set.
+Returns the case distinction from CDP in CD, the polynomial set from CDP
+in PL and the variable list and domain descriptor from CDP in VD. *)
+BEGIN
+     DEB_BEGIN(CdpParts);
+     FIRST3(CDP, CD,PL,VD);
+END CdpParts;
+
+PROCEDURE CdpCd(CDP: LIST): LIST;
+(* Case distinction and polynomial set case distinction part.
+CDP is a case distinction and polynomial set.
+Returns the case distinction from CDP. *)
+BEGIN
+     DEB_BEGIN(CdpCd);
+     RETURN FIRST(CDP);
+END CdpCd;
+
+PROCEDURE CdpPs(CDP: LIST): LIST;
+(* Case distinction and polynomial set polynomial set part.
+CDP is a case distinction and polynomial set.
+Returns the polynomial set from CDP. *)
+BEGIN
+     DEB_BEGIN(CdpPs);
+     RETURN SECOND(CDP);
+END CdpPs;
+
+PROCEDURE CdpVd(CDP: LIST): LIST;
+(* Case distinction and polynomial set variable list and domain descriptor 
+part.
+CDP is a case distinction and polynomial set.
+Returns the variable list and domain descriptor from CDP. *)
+BEGIN
+     DEB_BEGIN(CdpVd);
+     RETURN THIRD(CDP);
+END CdpVd;
+
+PROCEDURE CdpRead():LIST; 
+(*Case distinction and polynomial set read.
+Returns a case distinction and polynomial set read from the input stream.*)
+VAR   C, CD, NRLIST, VD, SYS, S, RET: LIST;
+BEGIN
+DEB_BEGIN(CdpRead);
+     C:=CREADB(); BKSP(); 
+     VD:=VdRead(); 
+     EvordSet(PAR.TermOrderPol); 
+     ValisSet(VdV(VD));
+     CD:=CdRead(VD); 
+     SYS:=RDSYS(VD);
+     C:=CREADB(); BKSP();
+     RET:=CdpCons(CD,LIST2(INV(DIPLPM(FIRST(SYS))),SECOND(SYS)),VD);
+     EvordReset();
+     ValisReset();
+     RETURN (RET);
+END CdpRead; 
+
+PROCEDURE CdpWrite(CDP: LIST);
+(*Case distinction and polynomial set write.
+CDP is a case distinction and polynomial set.
+Writes CDP to the output-stream.*)
+VAR   C, CONDS, NRLIST, VD, SYS: LIST; 
+BEGIN
+DEB_BEGIN(CdpWrite);
+     EvordSet(PAR.TermOrderPol);
+     ValisSet(FIRST(THIRD(CDP)));
+     BLINES(1);
+     SWRITE("Case distinction: ");
+     CdWrite(FIRST(CDP));
+     BLINES(1);
+     SWRITE("Polynomial set:"); BLINES(0);
+     SWRITE("Ring: ");
+     ADDDWRIT(SECOND(THIRD(CDP)));
+     VLWRIT(FIRST(THIRD(CDP)));
+     BLINES(0);
+     DILBSO(FIRST(SECOND(CDP))); (* -to do- ???? *)
+     DILWR(FIRST(SECOND(CDP)),FIRST(THIRD(CDP)));
+     BLINES(1);
+     EvordReset();
+     ValisReset();
+END CdpWrite; 
+
+PROCEDURE RDSYS(VD: LIST): LIST; 
+(*Read polynomial systems.
+VD is a variable list and domain descriptor.
+PPS is a list of two polynomial systems read from the input stream. *)
+(* -to do-: get rid of this procedure! -- mp *)
+VAR   A, C, D, NF, V: LIST; 
+BEGIN
+DEB_BEGIN(RDSYS);
+     VdParts(VD, V,D); 
+     A:=DILRD(V,D); 
+     C:=CREADB(); BKSP(); 
+     IF C <> MASORD("(") THEN RETURN(LIST2(A,SIL)); END; 
+     NF:=DILRD(V,D);
+     RETURN(LIST2(A,NF));
+END RDSYS; 
+
+(*****************************************************************************
+Data-Structure: Groebner system (Gs)
+====================================
+
+A Groebner System  is implemented as a list containing three lists:
+(S,VD,CD) where S is a list containing the Groebner system, VD is
+a variable list and domain descriptor for S and CD is the initial
+case distinction.
+******************************************************************************)
+
+PROCEDURE GsCons(S,VD,CD: LIST): LIST;
+(* Groebner system construct.
+S is a Groebner system,
+VD its variables list and domain descriptor and
+CD the initial case distinction
+Returns the Groebner system constructed from S, VD and CD *)
+BEGIN
+     DEB_BEGIN(GsCons);
+     RETURN(LIST3(S,VD,CD));
+END GsCons;
+
+PROCEDURE GsS(GS: LIST): LIST;
+(* Groebner system system part.
+GS is a Groebner system.
+Returns the system part of GS *)
+BEGIN
+     DEB_BEGIN(GsS);
+     RETURN(FIRST(GS));
+END GsS;
+
+PROCEDURE GsVd(GS: LIST): LIST;
+(* Groebner system variable list and domain descriptor.
+GS is a Groebner system.
+Returns the variable list and domain descriptor for GS. *)
+BEGIN
+     DEB_BEGIN(GsVd);
+     RETURN(SECOND(GS));
+END GsVd;
+
+PROCEDURE GsCd(GS: LIST): LIST;
+(* Groebner system initial case distinction.
+GS is a Groebner system.
+Returns the initial case distinction for GS. *)
+BEGIN
+     DEB_BEGIN(GsCd);
+     RETURN(THIRD(GS));
+END GsCd;
+
+PROCEDURE GsParts(GS: LIST; VAR S,VD,CD: LIST);
+(* Groebner system parts.
+S and VD need not be initialized.
+Returns the system part of GS in S, the variable list and domain
+descriptor for GS in VD and the initial case distinction in CD. *)
+BEGIN
+     DEB_BEGIN(GsParts);
+     FIRST3(GS, S,VD,CD);
+END GsParts;
+
+PROCEDURE GsWrite(GS: LIST);
+(* Groebner system write.
+GS is a Groebner system which is written to the output stream. *)
+BEGIN
+DEB_BEGIN(GsWrite);
+     EvordSet(PAR.TermOrderPol);
+     ValisSet(VdV(GsVd(GS)));
+     BLINES(1);
+     SWRITE("Groebner system:"); BLINES(0);
+     WRGBS(GsS(GS));
+     BLINES(0);
+     EvordReset();
+     ValisReset();
+END GsWrite;
+
+(******************************************************************************
+Data-Structure: Comprehensive Groebner basis (Cgb)
+==================================================
+
+A Comprehensive Groebner basis is implemented as a list containing four
+elements: (CGB,I,VD,CD) where CD is the CGB (a list of polynomials),
+I is the number of conditions, VD is the variable list and domain descriptor
+and CD is the initial case distinction.
+******************************************************************************)
+
+PROCEDURE CgbCons(CGB,I,VD,CD: LIST): LIST;
+(* Groebner system construct.
+CGB is a list of polynomials,
+I is an Integer, the number of conditions,
+VD its variables list and domain descriptor and
+CD the initial case distinction
+Returns the comprehensive Groebner basis constructed from CGB, I, VD and CD *)
+BEGIN
+     DEB_BEGIN(CgbCons);
+     RETURN(LIST4(CGB,I,VD,CD));
+END CgbCons;
+
+PROCEDURE CgbP(CGB: LIST): LIST;
+(* Comprehensive Groebner basis polynomial list part.
+CGB is a comprehensive Groebner basis
+Returns the polynomial list part of CGB *)
+BEGIN
+     DEB_BEGIN(CgbP);
+     RETURN(FIRST(CGB));
+END CgbP;
+
+PROCEDURE CgbI(CGB: LIST): LIST;
+(* Comprehensive Groebner basis number of conditions part.
+CGB is a comprehensive Groebner basis
+Returns the number of conditions part of CGB *)
+BEGIN
+     DEB_BEGIN(CgbI);
+     RETURN(SECOND(CGB));
+END CgbI;
+
+PROCEDURE CgbVd(CGB: LIST): LIST;
+(* Comprehensive Groebner basis variable list and domain descriptor.
+CGB is a Comprehensive Groebner basis.
+Returns the variable list and domain descriptor for CGB. *)
+BEGIN
+     DEB_BEGIN(CgbVd);
+     RETURN(THIRD(CGB));
+END CgbVd;
+
+PROCEDURE CgbCd(CGB: LIST): LIST;
+(* Groebner system initial case distinction.
+CGB is a Comprehensive Groebner basis.
+Returns the initial case distinction for CGB. *)
+BEGIN
+     DEB_BEGIN(CgbCd);
+     RETURN(FOURTH(CGB));
+END CgbCd;
+
+PROCEDURE CgbParts(CGB: LIST; VAR P,I,VD,CD: LIST);
+(* Comprehensive Groebner basis parts.
+P, I, VD and CD need not be initialized.
+Returns the polynomial list part of CGB in P, the number of conditions
+in I,  the variable list and domain
+descriptor for CGB in VD and the initial case distinction in CD. *)
+BEGIN
+     DEB_BEGIN(CgbParts);
+     FIRST4(CGB, P,I,VD,CD);
+END CgbParts;
+
+PROCEDURE CgbWrite(CGB: LIST);
+(* Comprehensive Groebner basis write.
+CGB is a comprehensive Groebner basis which is written to the output stream
+*)
+BEGIN
+DEB_BEGIN(CgbWrite);
+     BLINES(1);
+     EvordSet(PAR.TermOrderPol);
+     ValisSet(VdV(CgbVd(CGB)));
+     BLINES(0); SWRITE("Comprehensive-Groebner-Basis: "); BLINES(0); 
+     IF FIRST(CGB) = SIL THEN SWRITE("Empty."); BLINES(0); 
+    	       	         ELSE DILWR(CgbP(CGB),VdV(CgbVd(CGB))); END;
+     OWRITE(CgbI(CGB));
+     IF CgbI(CGB)=1 THEN SWRITE(" Condition.");
+     	      	    ELSE SWRITE(" Conditions."); END;
+     BLINES(1);
+     EvordReset();
+     ValisReset();
+     BLINES(1);
+END CgbWrite;
+
+
+(******************************************************************************
+Data-Structure: Formula and dimension (Fd)
+==========================================
+
+A formula and dimension implemented as a list (D, F, V) containing
+three elements: a formula F an integer D and a variable list V.
+(D is first (instead of F) because of problems with the interpreter.)
+******************************************************************************)
+
+PROCEDURE FdCons(F,D,V: LIST): LIST;
+(* Formula and dimension construct.
+F is a formula.
+D is an integer.
+Returns the Fd constructed from F and D. *)
+BEGIN
+DEB_BEGIN(FdCons);
+     RETURN(LIST3(D,F,V));
+END FdCons;
+
+PROCEDURE FdParts(FD: LIST; VAR F,D,V: LIST);
+(* Formula and dimension parts.
+FD is a formula and dimension.
+F, D and V need not be initialized.
+Returns the formula from FD in F, the dimension in D and the variable
+list in V. *)
+BEGIN
+DEB_BEGIN(FdParts);
+     FIRST3(FD, D,F,V);
+END FdParts;
+
+PROCEDURE FdF(FD: LIST): LIST;
+(* Formula and dimension formula part.
+FD is a formula and dimension.
+Returns the formula part from FD*)
+BEGIN
+DEB_BEGIN(FdF);
+     RETURN(SECOND(FD));
+END FdF;
+
+PROCEDURE FdD(FD: LIST): LIST;
+(* Formula and dimension formula part.
+FD is a formula and dimension.
+Returns the dimension part from FD*)
+BEGIN
+DEB_BEGIN(FdD);
+     RETURN(FIRST(FD));
+END FdD;
+
+PROCEDURE FdV(FD: LIST): LIST;
+(* Formula and dimension variable list part.
+FD is a formula and dimension.
+Returns the variable list part from FD*)
+BEGIN
+DEB_BEGIN(FdV);
+     RETURN(THIRD(FD));
+END FdV;
+
+PROCEDURE FdWrite(FD: LIST);
+(* Formula and dimension write.
+FD is a formula and dimension, which is written to the output stream.
+PQPRING must be called prior to calling FdWrite to set domain descriptor
+and variable list. (* --- to do ---: this must change!!! *)
+ *)
+VAR D: LIST;
+BEGIN
+DEB_BEGIN(FdWrite);
+     PQPPRT(FdF(FD));
+     SWRITE(": ");
+     OWRITE(FdD(FD));
+     IF FdD(FD)<>-1 THEN
+       SWRITE(": ");
+       VLWRIT(FdV(FD));
+     END;
+     BLINES(0);
+END FdWrite;
+
+(******************************************************************************
+Data-Structure: Parametric dimension (Pd)
+=========================================
+
+A parametric dimension implemented as a list containing
+two elements: a list of formulas and dimensions and the appropriate
+variable list and domain descriptor.
+******************************************************************************)
+
+PROCEDURE PdCons(F,VD: LIST): LIST;
+(* Parametric dimension construct.
+F is a formula.
+VD is the variable list and domain descriptor for F.
+Returns the Pd constructed from F and V. *)
+BEGIN
+DEB_BEGIN(PdCons);
+     RETURN(LIST2(F,VD));
+END PdCons;
+
+PROCEDURE PdParts(PD: LIST; VAR F,VD: LIST);
+(* Parametric dimension parts.
+Pd is a parametric dimension.
+F and V need not be initialized.
+Returns the formula from PD in F and the variable list and domain descriptor
+in V. *)
+BEGIN
+DEB_BEGIN(PdParts);
+     FIRST2(PD, F,VD);
+END PdParts;
+
+PROCEDURE PdF(PD: LIST): LIST;
+(* Parametric dimension formula and dimension list part.
+PD is a parametric dimension.
+Returns the formula and dimension list from PD. *)
+BEGIN
+DEB_BEGIN(PdF);
+     RETURN(FIRST(PD));
+END PdF;
+
+PROCEDURE PdVd(PD: LIST): LIST;
+(* Parametric dimension variable list and domain descriptor part.
+PD is a Parametric dimension.
+Returns the dimension from PD. *)
+BEGIN
+DEB_BEGIN(PdVd);
+     RETURN(SECOND(PD));
+END PdVd;
+
+PROCEDURE PdWrite(PD: LIST);
+(* Parametric dimension write.
+PD is a Parametric dimension, which is written to the output stream.
+ *)
+VAR FD,F,D,L: LIST;
+BEGIN
+DEB_BEGIN(PdWrite);
+     EvordSet(PAR.TermOrderCoef);
+     ValisSet(VdV(PdVd(PD)));
+     L:=PQPRING(LIST1(VdD(PdVd(PD)))); (*---to do---: this must vanish!!! *)
+     BLINES(0);
+     SWRITE("Parametric dimension and maximal independent sets:"); BLINES(0);
+     F:=PdF(PD);
+     WHILE F<>SIL DO 
+     	  ADV(F, FD,F);
+     	  FdWrite(FD);
+     END;
+     L:=PQPRING(L); (*---to do---: this must vanish!!! *)
+     ValisReset();
+     EvordReset();
+END PdWrite;
+     
+
+(******************************************************************************
+Data-Structure: Variable list and domain descriptor (Vd)
+========================================================
+
+A Variable list and domain descriptor is implemented as a list containing
+two elements: the variable list and the domain descriptor.
+******************************************************************************)
+
+PROCEDURE VdCons(V,D: LIST): LIST;
+(* Variable list and domain descriptor construct.
+V is a variable list.
+D is a domain descriptor.
+Returns the VD constructed from V and D. *)
+BEGIN
+     DEB_BEGIN(VdCons);
+     RETURN(LIST2(V,D));
+END VdCons;
+
+PROCEDURE VdV(Vd: LIST): LIST;
+(* Variable list and domain descriptor variable list part.
+Vd is a variable list and domain descriptor.
+Returns the variable list from Vd. *)
+BEGIN
+     DEB_BEGIN(VdV);
+     RETURN(FIRST(Vd));
+END VdV;
+
+PROCEDURE VdD(Vd: LIST): LIST;
+(* Variable list and domain descriptor domain descriptor part.
+Vd is a variable list and domain descriptor.
+Returns the domain descriptor from Vd. *)
+BEGIN
+     DEB_BEGIN(VdD);
+     RETURN(SECOND(Vd));
+END VdD;
+
+PROCEDURE VdParts(Vd: LIST; VAR V,D: LIST);
+(* Variable list and domain descriptor parts.
+Vd is a variable list and domain descriptor.
+Returns the variable list from Vd in V and the domain descriptor in D. *)
+BEGIN
+     DEB_BEGIN(VdParts);
+     FIRST2(Vd, V,D);
+END VdParts;
+
+PROCEDURE VdRead(): LIST; 
+(*Variable list and domain descriptor read.
+Returns a variable list and domain descriptor read from the input stream.*)
+VAR  D, V: LIST; 
+BEGIN
+DEB_BEGIN(VdRead);
+      D:=ADDDREAD(); (*Domain descriptor. *)
+      V:=VLREAD();   (*Variable list. *) 
+      RETURN(VdCons(V,D));
+END VdRead;
+
+END CGBDSTR.
+(* -EOF- *)

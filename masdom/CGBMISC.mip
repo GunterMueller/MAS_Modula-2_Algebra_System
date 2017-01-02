@@ -1,0 +1,1053 @@
+(* ----------------------------------------------------------------------------
+ * $Id: CGBMISC.mip,v 1.10 1996/06/08 16:47:13 pesch Exp $
+ * ----------------------------------------------------------------------------
+ * This file is part of MAS.
+ * ----------------------------------------------------------------------------
+ * Copyright (c) 1992-1996 Universitaet Passau
+ * ----------------------------------------------------------------------------
+ * $Log: CGBMISC.mip,v $
+ * Revision 1.10  1996/06/08 16:47:13  pesch
+ * Reformatted, removed obsolete procedures.
+ *
+ * Revision 1.9  1996/04/24 12:09:55  pesch
+ * Used EVOWRITE instead of WRORD for writing term orders.
+ * Removed WRORD.
+ * Reformatted import lists.
+ *
+ * Revision 1.8  1996/04/23 13:52:31  pesch
+ * Corrected printing of options.
+ *
+ * Revision 1.7  1995/03/23  16:05:46  pesch
+ * Added new data structure Colp for coloured polynomials.
+ *
+ * Revision 1.6  1995/03/06  15:49:36  pesch
+ * Added new procedure GSYSF, Groebner system with factorization. This uses
+ * the new procedures GBSYSF and CONSGBF (also added).
+ *
+ * Added new procedures DIP2AD, AD2DIP and DIPPFACTAV.
+ *
+ * Fixed error in CHECK.
+ *
+ * New option for factorization of conditions: factorize with optimization
+ * of variable ordering.
+ *
+ * Revision 1.5  1994/04/14  16:46:11  dolzmann
+ * Syntactical errors (founded by Mocka) corrected.
+ *
+ * Revision 1.4  1994/04/10  17:58:39  pesch
+ * Added option to compute generic case (coeficients are considered
+ * rational functions, the necessary non-zero conditions are collected) only.
+ *
+ * Revision 1.3  1994/04/09  18:06:00  pesch
+ * Reformatted parts of the CGB sources. Updated comments in CGB*.md.
+ *
+ * Revision 1.2  1994/03/14  16:42:59  pesch
+ * Minor changes requested by A. Dolzmann
+ *
+ * Revision 1.1  1994/03/11  15:58:16  pesch
+ * Major changes to CGB.
+ * C-Preprocessor now used for .mip files. The corresponding .mi files have
+ * been removed.
+ * Many new CGB-Functions and fixes of old ones.
+ *
+ * ----------------------------------------------------------------------------
+ *)
+
+#include "debug.h"
+
+IMPLEMENTATION MODULE CGBMISC;
+
+(* Comprehensive-Groebner-Bases Miscellaneous Programs Implementation Module.*)
+
+(* Import lists and declarations. *)
+
+FROM ADTOOLS	IMPORT	ADDDFSTR;
+
+FROM CGBAPPL	IMPORT	CGBQUA, CPART, DIMEXE, GBHELP, GTEST, INTDIM, MCOEF,
+			NFEXEC, NSET, WRCONJ, WRDIMS, WRQFN0, WRTEST;
+
+FROM CGBDSTR	IMPORT	CondCons, CondEmpty, CondIsEmpty, CondNzero,
+			CondParts, CondZero;
+
+FROM CGBFUNC	IMPORT	ADDCON, AINB, CGBCOL, CGBFRM, CGBLM, CGBLPM, DCLWR,
+			DET, DETPOL, DWRIT, EQPLCL, FINDBC, FINDCP, FINDRM,
+			GREPOL, MKPOL, REDSRT, SETCOL, VERIFY, WMEMB, WRTERM; 
+
+FROM CGBSYS	IMPORT	ADDCGB, CHDEGL, CMULT, COLDIF, COLPRD, FINCOL,
+			FINDPI, GBDIFF, GBSYS, GBUPD, GLEXTP, GLOBRE, GRED,
+			GSRED, GSYSN0, KEYCOL, MINPP, MKACOL, MKCGB, MKCOL,
+			MKN0, MKN1, MKNEWP, MKPAIR, NFORM, NFTOP, PRSCOP,
+			RDNORM, REDUCT, REFIND, REXTP, RMGRT, SPOL, UPDPP,
+			VRNORM, WHSRT, WUPD;
+
+FROM DIPADOM	IMPORT	DIFIP, DILRD, DILWR, DIPBCP, DIPDIF, DIPEXP, DIPNEG,
+			DIPROD, DIPSUM, DIREAD, DIWRIT;
+
+FROM DIPC	IMPORT	DILBSO, DIPBSO, DIPERM, DIPEVL, DIPFMO, DIPFP,
+			DIPLBC, DIPLPM, DIPMAD, DIPMCP, DIPTDG, EVCOMP,
+			EVDIF, EVLCM, EVMT, EVORD, EVOWRITE, EVSIGN, EVSUM,
+			GRLEX, IGRLEX, INVLEX, LEX, PFDIP, REVILEX, REVITDG,
+			REVLEX, REVTDEG, VALIS; 
+
+FROM DIPI	IMPORT	DIIPAB, DIIPCP, DIIPIQ, DIIPNG, DIIPON, DIIPSG,
+			DIIPWR;
+
+FROM DIPIDGB	IMPORT	DIIPDNF;
+
+FROM DIPIGB	IMPORT	DIIGBA, DIIPGB, DIIPNF;
+
+FROM DIPTOO	IMPORT	DIPVOPP, INVPERM;
+
+FROM DIPTOOLS	IMPORT	ADDDFDIP, DIPFDIPP, DIPPFDIP;
+
+FROM IO		IMPORT	WriteI;
+
+FROM MASADOM	IMPORT	ADCNST, ADDDREAD, ADDDWRIT, ADDIF, ADEXP, ADFACT,
+			ADFACTO, ADFI, ADFIP, ADGCD, ADGCDC, ADINV, ADINVT,
+			ADLCM, ADNEG, ADONE, ADPROD, ADQUOT, ADREAD, ADSIGN,
+			ADSUM, ADTOIP, ADVLDD, ADWRIT, DomSummary;
+
+FROM MASBIOS	IMPORT	BKSP, BLINES, CREAD, CREADB, DIGIT, LETTER, LISTS,
+			MASORD, SWRITE;
+
+FROM MASERR	IMPORT	ERROR, fatal, harmless, severe, spotless;
+
+FROM MASSTOR	IMPORT	ADV, BETA, COMP, FIRST, INV, LENGTH, LIST, LIST1,
+			LISTVAR, RED, SFIRST, SIL, SRED, TIME;
+
+FROM MASSYM2	IMPORT	SREAD1, UWRITE, UWRIT1;
+
+FROM SACLIST	IMPORT	ADV2, ADV3, AREAD, AWRITE, CINV, CLOUT, COMP2, COMP3,
+			CONC, EQUAL, FIRST2, FIRST3, FIRST4, FOURTH, LAST,
+			LIST2, LIST3, LIST4, LIST5, LWRITE, MEMBER, OWRITE,
+			RED2, SECOND, THIRD;
+
+FROM SACPFAC	IMPORT	IPFAC;
+
+FROM SACPOL	IMPORT	VLREAD, VLWRIT;
+
+CONST rcsidi = "$Id: CGBMISC.mip,v 1.10 1996/06/08 16:47:13 pesch Exp $";
+CONST copyrighti = "Copyright (c) 1992-1996 Universitaet Passau";
+
+(*****************************************************************************)
+(* EVORD and VALIS handling                                                  *)
+(*****************************************************************************)
+
+VAR EVORDSTACK: LIST; (* Stack for EVORD-values, see EvordSet. *)
+    VALISSTACK: LIST; (* Stack for VALIS-values, see ValisSet. *)
+
+PROCEDURE EvordSet(T: LIST);
+(* EVORD set.
+T is a termorder.
+The global variable EVORD is set to T.
+The old value of EVORD is put on top of a stack and can be restored
+using EvordReset(). *)
+BEGIN
+DEB_BEGIN(EvordSet);
+     EVORDSTACK:=COMP(EVORD,EVORDSTACK); 
+     EVORD:=T;
+END EvordSet;
+
+PROCEDURE EvordReset();
+(* Reset evord.
+The global variable EVORD is set to the top element of EVORDSTACK.
+(EVORDSTACK is set by EvordSet().) *)
+BEGIN
+DEB_BEGIN(EvordReset);
+     IF EVORDSTACK=SIL THEN ERROR(severe, "Error in EvordReset. Stack empty.");
+     ELSE ADV(EVORDSTACK, EVORD,EVORDSTACK); END;
+END EvordReset;
+
+PROCEDURE ValisSet(V: LIST);
+(* Set valis.
+V is a variables list. The global variable VALIS is set to T.
+The old value of VALIS is put on top of a stack and can be restored
+using ValisReset(). *)
+BEGIN
+DEB_BEGIN(ValisSet);
+     VALISSTACK:=COMP(VALIS,VALISSTACK); 
+     VALIS:=V;
+END ValisSet;
+
+PROCEDURE ValisReset();
+(* Reset valis.
+The global variable VALIS is set to the top element of VALISSTACK.
+(VALISSTACK is set by ValisSet().) *)
+BEGIN
+DEB_BEGIN(ValisReset);
+     IF VALISSTACK=SIL THEN ERROR(severe, "Error in ValisReset. Stack empty.");
+     ELSE ADV(VALISSTACK, VALIS,VALISSTACK); END;
+END ValisReset;
+
+(*****************************************************************************)
+(* Sets                                                                      *)
+(*****************************************************************************)
+
+PROCEDURE SetInsert(e, A: LIST): LIST;
+(* Set insert.
+A is a set.
+e is an element.
+Returns the set A U {e}.*)
+BEGIN
+DEB_BEGIN(SetInsert);
+     IF MEMBER(e,A)=1 THEN RETURN(A); END;
+     RETURN(COMP(e,A));
+END SetInsert;
+
+PROCEDURE SetUnion(A,B: LIST): LIST;
+(* Set union.
+A is a set.
+B is a set.
+Returns the set A U B. *)
+VAR e: LIST;
+BEGIN
+DEB_BEGIN(SetInsert);
+     WHILE B<>SIL DO
+     	  ADV(B, e,B);
+     	  A:=SetInsert(e,A);
+     END;
+     RETURN(A);
+END SetUnion;
+
+(*****************************************************************************)
+(* Miscellaneous CGB Functions                                               *)
+(*****************************************************************************)
+
+PROCEDURE CGBOPT(O: LIST);
+(*Comprehensive Groebner Basis Options.
+O is a list with an arbitrary number of elements.
+The global variable PAR is set according to O.
+The elements of O (if existent) are interpreted as follows:
+1st element: if =0 no output during computation, if >0 chatty.
+2nd element: if =0 do not factorize coefficients, if =1 do factorize
+             coefficients, if =2 do factorize coefficients with variable order
+             optimization.
+3rd element: if =0 use top reduction only, if =1 use "normal" reduction.
+4th element: evaluate conditions using:
+     	     if =0: simple methode, if =1: reduced sets, if =2: Groebner bases.
+5th element: if =0: characteristic 0, if <>0 arbritrary characteristic.
+6th element: term order for polynomials.
+7th element: term order for coefficients.
+8th element: if =1: generic case only, if <>1 all cases.
+*)
+
+VAR dummy: LIST;
+BEGIN
+DEB_BEGIN(CGBOPT);
+     IF O<>SIL THEN ADV(O, PAR.outputlevel,O); END;
+     IF O<>SIL THEN ADV(O, PAR.factorize,O); END;
+     IF O<>SIL THEN ADV(O, PAR.normalform,O); END;
+     IF O<>SIL THEN ADV(O, PAR.compcond,O); END;
+     IF O<>SIL THEN ADV(O, PAR.char, O); END;
+     IF O<>SIL THEN ADV(O, PAR.TermOrderPol, O); END;
+     IF O<>SIL THEN ADV(O, PAR.TermOrderCoef, O); END;
+     IF O<>SIL THEN ADV(O, dummy,O); PAR.genericOnly:=(dummy=1); END;
+     CASE PAR.factorize OF
+     	 0: PAR.Factorize:=dummyfactorize|
+         1: PAR.Factorize:=ADFACT|
+         2: PAR.Factorize:=ADFACTO;
+     END;
+     IF PAR.normalform=0 THEN PAR.NormalForm:=NFTOP; 
+     	                 ELSE PAR.NormalForm:=NFORM; END;
+     IF PAR.genericOnly THEN
+       PAR.CondEval:=CondEvalGen;
+       PAR.CondRamif:=CondRamifGen;
+     ELSE
+       CASE PAR.compcond OF
+           0: PAR.CondEval:=CondEvalSim;
+              PAR.CondRamif:=CondRamifSim|
+     	   1: IF PAR.char=0 THEN
+     	        PAR.CondEval:=CondEvalRed;
+              PAR.CondRamif:=CondRamifRed;
+     	      ELSE
+     	        PAR.CondEval:=CondEvalDred;
+                PAR.CondRamif:=CondRamifDred;
+     	      END|
+     	   2: PAR.CondEval:=CondEvalGb;
+              PAR.CondRamif:=CondRamifGb;
+       END;
+     END;
+     IF PAR.char=0 THEN PAR.IsCnst:=ADCNST;
+     	           ELSE PAR.IsCnst:=dummycnst; END;
+     PAR.Factors:=DIPPFACTAV;
+END CGBOPT;
+
+PROCEDURE CGBOPTWRITE();
+(*Comprehensive Groebner Basis Options Write
+Writes the options from the global Variable PAR on the output stream*)
+BEGIN
+DEB_BEGIN(CGBOPTWRITE);
+     BLINES(1);
+     SWRITE("Options for computation of Groebner systems are: ");
+	SWRITE("(");
+	UWRIT1(PAR.outputlevel);SWRITE(",");
+	IF PAR.factorize THEN SWRITE("1,"); ELSE SWRITE("0,"); END;
+	UWRIT1(PAR.normalform);SWRITE(",");
+	UWRIT1(PAR.compcond);SWRITE(",");
+	UWRIT1(PAR.char);SWRITE(",");
+	UWRIT1(PAR.TermOrderPol);SWRITE(",");
+	UWRIT1(PAR.TermOrderCoef);SWRITE(",");
+	IF PAR.genericOnly THEN SWRITE("1"); ELSE SWRITE("0"); END;	
+	SWRITE(")");
+     BLINES(0);
+     CASE PAR.outputlevel OF
+     	 0: SWRITE("No output.")|
+     	 1: SWRITE("Some output during computation.");
+     END;
+     BLINES(0);
+     CASE PAR.factorize OF
+         0: SWRITE ("Without factorization of coefficients.")|
+     	 1: SWRITE ("With factorization of coefficients.")|
+     	 2: SWRITE ("With factorization using variable order optimization of coefficients.");
+     END;
+     BLINES(0);
+     IF PAR.normalform=0 THEN SWRITE("Top-reduction only.");
+     	                 ELSE SWRITE("Normal reduction."); END;
+     BLINES(0);
+     SWRITE("Conditions are evaluated ");
+     CASE PAR.compcond OF
+         0: SWRITE("by comparing.")|
+         1: SWRITE("using reduced sets. "); BLINES(0)|
+         2: SWRITE("using Groebner bases."); BLINES(0)|
+     END;
+     BLINES(0);
+     SWRITE("Characteristic is ");
+     IF PAR.char=0 THEN SWRITE("0."); ELSE SWRITE("arbitrary."); END;
+     BLINES(0);
+     SWRITE("Term order: "); EVOWRITE(PAR.TermOrderPol); BLINES(0);
+     SWRITE("Coefficient term order: "); EVOWRITE(PAR.TermOrderCoef);
+     BLINES(0);
+     IF PAR.genericOnly THEN SWRITE("Generic case only.");
+                        ELSE SWRITE("All cases are considered."); END;
+     BLINES(0);
+     BLINES(1);
+END CGBOPTWRITE;
+
+PROCEDURE dummycnst(A: LIST): BOOLEAN;
+(* Dummy constant.
+Value for PAR.IsCnst. Returns false always (nothing is constant). *)
+BEGIN
+DEB_BEGIN(dummycnst);
+     RETURN(FALSE);
+END dummycnst;
+
+PROCEDURE dummyfactorize(A: LIST): LIST;
+(* Dummy factorize.
+Value for PAR.factorize. Does not factorize. Returns a list containing A.*)
+BEGIN
+DEB_BEGIN(dummyfactorize);
+     RETURN(LIST1(A));
+END dummyfactorize;
+
+PROCEDURE CondEvalSim(Cond, COEF: LIST): COLOUR;
+(* Condition evaluate using simple method.
+Cond is a Condition.
+COEF is a (coefficient) polynomial.
+Tests whether COEF =0, <>0 or unknown wrt. to Cond.
+Returns zero iff COEF is an element of CondZero(Cond).
+Returns nzero iff COEF is an element of CondNzero(Cond).
+Otherwise returns unknown. *)
+BEGIN
+DEB_BEGIN(CondEvalSim);
+     IF MEMBER(COEF, CondZero(Cond))=1 THEN RETURN(zero); END;
+     IF MEMBER(COEF, CondNzero(Cond))=1 THEN RETURN(nzero); END;
+     RETURN(unknown);
+END CondEvalSim;
+
+PROCEDURE CondEvalRed(Cond, COEF: LIST): COLOUR;
+(* Condition evaluate using reduced set method.
+Cond is a Condition where CondZero(Cond) is a reduced set and 
+CondNzero(Cond) is reduced wrt CondZero(Cond).
+COEF is a (coefficient) polynomial.
+Tests whether COEF =0, <>0 or unknown wrt. to Cond.
+Returns zero iff a reduction of COEF to zero wrt. CondZero(Cond) is found.
+Returns nzero iff a normal form of COEF wrt. CondZero(Cond) is an
+element of CondNzero(Cond). (Note: only one of the possible normal
+forms is checked.)
+Otherwise returns unknown. *)
+BEGIN
+DEB_BEGIN(CondEvalRed);
+     IF MEMBER(COEF, CondZero(Cond))=1 THEN RETURN(zero); END;
+     IF MEMBER(COEF, CondNzero(Cond))=1 THEN RETURN(nzero); END;
+     EvordSet(PAR.TermOrderCoef);
+     COEF:=PFINOR(CondZero(Cond),COEF);
+     EvordReset();
+     IF COEF=SIL THEN RETURN(zero); END;
+     IF (MEMBER(COEF, CondNzero(Cond))=1) OR (PAR.IsCnst(COEF))
+       THEN RETURN(nzero); END;
+     RETURN(unknown);
+END CondEvalRed;
+
+PROCEDURE CondEvalDred(Cond, COEF: LIST): COLOUR;
+(* Condition evaluate using d-reduced set method.
+Cond is a Condition where CondZero(Cond) is a d-reduced set and 
+CondNzero(Cond) is d-reduced wrt CondZero(Cond).
+COEF is a (coefficient) polynomial.
+Tests whether COEF =0, <>0 or unknown wrt. to Cond.
+Returns zero iff a d-reduction of COEF to zero wrt. CondZero(Cond) is found.
+Returns nzero iff a d-normal form of COEF wrt. CondZero(Cond) is an
+element of CondNzero(Cond). (Note: only one of the possible normal
+forms is checked.)
+Otherwise returns unknown. *)
+BEGIN
+DEB_BEGIN(CondEvalDred);
+     IF MEMBER(COEF, CondZero(Cond))=1 THEN RETURN(zero); END;
+     IF MEMBER(COEF, CondNzero(Cond))=1 THEN RETURN(nzero); END;
+     EvordSet(PAR.TermOrderCoef);
+     COEF:=PFIDNOR(CondZero(Cond),COEF);
+     EvordReset();
+     IF COEF=SIL THEN RETURN(zero); END;
+     IF MEMBER(COEF, CondNzero(Cond))=1 THEN RETURN(nzero); END;
+     RETURN(unknown);
+END CondEvalDred;
+
+PROCEDURE CondEvalGb(Cond, COEF: LIST): COLOUR;
+(* Evaluate Condition using GB method.
+Cond is a Condition, where CondZero(Cond) is a Groebner basis and
+CondNzero(Cond) is reduced wrt. CondZero(Cond).
+COEF is a (coefficient) polynomial.
+Tests whether COEF =0, <>0 or unknown wrt. to Cond.
+Returns zero iff COEF reduces to zero wrt. CondZero(Cond).
+Returns nzero iff the normal form of COEF wrt. CondZero(Cond) is an
+element of CondNzero(Cond). (Note: only one of the possible normal
+forms is checked.)
+Otherwise returns unknown. *)
+BEGIN
+DEB_BEGIN(CondEvalGb);
+     EvordSet(PAR.TermOrderCoef);
+     COEF:=PFINOR(CondZero(Cond),COEF);
+     EvordReset();
+     IF COEF=SIL THEN RETURN(zero); END;
+     IF (MEMBER(COEF, CondNzero(Cond))=1) OR (PAR.IsCnst(COEF))
+       THEN RETURN(nzero); END;
+     RETURN(unknown);
+END CondEvalGb;
+
+PROCEDURE CondRamifSim(COEF, Cond: LIST; VAR CD0, CD1: LIST);
+(* Condition ramificate.
+COEF is a (coefficient) polynomial.
+Cond is a Condition.
+Returns Conditions CD0 and CD1 such that CondEvalsim(COEF,CD0)=zero,
+CondEvalsim(COEF,CD1)=nzero and for all coefficients c: 
+CondEvalsim(C,Cond)=zero/nzero ==> CondEvalsim(C,CDi)=zero/nzero
+*)
+BEGIN
+DEB_BEGIN(CondRamifSim);
+     CD0:=CondCons(COMP(COEF,CondZero(Cond)), CondNzero(Cond));
+     CD1:=CondCons(CondZero(Cond), COMP(COEF,CondNzero(Cond)));
+END CondRamifSim;
+
+PROCEDURE CondRamifRed(COEF, Cond: LIST; VAR CD0, CD1: LIST);
+(* Condition ramificate using reduced sets.
+COEF is a (coefficient) polynomial.
+Cond is a Condition such that CondZero(Cond) contains a reduced set.
+Returns Conditions CD0 and CD1 such that CondEvalred(COEF,CD0)=zero,
+CondEvalred(COEF,CD1)=nzero and for all coefficients c: 
+CondEvalred(C,Cond)=zero/nzero ==> CondEvalred(C,CDi)=zero/nzero.
+If CD0 or CD1 would be a contradiction (1=0 or 0<>0) CondEmpty is
+returned.
+*)
+VAR RED, RS: LIST;
+    ONE, ZERO: BOOLEAN;
+BEGIN
+DEB_BEGIN(CondRamifRed);
+     CD0:=CondEmpty();
+     CD1:=CondEmpty();
+     EvordSet(PAR.TermOrderCoef);
+     (* Condition COEF=0 *)
+     RED:=PFILS(COMP(COEF,CondZero(Cond)),ONE);
+     RS:=PFILNOR(RED,CondNzero(Cond),ZERO);
+     IF NOT (ONE OR ZERO) THEN 
+       CD0:=CondCons(SetInsert(COEF,SetUnion(RED,CondZero(Cond))),
+     	       	      SetUnion(RS,CondNzero(Cond))); END;
+     (* Condition COEF<>0 *)
+     RS:=PFILNOR(CondZero(Cond),COMP(COEF,CondNzero(Cond)),ZERO);
+     IF NOT ZERO THEN
+       CD1:=CondCons(CondZero(Cond),SetUnion(RS,CondNzero(Cond))); END;
+     EvordReset();
+END CondRamifRed;
+
+PROCEDURE CondRamifDred(COEF, Cond: LIST; VAR CD0, CD1: LIST);
+(* Condition ramificate using d-reduced sets
+COEF is a (coefficient) polynomial.
+Cond is a Condition such that CondZero(Cond) is a d-reduced set.
+Returns Conditions CD0 and CD1 such that CondEvaldred(COEF,CD0)=zero,
+CondEvaldred(COEF,CD1)=nzero and for all coefficients c: 
+CondEvaldred(C,Cond)=zero/nzero ==> CondEvaldred(C,CDi)=zero/nzero.
+If CD0 or CD1 would be a contradiction (0<>0) CondEmpty is
+returned.
+*)
+VAR RED, RS: LIST;
+    ONE, ZERO: BOOLEAN;
+BEGIN
+DEB_BEGIN(CondRamifDred);
+     CD0:=CondEmpty();
+     CD1:=CondEmpty();
+     EvordSet(PAR.TermOrderCoef);
+     (* Condition COEF=0 *)
+     RED:=PFILDS(COMP(COEF,CondZero(Cond)),ONE);
+     RS:=PFILDNOR(RED,CondNzero(Cond),ZERO);
+     IF NOT (ONE OR ZERO) THEN 
+       CD0:=CondCons(SetInsert(COEF,SetUnion(RED,CondZero(Cond))),
+     	       	      SetUnion(RS,CondNzero(Cond))); END;
+     (* Condition COEF<>0 *)
+     RS:=PFILDNOR(CondZero(Cond),COMP(COEF,CondNzero(Cond)),ZERO);
+     IF NOT ZERO THEN
+       CD1:=CondCons(CondZero(Cond),SetUnion(RS,CondNzero(Cond))); END;
+     EvordReset();
+END CondRamifDred;
+
+PROCEDURE CondRamifGb(COEF, Cond: LIST; VAR CD0, CD1: LIST);
+(* Condition ramificate using Groebner bases.
+COEF is a (coefficient) polynomial.
+Cond is a Condition such that CondZero(Cond) is a Groebner basis.
+Returns Conditions CD0 and CD1 such that CondEvalgb(COEF,CD0)=zero,
+CondEvalgb(COEF,CD1)=nzero and for all coefficients c: 
+CondEvalgb(C,Cond)=zero/nzero ==> CondEvalgb(C,CDi)=zero/nzero.
+If CD0 or CD1 would be a contradiction (1=0 or 0<>0) CondEmpty is
+returned.
+*)
+VAR GB, RS: LIST;
+    ONE, ZERO: BOOLEAN;
+BEGIN
+DEB_BEGIN(CondRamifGb);
+     CD0:=CondEmpty();
+     CD1:=CondEmpty();
+     EvordSet(PAR.TermOrderCoef);
+     GB:=PFIGBA(CondZero(Cond),COEF,PAR.outputlevel,ONE);
+     RS:=PFILNOR(GB,CondNzero(Cond),ZERO);
+     IF NOT (ONE OR ZERO) THEN CD0:=CondCons(GB,RS); END;
+     RS:=PFILNOR(CondZero(Cond),COMP(COEF,CondNzero(Cond)),ZERO);
+     IF NOT ZERO THEN CD1:=CondCons(CondZero(Cond),RS); END;
+     EvordReset();
+END CondRamifGb;
+
+PROCEDURE CondEvalGen(Cond, COEF: LIST): COLOUR;
+(* Condition evaluate in generic case.
+Cond is a Condition.
+COEF is a (coefficient) polynomial.
+Tests whether COEF =0, <>0 or unknown wrt. to Cond.
+Returns nzero iff COEF is an element of CondNzero(Cond).
+Otherwise returns unknown. *)
+BEGIN
+DEB_BEGIN(CondEvalGen);
+     IF MEMBER(COEF, CondNzero(Cond))=1 THEN RETURN(nzero); END;
+     RETURN(unknown);
+END CondEvalGen;
+
+PROCEDURE CondRamifGen(COEF, Cond: LIST; VAR CD0, CD1: LIST);
+(* Condition ramificate in generic case.
+COEF is a (coefficient) polynomial.
+Cond is a Condition.
+Returns empty condition in CD0.
+Returns Condition CD1 such that CondEvalGen(COEF,CD1)=nzero
+and for all coefficients c: 
+CondEvalGen(C,Cond)=nzero ==> CondEvalGen(C,CD1)=nzero
+*)
+BEGIN
+DEB_BEGIN(CondRamifGen);
+     CD0:=CondEmpty();
+     CD1:=CondCons(SIL, COMP(COEF,CondNzero(Cond)));
+END CondRamifGen;
+
+
+(* Do not use any of the following outside from CGB! -- mp*)
+
+(*****************************************************************************)
+(* LIST output                                                               *)
+(*****************************************************************************)
+
+PROCEDURE FLWRITE(L: LIST);
+(* Formatted list write.
+The input list L is written to the output stream.*)
+
+VAR  E: LIST;
+     I: INTEGER;
+BEGIN
+     IF L < BETA THEN AWRITE(L); RETURN END;
+     SWRITE("(");
+     WHILE L <> SIL DO
+     	  ADV(L, E,L);
+	  IF E < BETA THEN AWRITE(E); ELSE FILWRITE(E,1); END;
+          IF L <> SIL THEN SWRITE(","); END;
+     END;
+     SWRITE(")");
+     RETURN;
+END FLWRITE;
+
+PROCEDURE FILWRITE(L: LIST; N:INTEGER);
+(* Formatted indented list write.
+The input list L is written to the output stream.*)
+
+VAR  E: LIST;
+     I: INTEGER;
+     R: BOOLEAN;
+BEGIN
+     BLINES(0);
+     FOR I:=1 TO N DO SWRITE(" "); END;
+     SWRITE("(");
+     R:=FALSE;
+     WHILE L <> SIL DO
+     	  ADV(L, E,L);
+	  IF E < BETA THEN AWRITE(E); ELSE FILWRITE(E,N+1); R:=TRUE; END;
+          IF L <> SIL THEN SWRITE(","); END;
+     END;
+     IF R THEN
+     	  BLINES(0); 
+	  FOR I:=1 TO N DO SWRITE(" "); END;
+     END;
+     SWRITE(")");
+END FILWRITE;
+
+(*****************************************************************************)
+(* Polynomial conversion                                                     *)
+(*****************************************************************************)
+
+PROCEDURE XPFDIP (DP, DOM, VARL: LIST): LIST;
+(* Recursive polynomial (with domain-descriptor) from distributive polynomial.
+DP is a polynomial in distributive representation.
+DOM is a domain descriptor.
+VARL is a list of variables.
+Returns a Polynomial (DOM, P, R, VARL) where
+P is the recursive representation of DP and R is the number of variables of DP.
+*)
+VAR R, B, TEVORD: LIST;
+BEGIN
+     EvordSet(INVLEX);
+     DIPBSO(DP);	(* PFDIP needs INVLEX sorted polynomial! *)
+     PFDIP(DP, R,B);	(* R: #variables; B: rec.-pol.*)
+     EvordReset();
+     RETURN(LIST4(DOM, B, R, VARL));
+END XPFDIP;
+
+PROCEDURE PFLDIPL (DIPL, DOM, VARL: LIST): LIST;
+(* Recursive polynomial list (with domain-descriptor) from distributive
+polynomial list.
+DIPL is a list of polynomials in distributive representation.
+DOM is a domain descriptor.
+VARL is a list of variables.
+Returns a list containing an element
+(DOM, P, R, VARL) for each distributive polynomial dp in DIPL where
+P is the recursive representation of dp and R is the number of variables of dp
+(all polynomials in DIPL are assumed to have the same number of variables).
+*)
+VAR RET, P, B: LIST;
+BEGIN
+DEB_BEGIN(PFLDIPL);
+     RET:=SIL;
+     WHILE DIPL <> SIL DO
+          ADV(DIPL, P,DIPL);
+	  RET:=COMP(XPFDIP(P, DOM, VARL), RET);
+     END;
+     RETURN (INV(RET));
+END PFLDIPL;
+
+PROCEDURE XDIPFPF (P: LIST; VAR DOM, VARL: LIST): LIST;
+(* Distributive polynomial from recursive polynomial (with domain-descriptor).
+P is a polynomial in recursive representation. 
+Returns this polynomial in distributive representation, sorted according
+to the value of EVORD, the domain-descriptor in DOM and the list of
+variables in VARL.
+*)
+
+VAR B, R, DI: LIST;
+BEGIN
+DEB_BEGIN(XDIPFPF);
+     FIRST4(P, DOM, B, R, VARL);
+     DI:=DIPFP(R, B);
+     DIPBSO(DI);	(* DIPFP returns INVLEX sorted polynomial! *)
+     RETURN(DI);
+END XDIPFPF;
+
+PROCEDURE DIPLFPFL (PFL: LIST; VAR DOM, VARL: LIST): LIST;
+(* Distributive polynomial list from recursive polynomial
+(with domain-descriptor) list.
+PFL is a list of polynomials in recursive representation. 
+Returns a list of this polynomials in distributive representation
+the domain-descriptor in DOM and the list of variables in VARL.
+*)
+
+VAR RET, P: LIST;
+BEGIN
+DEB_BEGIN(DIPLFPFL);
+     RET:=SIL;
+     WHILE PFL <> SIL DO
+          ADV(PFL, P, PFL);
+       	  RET:=COMP(XDIPFPF(P, DOM, VARL), RET);
+     END;
+     RETURN(INV(RET));
+END DIPLFPFL;
+
+PROCEDURE DIFPF(P, D: LIST; VAR DOM, VARL: LIST): LIST;
+(* Distributive polynomial with arbitrary domain coefficients from
+recursive polynomial (with domain-descriptor).
+P is a polynomial with domain descriptor.
+D is a domain descriptor.
+Returns P in distributive representation over domain D,
+sorted according to the value of EVORD, the domain-descriptor of P in DOM, and
+the list of variables in VARL.
+*)
+VAR AL, EL, B, BL: LIST;
+BEGIN
+DEB_BEGIN(DIFPF);
+     P:=XDIPFPF(P,DOM,VARL);
+     IF P=0 THEN RETURN(0); END;
+     ValisSet(VARL);
+     B:=SIL;
+     WHILE P<>SIL DO
+     	   DIPMAD(P, AL,EL,P); 
+           BL:=ADFI(D,AL);  
+           IF ADSIGN(BL) <> 0 THEN B:=DIPMCP(EL,BL,B) END; 
+     END; 
+     IF B = SIL THEN B:=0; ELSE B:=INV(B); DIPBSO(B); END; 
+     ValisReset();
+     RETURN(B);
+END DIFPF;
+
+PROCEDURE DILFPFL(PFL, D: LIST; VAR DOM, VARL: LIST): LIST;
+(* Distributive polynomial list with arbitrary domain coefficients from
+recursive polynomial list (with domain-descriptor).
+P is a polynomial list with domain descriptor.
+D is a domain descriptor.
+Returns a list containing the polynomials from PFL
+in distributive representation over domain D,
+sorted according to the value of EVORD, the domain-descriptor of PFL
+in DOM, and the list of variables in VARL.
+*)
+VAR RET, P: LIST;
+BEGIN
+DEB_BEGIN(DILFPFL);
+     RET:=SIL;
+     WHILE PFL <> SIL DO
+          ADV(PFL, P, PFL);
+       	  RET:=COMP(DIFPF(P,D, DOM, VARL), RET);
+     END;
+     RETURN(INV(RET));
+END DILFPFL;
+
+(*****************************************************************************)
+(* Groebner bases and related procedures for recursive integral polynomials  *)
+(*****************************************************************************)
+
+PROCEDURE PFIGB(PFL, TF: LIST; VAR ONE: BOOLEAN): LIST;
+(* Integral Polynomial Groebner Basis.
+PFL is a list of polynomials in recursive representation.
+TF is the trace flag.
+Returns the Groebner Basis of PFL wrt. to the total degree inverse 
+lexicographical term order.
+ONE=TRUE iff 1 is an element of the Groebner Basis.*)
+
+VAR GB, DOM, VARL: LIST;
+BEGIN
+DEB_BEGIN(PFIGB);
+     ONE:=FALSE;
+     PFL:=DIPLFPFL(PFL, DOM, VARL); DILBSO(PFL);
+     ValisSet(VARL);
+     GB:=DIIPGB(PFL, TF);
+     IF GB<>SIL THEN IF DIIPON(FIRST(GB))=1 THEN ONE:=TRUE; END; END;
+     ValisReset();
+     RETURN (PFLDIPL(GB, DOM, VARL));
+END PFIGB;
+
+PROCEDURE PFIGBA(PFL, P, TF: LIST; VAR ONE: BOOLEAN): LIST;
+(* Integral Polynomial Groebner Basis augmentation.
+PFL is a list of polynomials in recursive representation.
+P is a polynomial.
+TF is the trace flag.
+Returns the Groebner Basis of PFL and P wrt. to the total degree inverse 
+lexicographical term order.
+ONE=TRUE iff 1 is an element of the Groebner Basis.*)
+
+VAR GB, DOM, VARL: LIST;
+BEGIN
+DEB_BEGIN(PFIGBA);
+     ONE := FALSE;
+     P:=XDIPFPF(P, DOM,VARL);
+     PFL:=DIPLFPFL(PFL, DOM,VARL);
+     ValisSet(VARL);
+     GB:=DIIGBA(P,PFL,TF);
+     ValisReset();
+     IF GB<>SIL THEN IF DIIPON(FIRST(GB))=1 THEN ONE:=TRUE; END; END;
+     RETURN (PFLDIPL(GB, DOM, VARL));
+END PFIGBA;
+
+PROCEDURE PFILS(B: LIST; VAR ONE: BOOLEAN): LIST;
+(* Integral polynomial list irreducible set.
+B is a list of polynomials in recursive representation.
+Returns the result of reducing B.
+ONE=TRUE iff 1 is an element of the result. *)
+
+VAR DOM, VARL: LIST;
+BEGIN
+DEB_BEGIN(PFILS);
+     ONE:=FALSE;
+     B:=DIPLFPFL(B, DOM, VARL);
+     ValisSet(VARL);
+     B:=DIILIS(B);
+     IF B<>SIL THEN IF DIIPON(FIRST(B))=1 THEN ONE:=TRUE; END; END;
+     ValisReset();
+     RETURN (PFLDIPL(B, DOM, VARL));
+END PFILS;
+
+PROCEDURE DIILIS(P: LIST): LIST; 
+(*Distributive integral polynomial list irreducible set.
+P is a list of distributive integral polynomials,
+PP is the result of reducing each p element of P modulo P-(p)
+until no further reductions are possible. *)
+VAR   CL, EL, FL, IRR, LL, PL, PP, PS, RP, SL: LIST; 
+BEGIN
+      (*initialise. *) PP:=P; PS:=BETA; 
+      WHILE PP <> SIL DO ADV(PP, PL,PP); DIIPCP(PL, CL,PL); 
+            IF PL <> 0 THEN PS:=COMP(PL,PS); END; 
+            END; 
+      RP:=PS; PP:=INV(PS); LL:=LENGTH(PP); IRR:=0; 
+      IF LL <= 1 THEN RETURN(PP); END; 
+      (*reduce until all polynomials are irreducible. *) 
+      LOOP ADV(PP, PL,PP); EL:=DIPEVL(PL); PL:=DIIPNF(PP,0,PL); 
+           IF PL = 0 THEN LL:=LL-1; 
+              IF LL <= 1 THEN EXIT END; 
+              ELSE PL:=DIIPNORM(PL); FL:=DIPEVL(PL); SL:=EVSIGN(FL); 
+              IF SL = 0 THEN PP:=LIST1(PL); EXIT; END; 
+              SL:=EQUAL(EL,FL); 
+              IF SL = 1 THEN IRR:=IRR+1; ELSE IRR:=0; DIIPCP(PL,
+                 CL,PL); END; 
+              PS:=LIST1(PL); SRED(RP,PS); RP:=PS; END; 
+           IF IRR = LL THEN EXIT END; 
+           END; (*loop*)
+     RETURN(PP);
+END DIILIS; 
+
+
+PROCEDURE PFINOR(B, P: LIST): LIST;
+(* Integral Polynomial Normal Form.
+B is a list of polynomials in recursive representation.
+P is a polynomial in recursive representation.
+Returns the normal form of P wrt. B, or SIL if this normal form is 0. *)
+
+VAR NF, DOM, VARL: LIST;
+BEGIN
+DEB_BEGIN(PFINOR);
+     B:=DIPLFPFL(B, DOM,VARL);
+     ValisSet(VARL);
+     NF:=DIIPNF(B, 0, XDIPFPF(P, DOM,VARL));
+     IF NF=0 THEN ValisReset(); RETURN SIL; END;
+     NF:=DIIPNORM(NF);
+     ValisReset();
+     RETURN (XPFDIP(NF, DOM, VARL));
+END PFINOR;
+
+
+PROCEDURE PFILNOR(B, P: LIST; VAR ZERO: BOOLEAN): LIST;
+(* Integral Polynomial List Normal Form.
+B is a list of polynomials in recursive representation.
+P is a list of polynomials in recursive representation.
+Returns a list of (non-zero, not constant) normal forms of each p in P wrt. B.
+ZERO=TRUE iff one of the normal forms is zero. *)
+
+VAR RET, NF, p: LIST;
+BEGIN
+DEB_BEGIN(PFILNOR);
+     RET:=SIL;
+     ZERO:=FALSE;
+     WHILE P<>SIL DO
+     	  ADV(P, p, P);
+     	  NF:=PFINOR(B, p);
+     	  IF NF<>SIL THEN IF (MEMBER(NF,RET)=0) AND (NOT PAR.IsCnst(NF))
+     	       	    	    THEN RET:=COMP(NF,RET); END;
+     	       	     ELSE ZERO:=TRUE; END;
+     END;
+     RETURN (INV(RET));
+END PFILNOR;
+
+
+PROCEDURE PFILDS(B: LIST; VAR ONE: BOOLEAN): LIST;
+(* Integral polynomial list d-irreducible set.
+B is a list of polynomials in recursive representation.
+Returns the result of d-reducing B.
+ONE=FALSE.*)
+
+VAR DOM, VARL, L, P, NP, HC, HT, NHC, NHT, dummy: LIST;
+    I: INTEGER;
+BEGIN
+DEB_BEGIN(PFILDS);
+     ONE:=FALSE;
+     IF B=SIL THEN RETURN(SIL); END;
+     B:=DIPLFPFL(B, DOM, VARL);
+     L:=LENGTH(B);
+     I:=0;
+     LOOP
+     	 ADV(B, P,B);
+     	 NP:=DIIPDNF(B,0,P);
+     	 IF NP=0 THEN L:=L-1;
+     	 ELSE
+     	     NP:=DIIPAB(NP);
+	     DIPMAD(P, HC,HT,dummy);
+     	     DIPMAD(NP, NHC,NHT,dummy);
+     	     IF (EQUAL(HC,NHC)=1) AND (EQUAL(HT,NHT)=1)
+     	       THEN IF I>0 THEN I:=I+1; ELSE I:=1; END;
+     	       ELSE I:=0; END;
+     	       B:=CONC(B,LIST1(NP)); 
+     	 END;
+     	 IF I>=L THEN EXIT; END;
+     END;
+     RETURN (PFLDIPL(B, DOM, VARL));
+END PFILDS;
+
+
+PROCEDURE PFIDNOR(B, P: LIST): LIST;
+(* Integral Polynomial D Normal Form.
+B is a list of polynomials in recursive representation.
+P is a polynomial in recursive representation.
+Returns the d-normal form of P wrt. B, or SIL if this normal form is 0. *)
+
+VAR NF, DOM, VARL: LIST;
+BEGIN
+DEB_BEGIN(PFIDNOR);
+     B:=DIPLFPFL(B, DOM,VARL);
+     ValisSet(VARL);
+     NF:=DIIPDNF(B, 0, XDIPFPF(P, DOM,VARL));
+     IF NF=0 THEN ValisReset(); RETURN SIL; END;
+     NF:=DIIPAB(NF);
+     ValisReset();
+     RETURN (XPFDIP(NF, DOM,VARL));
+END PFIDNOR;
+
+PROCEDURE PFILDNOR(B, P: LIST; VAR ZERO: BOOLEAN): LIST;
+(* Integral Polynomial List D-Normal Form.
+B is a list of polynomials in recursive representation.
+P is a list of polynomials in recursive representation.
+Returns a list of (non-zero) d-normal forms of each p in P wrt. B.
+ZERO=TRUE iff one of the d-normal forms is zero. *)
+
+VAR RET, NF, p: LIST;
+BEGIN
+DEB_BEGIN(PFILDNOR);
+     RET:=SIL;
+     ZERO:=FALSE;
+     WHILE P<>SIL DO
+     	  ADV(P, p, P);
+     	  NF:=PFIDNOR(B, p);
+     	  IF NF<>SIL THEN IF MEMBER(NF,RET)=0 THEN RET:=COMP(NF,RET); END;
+     	       	     ELSE ZERO:=TRUE; END;
+     END;
+     RETURN (INV(RET));
+END PFILDNOR;
+
+PROCEDURE PFWRITE(P: LIST);
+(* Integral polynomial write.
+P is a polynomial in recursive representation with domain-descriptor.
+P is written to the outputstream (wrt. the term order in EVORD).
+*)
+VAR DOM, VARL: LIST;
+BEGIN
+DEB_BEGIN(PFWRITE);
+     P:=XDIPFPF(P, DOM,VARL);
+     ValisSet(VARL);
+     DIIPWR(P,VARL);
+     ValisReset();
+END PFWRITE;
+
+PROCEDURE DIIPNORM(P: LIST): LIST;
+(* Distributive integral polynomial norm.
+Returns a polynomial r, were  n*r=p for an Integer n, the content of r is 1
+and the highest coefficient of r is not negative.*)
+VAR C, DUMMY: LIST;
+BEGIN
+DEB_BEGIN(DIIPNORM);
+     DIIPCP(P, C,DUMMY);
+     P:=DIIPIQ(P,C);
+     IF DIIPSG(P)=-1 THEN RETURN (DIIPNG(P));
+     	       	     ELSE RETURN (P); END;
+END DIIPNORM;
+
+(*****************************************************************************)
+(* Routines for distributive polynomials over polynomial rings		     *)
+(*****************************************************************************)
+
+PROCEDURE DIP2AD(P,d,rest: LIST): LIST;
+(* distributive polynomial to arbitrary domain.
+   P is a polynomial in distributive representation,
+   d is a domain number, rest is a domain descriptor,
+   P1 is P with added domain numbers and descriptors *)
+VAR P1,exp,coe: LIST;
+BEGIN
+   P1:=BETA;
+   WHILE P<>SIL DO
+      ADV(P,exp,P);
+      P1:=COMP(exp,P1);
+      ADV(P,coe,P);
+      coe:=COMP(d,COMP(coe,rest));
+      P1:=COMP(coe,P1);
+   END; (* while... *)
+   P1:=INV(P1);
+   RETURN P1;
+END DIP2AD;
+
+PROCEDURE AD2DIP(P: LIST; VAR d, rest: LIST): LIST;
+(* arbitrary domain to distributive polynomial.
+   P is a polynomial in distributive representation
+   with domain numbers and descriptors,
+   P1 is P without domain numbers and descriptors *)
+VAR P1,exp,coe,val: LIST;
+BEGIN
+   P1:=BETA;
+   WHILE P<>SIL DO
+      ADV(P,exp,P);
+      P1:=COMP(exp,P1);
+      ADV(P,coe,P);
+      ADV2(coe, d,val,rest);
+      P1:=COMP(val,P1);
+   END; (* while... *)
+   P1:=INV(P1);
+   RETURN(P1);
+END AD2DIP;
+
+PROCEDURE DIPPFACTAV (P: LIST) :LIST;
+(* Distributive polynomial over polynomial ring factorize in all variables.
+P is a distributive polynomial over a polynomial ring.
+Returns a list of all irreducible factors of P seen as a polynomial
+in all variables (including the variables in the coefficients). *)
+VAR c, d, dd, ExpPol, f, pol, PP, PV, q, r, VP,  rest, RET, s, vlist: LIST;
+BEGIN
+DEB_BEGIN(DIPPFACTAV);
+     IF P=SIL THEN RETURN(SIL); END;
+     dd := ADDDFDIP(P);
+     IF dd=0 THEN RETURN(SIL); END;
+     DIPFDIPP(P,ADDDFSTR("INT "), q, vlist);
+     ValisSet(vlist);
+     q:=AD2DIP(q, d,rest);
+     DIPVOPP(LIST1(q),VALIS, PP,VP,PV);
+     ValisSet(VP);
+     q:=FIRST(PP);
+     EvordSet(INVLEX);
+     DIPBSO(q);
+     PFDIP(q, r,q);
+     EvordReset();
+     IPFAC(r,q, s,c,f);
+     RET:=SIL;
+     PV:=INVPERM(PV);
+     WHILE f<>SIL DO
+     	  ADV(f, ExpPol,f);
+	  pol:=DIPFP(r,SECOND(ExpPol));
+(*	  DIPBSO(pol);*)
+     	  pol:=DIPERM(pol,PV); 
+	  pol:=DIP2AD(pol,d,rest);
+	  DIPPFDIP(pol,THIRD(dd),dd, pol,vlist);
+     	  RET:=COMP(pol, RET);
+     END;
+     ValisReset();
+     ValisReset();
+     RETURN(RET);
+END DIPPFACTAV;
+
+BEGIN
+     (* LISTVAR makes global variables known to the garbage collector. *)
+     EVORDSTACK:=SIL; LISTVAR(EVORDSTACK);
+     VALISSTACK:=SIL; LISTVAR(VALISSTACK);
+     LISTVAR(PAR.TermOrderPol);
+     LISTVAR(PAR.TermOrderCoef);
+     CGBOPT(CONC(LIST5(1,1,0,0,0),LIST3(IGRLEX,IGRLEX,0)));
+END CGBMISC.
+
+(* -EOF- *)
+

@@ -1,0 +1,61 @@
+#
+rm -rf */m2bin
+#
+echo "cd maskern"
+cd maskern
+./machen
+cd ..
+echo "--------------------------"
+echo "cd masarith"
+cd masarith
+./machen
+cd ..
+echo "--------------------------"
+echo "cd maslisp"
+cd maslisp
+./machen
+cd ..
+echo "--------------------------"
+exit
+cd maslog
+./machen
+cd ..
+echo "--------------------------"
+echo "cd masdom"
+cd masdom
+./machen
+cd ..
+echo "--------------------------"
+echo "cd masib"
+cd masib
+./machen
+cd ..
+echo "--------------------------"
+cd masmodul
+./machen
+cd ..
+echo "--------------------------"
+cd masnc
+./machen
+cd ..
+echo "--------------------------"
+cd maspoly
+./machen
+cd ..
+echo "--------------------------"
+cd masring
+./machen
+cd ..
+echo "--------------------------"
+cd masroot
+./machen
+cd ..
+echo "--------------------------"
+cd sacring
+./machen
+cd ..
+echo "--------------------------"
+cd masmain
+./machen
+cd ..
+echo "--------------------------"

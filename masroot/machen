@@ -6,7 +6,7 @@
 
 export MOCKA=/usr/local/mocka
 #export MOCKAM2="-d  $MURUS/m2bin -CcallsMocka"
-export MOCKAM2="-d  ../maskern/m2bin "
+export MOCKAM2="-d  ../maskern/m2bin  -d ../masarith/m2bin -d ../maspoly/m2bin"
 export MOCKALINK="-lpthread -L/usr/X11R6/lib -lX11"
 
 

@@ -6,17 +6,22 @@ cd maskern
 ./machen
 cd ..
 echo "--------------------------"
-echo "cd masarith"
-cd masarith
-./machen
-cd ..
-echo "--------------------------"
 echo "cd maslisp"
 cd maslisp
 ./machen
 cd ..
 echo "--------------------------"
-exit
+echo "cd masarith"
+cd masarith
+./machen
+cd ..
+echo "--------------------------"
+echo "cd masroot"
+cd masroot
+./machen
+cd ..
+echo "--------------------------"
+echo "cd maslog"
 cd maslog
 ./machen
 cd ..
@@ -26,6 +31,7 @@ cd masdom
 ./machen
 cd ..
 echo "--------------------------"
+exit
 echo "cd masib"
 cd masib
 ./machen
@@ -44,10 +50,6 @@ cd maspoly
 cd ..
 echo "--------------------------"
 cd masring
-./machen
-cd ..
-echo "--------------------------"
-cd masroot
 ./machen
 cd ..
 echo "--------------------------"

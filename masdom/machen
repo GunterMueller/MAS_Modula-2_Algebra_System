@@ -6,7 +6,7 @@
 
 export MOCKA=/usr/local/mocka
 #export MOCKAM2="-d  $MURUS/m2bin -CcallsMocka"
-export MOCKAM2="-d  ../maskern/m2bin "
+export MOCKAM2="-d  ../maskern/m2bin -d ../maslisp/m2bin -d ../maspoly/m2bin "
 export MOCKALINK="-lpthread -L/usr/X11R6/lib -lX11"
 
 
@@ -17,9 +17,9 @@ rm -f $B/* # alte Kompilate werden entfernt
 
 
 # Definition Modules :
-for d in ADTOOLS.def  CGBFUNC.def  CGBSYS.def   DIPDCGB.def  DIPTOOLS.def  DOMC.def   DOMIP.def  DOMO.def   DOMRN.def \
-CGBAPPL.def  CGBMAIN.def  DIPADOM.def  DIPDDGB.def  DOMAF.def     DOMFF.def  DOMMD.def  DOMQ.def   DOMRP.def\
-CGBDSTR.def  CGBMISC.def  DIPAGB.def   DIPGB.def    DOMAPF.def    DOMI.def   DOMMI.def  DOMRF.def  MASADOM.def
+for d in  MASADOM.def ADTOOLS.def  CGBFUNC.def  CGBSYS.def   DIPDCGB.def  DIPTOOLS.def  DOMC.def   DOMIP.def  DOMO.def   DOMRN.def \
+CGBAPPL.def  CGBMAIN.def  DIPADOM.def  DIPDDGB.def  DOMAF.def     DOMFF.def  DOMMD.def  DOMQ.def   DOMRP.def \
+CGBDSTR.def  CGBMISC.def  DIPAGB.def   DIPGB.def    DOMAPF.def    DOMI.def   DOMMI.def  DOMRF.def  
 do
  echo $d
  m=${d%.def}

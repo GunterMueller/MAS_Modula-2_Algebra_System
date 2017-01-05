@@ -16,13 +16,23 @@ cd masarith
 ./machen
 cd ..
 echo "--------------------------"
-echo "cd masroot"
-cd masroot
+echo "cd maspoly"
+cd maspoly
 ./machen
 cd ..
 echo "--------------------------"
-echo "cd maslog"
-cd maslog
+echo "cd masring"
+cd masring
+./machen
+cd ..
+echo "--------------------------"
+echo "cd masnc"
+cd masnc
+./machen
+cd ..
+echo "--------------------------"
+echo "cd masmodul"
+cd masmodul
 ./machen
 cd ..
 echo "--------------------------"
@@ -30,34 +40,4 @@ echo "cd masdom"
 cd masdom
 ./machen
 cd ..
-echo "--------------------------"
-exit
-echo "cd masib"
-cd masib
-./machen
-cd ..
-echo "--------------------------"
-cd masmodul
-./machen
-cd ..
-echo "--------------------------"
-cd masnc
-./machen
-cd ..
-echo "--------------------------"
-cd maspoly
-./machen
-cd ..
-echo "--------------------------"
-cd masring
-./machen
-cd ..
-echo "--------------------------"
-cd sacring
-./machen
-cd ..
-echo "--------------------------"
-cd masmain
-./machen
-cd ..
-echo "--------------------------"
+

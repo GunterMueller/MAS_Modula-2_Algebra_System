@@ -56,7 +56,7 @@ dnl Write revision in configure
 AC_REVISION($Id: configure.in,v 1.13 1998/03/09 15:45:15 pesch Exp $)
 
 dnl Check for this file
-AC_INIT(masmain/MAS.mod)
+AC_INIT(masmain/MAS.mi)
 
 dnl config file
 AC_CONFIG_HEADER(config.h)
@@ -78,7 +78,6 @@ dnl Checks for programs.
 AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_CPP
-AC_PROG_MOCKA
 
 dnl Set CFLAGS if not given by user.
 dnl if test "${CFLAGS+set}" != set ; then
@@ -232,17 +231,17 @@ EOF
 $MTC $MTCFLAGS mtctest.md 1>&4 2>&5
 if test $? != 0; then
 	rm -f mtctest.*
-dnl	AC_MSG_ERROR("Sorry can not find reuse definition modules. Please install them and set MTCFLAGS appropriately.");
+	AC_MSG_ERROR("Sorry can not find reuse definition modules. Please install them and set MTCFLAGS appropriately.");
 fi;
 
 rm -f mtctest.*
 
 AC_CHECK_HEADERS(System.h,,
-dnl	AC_MSG_ERROR("Sorry can not find reuse C header files. Please install them and set CPPFLAGS appropriately.");
+	AC_MSG_ERROR("Sorry can not find reuse C header files. Please install them and set CPPFLAGS appropriately.");
 )
 
 AC_CHECK_LIB(reuse,main,,
-dnl	AC_MSG_ERROR("Sorry can not find the reuse library. Please install it and set LIBS appropriately.");
+	AC_MSG_ERROR("Sorry can not find the reuse library. Please install it and set LIBS appropriately.");
 )
 
 

@@ -452,7 +452,7 @@ echo > confdefs.h
 
 # A filename unique to this package, relative to the directory that
 # configure is in, which we can look for to find out if srcdir is correct.
-ac_unique_file=masmain/MAS.mod
+ac_unique_file=masmain/MAS.mi
 
 # Find the source files, if location was not specified.
 if test -z "$srcdir"; then
@@ -1231,7 +1231,7 @@ EOF
 $MTC $MTCFLAGS mtctest.md 1>&4 2>&5
 if test $? != 0; then
 	rm -f mtctest.*
-	{ echo "configure: error: "Sorry can not find reuse definition modules. Please install them and set MTCFLAGS appropriately."" 1>&2;  };
+	{ echo "configure: error: "Sorry can not find reuse definition modules. Please install them and set MTCFLAGS appropriately."" 1>&2; exit 1; };
 fi;
 
 rm -f mtctest.*
@@ -1273,7 +1273,7 @@ EOF
  
 else
   echo "$ac_t""no" 1>&6
-{ echo "configure: error: "Sorry can not find reuse C header files. Please install them and set CPPFLAGS appropriately."" 1>&2; };
+{ echo "configure: error: "Sorry can not find reuse C header files. Please install them and set CPPFLAGS appropriately."" 1>&2; exit 1; };
 
 fi
 done
@@ -1320,7 +1320,7 @@ EOF
 
 else
   echo "$ac_t""no" 1>&6
-{ echo "configure: error: "Sorry can not find the reuse library. Please install it and set LIBS appropriately."" 1>&2;  };
+{ echo "configure: error: "Sorry can not find the reuse library. Please install it and set LIBS appropriately."" 1>&2; exit 1; };
 
 fi
 

@@ -1231,7 +1231,7 @@ EOF
 $MTC $MTCFLAGS mtctest.md 1>&4 2>&5
 if test $? != 0; then
 	rm -f mtctest.*
-	{ echo "configure: error: "Sorry can not find reuse definition modules. Please install them and set MTCFLAGS appropriately."" 1>&2;  };
+	{ echo "configure: error: "Sorry can not find reuse definition modules. Please install them and set MTCFLAGS appropriately."" 1>&2; exit 1; };
 fi;
 
 rm -f mtctest.*

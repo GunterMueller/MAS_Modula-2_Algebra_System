@@ -1,0 +1,169 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Generated automatically from makemake.in by configure.
+# ----------------------------------------------------------------------------
+# $Id: makemake.in,v 1.2 1995/10/24 14:36:53 pesch Exp $
+# ----------------------------------------------------------------------------
+# The makemake Makefile generator for MAS
+# ----------------------------------------------------------------------------
+# This file is part of MAS.
+# ----------------------------------------------------------------------------
+# Copyright (c) 1995 Universitaet Passau
+# ----------------------------------------------------------------------------
+# $Log: makemake.in,v $
+# Revision 1.2  1995/10/24 14:36:53  pesch
+# Fixed generation of dependencies for .c files, which were not created.
+# Will now generate useful dependencies if some .h files can not be
+# found (when bootstrapping), too.
+#
+# Revision 1.1  1995/03/06  17:01:17  pesch
+# New files to make mas using GNU autoconf and GNU make. This replaces
+# the old Makefiles.
+#
+# ----------------------------------------------------------------------------
+
+: set -x
+
+text="usage: $0 makemake [directories]"
+
+top_srcdir=.
+
+MAKEMAKEAWK="$top_srcdir/makemake.awk"
+MAKEMAKE="makemake"
+
+AWK="awk" #"mawk"# will not work with gawk
+
+MTCCPP="/usr/bin/cpp"
+MTCCPPFLAGS="-P -DHAVE_LIBKPATHSEA -DHAVE_LIBREADLINE"
+
+MKDEP="gcc  -I/usr/local/lib/mtc//lib/include -MM -I$top_srcdir -I$top_srcdir/lib -I."
+
+GETIMPORTS="/usr/local/bin/GetImports -l/usr/local/bin"
+
+#	exit on signals
+trap 'exit 1' 1 2 3 15
+
+#	test arguments
+if test $# -eq 1
+then
+   case $1 in
+	 -*) echo "$text"; exit 1;;
+	  *) ;;
+   esac
+fi
+
+#	were given a list of directories?
+if test $# -eq 0
+then dirs=.
+else dirs=$*
+fi
+
+allsrc=
+
+for dir in $dirs
+do
+(
+   echo DIR\*`basename $dir`
+#	check for .md files
+   bb=""
+   for file in `ls $dir/*.md 2>/dev/null`
+   do
+      bn=`basename $file .md`
+      if test -f $bn.mdp
+        then  true
+        else bb="$bb $bn.md"
+      fi
+   done
+   echo MD\*$bb
+
+#	check for .mi files
+   allsrc="$allsrc $bb"
+   bb=""
+   for file in `ls $dir/*.mi 2>/dev/null`
+   do
+      bn=`basename $file .mi`
+      if test -f $bn.mip
+        then  true
+        else bb="$bb $bn.mi"
+      fi
+   done
+   echo MI\*$bb
+   allsrc="$allsrc $bb"
+
+#	check for .mdp files
+   bb=""
+   for file in `ls $dir/*.mdp 2>/dev/null`
+   do
+      bn=`basename $file .mdp`
+      bb="$bb $bn.mdp"
+   done
+   echo MDP\*$bb
+   allsrc="$allsrc $bb"
+
+#	check for .mip files
+   bb=""
+   for file in `ls $dir/*.mip 2>/dev/null`
+   do
+      bn=`basename $file .mip`
+      bb="$bb $bn.mip"
+   done
+   echo MIP\*$bb
+   allsrc="$allsrc $bb"
+
+#	check for .h files
+   bb=""
+   for file in `ls $dir/*.h 2>/dev/null`
+   do
+      bn=`basename $file .h`
+      if test -f $bn.md
+        then true
+        else bb="$bb $bn.h"
+      fi
+   done
+   echo CINC\*$bb
+   allsrc="$allsrc $bb"
+
+#	check for .c files
+   bb=""
+   for file in `ls $dir/*.c 2>/dev/null`
+   do
+      bn=`basename $file .c`
+      if test -f $bn.mi
+        then true
+        else bb="$bb $bn.c"
+      fi
+   done
+   echo CSRC\*$bb
+   allsrc="$allsrc $bb"
+
+#	all source files
+   echo ALLSRC\*$allsrc
+
+#	dependencies for the .mk file under construction
+   echo MKDEP\*"\$(top_srcdir)/`basename $dir`/`basename $dir`.mk: \$(`basename $dir`_ALLSRC) \$(MAKEMAKE) \$(MAKEMAKEAWK)"
+
+#	get dependencies of .md and .mi files
+   for file in `ls $dir/*.m[di] 2>/dev/null`
+   do
+      $GETIMPORTS 2>/dev/null < $file || echo "$0: error in module $file" 1>&2
+   done
+
+#	get dependencies of .mdp and .mip files
+   for file in `ls $dir/*.m[di]p 2>/dev/null`
+   do
+      $MTCCPP $MTCCPPFLAGS $file 2>/dev/null | $GETIMPORTS 2>/dev/null || echo "$0: error in module $file" 1>&2
+   done
+
+#	get dependencies of .c files
+   echo CDEP\*
+   opwd=`pwd`
+   cd $dir
+   for file in `ls *.c 2>/dev/null`
+   do
+      $MKDEP $file 2>&1 || echo "$0: error in $file" 1>&2
+   done
+   cd $opwd
+) | $AWK -f $MAKEMAKEAWK
+
+done 
+# -EOF-

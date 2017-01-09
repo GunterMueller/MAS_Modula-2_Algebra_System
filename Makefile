@@ -164,7 +164,7 @@ LDFLAGS=
 LIBS=-lreadline -ltermcap -lkpathsea -lreuse  -L/usr/local/lib/mtc//lib
 
 # The MODULA-2 compiler mtc
-MTC=/usr/local/bin/mtc
+MTC=/usr/local/bin/mtc -l/usr/local/lib/mtc/mtc/
 
 # The C preprocessor for use with Modula-2 input 
 # (must accept .mip and .mdp files)

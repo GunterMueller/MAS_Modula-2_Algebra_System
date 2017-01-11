@@ -1,0 +1,195 @@
+#include "SYSTEM_.h"
+
+#ifndef DEFINITION_MASLISPU
+#include "MASLISPU.h"
+#endif
+
+#ifndef DEFINITION_SACPOL
+#include "SACPOL.h"
+#endif
+
+#ifndef DEFINITION_SACDPOL
+#include "SACDPOL.h"
+#endif
+
+#ifndef DEFINITION_SACIPOL
+#include "SACIPOL.h"
+#endif
+
+#ifndef DEFINITION_SACPGCD
+#include "SACPGCD.h"
+#endif
+
+#ifndef DEFINITION_SACPFAC
+#include "SACPFAC.h"
+#endif
+
+#ifndef DEFINITION_SACROOT
+#include "SACROOT.h"
+#endif
+
+#ifndef DEFINITION_DIPC
+#include "DIPC.h"
+#endif
+
+#ifndef DEFINITION_DIPI
+#include "DIPI.h"
+#endif
+
+#ifndef DEFINITION_DIPRN
+#include "DIPRN.h"
+#endif
+
+#ifndef DEFINITION_DIPRNPOL
+#include "DIPRNPOL.h"
+#endif
+
+#ifndef DEFINITION_DIPRNGB
+#include "DIPRNGB.h"
+#endif
+
+#ifndef DEFINITION_DIPIGB
+#include "DIPIGB.h"
+#endif
+
+#ifndef DEFINITION_DIPGCD
+#include "DIPGCD.h"
+#endif
+
+#ifndef DEFINITION_DIPTOO
+#include "DIPTOO.h"
+#endif
+
+#ifndef DEFINITION_MASYMDIP
+#include "MASYMDIP.h"
+#endif
+
+#ifndef DEFINITION_MASLOADB
+#include "MASLOADB.h"
+#endif
+
+CHAR MASLOADB_rcsid [] = "$Id: MASLOADB.md,v 1.1 1992/01/22 15:11:47 kredel Exp $";
+CHAR MASLOADB_copyright [] = "Copyright (c) 1989 - 1992 Universitaet Passau";
+
+static CHAR rcsidi [] = "$Id: MASLOADB.mi,v 1.8 1995/11/05 09:08:56 kredel Exp $";
+static CHAR copyrighti [] = "Copyright (c) 1989 - 1992 Universitaet Passau";
+static  GetPRIME ARGS(());
+
+
+void MASLOADB_InitExternalsB
+# ifdef __STDC__
+()
+# else
+()
+# endif
+{
+  MASLISPU_Compiledf2(SACDPOL_DPFP, "DPFP", 4L);
+  MASLISPU_Compiledf2(SACPOL_PFDP, "PFDP", 4L);
+  MASLISPU_Compiledf0(GetPRIME, "PRIME", 5L);
+  MASLISPU_Compiledf3(SACIPOL_IPPROD, "IPPROD", 6L);
+  MASLISPU_Compiledf3(SACIPOL_IPSUM, "IPSUM", 5L);
+  MASLISPU_Compiledf3(SACIPOL_IPEXP, "IPEXP", 5L);
+  MASLISPU_Compiledf2(SACIPOL_IPNEG, "IPNEG", 5L);
+  MASLISPU_Compiledp1v2(DIPC_PFDIP, "PFDIP", 5L);
+  MASLISPU_Compiledp1(DIPC_DILBSO, "DILBSO", 6L);
+  MASLISPU_Compiledf2(DIPC_DILFPL, "DILFPL", 6L);
+  MASLISPU_Compiledp1v2(DIPC_PLFDIL, "PLFDIL", 6L);
+  MASLISPU_Compiledp1(DIPC_DIPBSO, "DIPBSO", 6L);
+  MASLISPU_Compiledf1(DIPC_DIPLDC, "DIPLDC", 6L);
+  MASLISPU_Compiledf1(DIPC_DIPLBC, "DIPLBC", 6L);
+  MASLISPU_Compiledf2(DIPRN_DIRPRP, "DIRPRP", 6L);
+  MASLISPU_Compiledf1(DIPRN_DIRPSG, "DIRPSG", 6L);
+  MASLISPU_Compiledf1(DIPRN_DIRPRD, "DIRPRD", 6L);
+  MASLISPU_Compiledp3(DIPRN_DIRPWR, "DIRPWR", 6L);
+  MASLISPU_Compiledf1(DIPRN_DIRPDM, "DIRPDM", 6L);
+  MASLISPU_Compiledf2(DIPRN_DIRPQ, "DIRPQ", 5L);
+  MASLISPU_Compiledp2v2(DIPRN_DIRPQR, "DIRPQR", 6L);
+  MASLISPU_Compiledf2(DIPRN_DIRPRQ, "DIRPRQ", 6L);
+  MASLISPU_Compiledf2(DIPRNPOL_RUPGCD, "RUPGCD", 6L);
+  MASLISPU_Compiledp2v2(DIPC_EVDFSI, "EVDFSI", 6L);
+  MASLISPU_Compiledf1(DIPC_EVDOV, "EVDOV", 5L);
+  MASLISPU_Compiledf2(DIPC_EVCOMP, "EVCOMP", 6L);
+  MASLISPU_Compiledp3v2(DIPC_EVCADD, "EVCADD", 6L);
+  MASLISPU_Compiledp1(DIPC_EVOWRITE, "EVOWRITE", 8L);
+  MASLISPU_Compiledp0(DIPC_EvordWrite, "EVORDWRITE", 10L);
+  MASLISPU_Compiledf2(DIPC_EVSUM, "EVSUM", 5L);
+  MASLISPU_Compiledf2(DIPC_EVDIF, "EVDIF", 5L);
+  MASLISPU_Compiledf1(DIPC_EVSIGN, "EVSIGN", 6L);
+  MASLISPU_Compiledf2(DIPC_EVLCM, "EVLCM", 5L);
+  MASLISPU_Compiledf1(DIPC_EVTDEG, "EVTDEG", 6L);
+  MASLISPU_Compiledf1(DIPC_DIPEVL, "DIPEVL", 6L);
+  MASLISPU_Compiledf2(DIPC_DIPFMO, "DIPFMO", 6L);
+  MASLISPU_Compiledf1(DIPC_DIPMRD, "DIPMRD", 6L);
+  MASLISPU_Compiledp1v3(DIPC_DIPMAD, "DIPMAD", 6L);
+  MASLISPU_Compiledf2(DIPC_DIPFP, "DIPFP", 5L);
+  MASLISPU_Compiledf1(DIPI_DIIFRP, "DIIFRP", 6L);
+  MASLISPU_Compiledf1(DIPI_DIILFR, "DIILFR", 6L);
+  MASLISPU_Compiledf2(DIPI_DIIPPS, "DIIPPS", 6L);
+  MASLISPU_Compiledp2v2(DIPI_DIIPQR, "DIIPQR", 6L);
+  MASLISPU_Compiledp2(DIPI_DIILWR, "DIILWR", 6L);
+  MASLISPU_Compiledf1(DIPRN_DIRFIP, "DIRFIP", 6L);
+  MASLISPU_Compiledf1(DIPRN_DIRLRD, "DIRLRD", 6L);
+  MASLISPU_Compiledf2(DIPRN_DIRPPR, "DIRPPR", 6L);
+  MASLISPU_Compiledf2(DIPRN_DIRPSM, "DIRPSM", 6L);
+  MASLISPU_Compiledf2(DIPRN_DIRPEX, "DIRPEX", 6L);
+  MASLISPU_Compiledf1(DIPRN_DIRPNG, "DIRPNG", 6L);
+  MASLISPU_Compiledp2v2(DIPTOO_DIPVOP, "DIPVOP", 6L);
+  MASLISPU_Compiledf2(DIPRNGB_DIRPSP, "DIRPSP", 6L);
+  MASLISPU_Compiledf2(DIPRNGB_DIRPNF, "DIRPNF", 6L);
+  MASLISPU_Compiledf1(DIPRNGB_DIRLIS, "DIRLIS", 6L);
+  MASLISPU_Compiledf2(DIPRNGB_DIRPGB, "DIRPGB", 6L);
+  MASLISPU_Compiledf2(DIPIGB_DIIPSP, "DIIPSP", 6L);
+  MASLISPU_Compiledf3(DIPIGB_DIIPNF, "DIIPNF", 6L);
+  MASLISPU_Compiledf1(DIPIGB_DIILIS, "DIILIS", 6L);
+  MASLISPU_Compiledf2(DIPIGB_DIIPGB, "DIIPGB", 6L);
+  MASLISPU_Compiledf1(DIPI_DIIPRD, "DIIPRD", 6L);
+  MASLISPU_Compiledp2(DIPI_DIIPWR, "DIIPWR", 6L);
+  MASLISPU_Compiledf1(DIPI_DIILRD, "DIILRD", 6L);
+  MASLISPU_Compiledf2(DIPI_DIIPDF, "DIIPDF", 6L);
+  MASLISPU_Compiledf2(DIPI_DIIPSM, "DIIPSM", 6L);
+  MASLISPU_Compiledf2(DIPI_DIIPEX, "DIIPEX", 6L);
+  MASLISPU_Compiledp3v3(SACPGCD_IPGCDC, "IPGCDC", 6L);
+  MASLISPU_Compiledf3(SACPGCD_IPRES, "IPRES", 5L);
+  MASLISPU_Compiledf3(SACPGCD_IPRPRS, "IPRPRS", 6L);
+  MASLISPU_Compiledp2v3(SACPFAC_IPFAC, "IPFAC", 5L);
+  MASLISPU_Compiledf1(DIPGCD_DIRFAC, "DIRFAC", 6L);
+  MASLISPU_Compiledf1(SACROOT_IPRIM, "IPRIM", 5L);
+  MASYMDIP_InitExternalsI();
+}
+
+static  GetPRIME
+# ifdef __STDC__
+()
+# else
+()
+# endif
+{
+  return SACPOL_PRIME;
+}
+
+void BEGIN_MASLOADB()
+{
+  static BOOLEAN has_been_called = FALSE;
+
+  if (!has_been_called) {
+    has_been_called = TRUE;
+
+    BEGIN_MASLISPU();
+    BEGIN_SACPOL();
+    BEGIN_SACDPOL();
+    BEGIN_SACIPOL();
+    BEGIN_SACPGCD();
+    BEGIN_SACPFAC();
+    BEGIN_SACROOT();
+    BEGIN_DIPC();
+    BEGIN_DIPI();
+    BEGIN_DIPRN();
+    BEGIN_DIPRNPOL();
+    BEGIN_DIPRNGB();
+    BEGIN_DIPIGB();
+    BEGIN_DIPGCD();
+    BEGIN_DIPTOO();
+    BEGIN_MASYMDIP();
+
+  }
+}

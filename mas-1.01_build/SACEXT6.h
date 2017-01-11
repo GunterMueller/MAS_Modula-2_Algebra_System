@@ -1,0 +1,10 @@
+#define DEFINITION_SACEXT6
+
+#ifndef DEFINITION_MASSTOR
+#include "MASSTOR.h"
+#endif
+
+extern CHAR SACEXT6_rcsid[];
+extern CHAR SACEXT6_copyright[];
+extern MASSTOR_LIST SACEXT6_IPFSFB ARGS((MASSTOR_LIST RL, MASSTOR_LIST C_1_A));
+extern void BEGIN_SACEXT6();

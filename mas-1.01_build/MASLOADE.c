@@ -1,0 +1,280 @@
+#include "SYSTEM_.h"
+
+#ifndef DEFINITION_MASLISPU
+#include "MASLISPU.h"
+#endif
+
+#ifndef DEFINITION_DIPADOM
+#include "DIPADOM.h"
+#endif
+
+#ifndef DEFINITION_MASADOM
+#include "MASADOM.h"
+#endif
+
+#ifndef DEFINITION_DIPTOOLS
+#include "DIPTOOLS.h"
+#endif
+
+#ifndef DEFINITION_DINNGB
+#include "DINNGB.h"
+#endif
+
+#ifndef DEFINITION_DOMAF
+#include "DOMAF.h"
+#endif
+
+#ifndef DEFINITION_DOMI
+#include "DOMI.h"
+#endif
+
+#ifndef DEFINITION_DOMFF
+#include "DOMFF.h"
+#endif
+
+#ifndef DEFINITION_DOMIP
+#include "DOMIP.h"
+#endif
+
+#ifndef DEFINITION_DOMMD
+#include "DOMMD.h"
+#endif
+
+#ifndef DEFINITION_DOMMI
+#include "DOMMI.h"
+#endif
+
+#ifndef DEFINITION_DOMRF
+#include "DOMRF.h"
+#endif
+
+#ifndef DEFINITION_DOMRN
+#include "DOMRN.h"
+#endif
+
+#ifndef DEFINITION_DOMRP
+#include "DOMRP.h"
+#endif
+
+#ifndef DEFINITION_DOMC
+#include "DOMC.h"
+#endif
+
+#ifndef DEFINITION_CGBMAIN
+#include "CGBMAIN.h"
+#endif
+
+#ifndef DEFINITION_CGBDSTR
+#include "CGBDSTR.h"
+#endif
+
+#ifndef DEFINITION_CGBMISC
+#include "CGBMISC.h"
+#endif
+
+#ifndef DEFINITION_DOMQ
+#include "DOMQ.h"
+#endif
+
+#ifndef DEFINITION_DOMO
+#include "DOMO.h"
+#endif
+
+#ifndef DEFINITION_DOMAPF
+#include "DOMAPF.h"
+#endif
+
+#ifndef DEFINITION_DIPGB
+#include "DIPGB.h"
+#endif
+
+#ifndef DEFINITION_DIPDDGB
+#include "DIPDDGB.h"
+#endif
+
+#ifndef DEFINITION_DIPDCGB
+#include "DIPDCGB.h"
+#endif
+
+#ifndef DEFINITION_DIPAGB
+#include "DIPAGB.h"
+#endif
+
+#ifndef DEFINITION_ADTOOLS
+#include "ADTOOLS.h"
+#endif
+
+#ifndef DEFINITION_MASLOADE
+#include "MASLOADE.h"
+#endif
+
+CHAR MASLOADE_rcsid [] = "$Id: MASLOADE.md,v 1.1 1992/01/22 15:11:52 kredel Exp $";
+CHAR MASLOADE_copyright [] = "Copyright (c) 1989 - 1992 Universitaet Passau";
+
+static CHAR rcsidi [] = "$Id: MASLOADE.mi,v 1.16 1995/03/06 15:55:40 pesch Exp $";
+static CHAR copyrighti [] = "Copyright (c) 1989 - 1992 Universitaet Passau";
+
+
+void MASLOADE_InitExternalsE
+# ifdef __STDC__
+()
+# else
+()
+# endif
+{
+  DOMAF_DomLoadAF();
+  DOMI_DomLoadI();
+  DOMIP_DomLoadIP();
+  DOMMD_DomLoadMD();
+  DOMMI_DomLoadMI();
+  DOMFF_DomLoadFF();
+  DOMRF_DomLoadRF();
+  DOMRN_DomLoadRN();
+  DOMC_DomLoadC();
+  DOMQ_DomLoadQ();
+  DOMO_DomLoadO();
+  DOMRP_DomLoadRP();
+  DOMAPF_DomLoadAPF();
+  ADTOOLS_AdLoadConvFunc();
+  MASLISPU_Compiledp0(MASADOM_DomSummary, "DOMAINS", 7L);
+  MASLISPU_Compiledf2(MASADOM_ADDIF, "ADDIF", 5L);
+  MASLISPU_Compiledf2(MASADOM_ADEXP, "ADEXP", 5L);
+  MASLISPU_Compiledf2(MASADOM_ADFI, "ADFI", 4L);
+  MASLISPU_Compiledf2(MASADOM_ADFIP, "ADFIP", 5L);
+  MASLISPU_Compiledf2(MASADOM_ADGCD, "ADGCD", 5L);
+  MASLISPU_Compiledp2v3(MASADOM_ADGCDE, "ADGCDE", 6L);
+  MASLISPU_Compiledf1(MASADOM_ADINV, "ADINV", 5L);
+  MASLISPU_Compiledf1(MASADOM_ADINVT, "ADINVT", 6L);
+  MASLISPU_Compiledf2(MASADOM_ADLCM, "ADLCM", 5L);
+  MASLISPU_Compiledf1(MASADOM_ADNEG, "ADNEG", 5L);
+  MASLISPU_Compiledf1(MASADOM_ADONE, "ADONE", 5L);
+  MASLISPU_Compiledf2(MASADOM_ADPROD, "ADPROD", 6L);
+  MASLISPU_Compiledf2(MASADOM_ADQUOT, "ADQUOT", 6L);
+  MASLISPU_Compiledf1(MASADOM_ADREAD, "ADREAD", 6L);
+  MASLISPU_Compiledf1(MASADOM_ADSIGN, "ADSIGN", 6L);
+  MASLISPU_Compiledf2(MASADOM_ADSUM, "ADSUM", 5L);
+  MASLISPU_Compiledp1(MASADOM_ADWRIT, "ADWRIT", 6L);
+  MASLISPU_Compiledf0(MASADOM_ADDDREAD, "ADDDREAD", 8L);
+  MASLISPU_Compiledp1(MASADOM_ADDDWRIT, "ADDDWRIT", 8L);
+  MASLISPU_Compiledf1(MASADOM_ADVLDD, "ADVLDD", 6L);
+  MASLISPU_Compiledf2(DIPADOM_DILRD, "DILRD", 5L);
+  MASLISPU_Compiledp2(DIPADOM_DILWR, "DILWR", 5L);
+  MASLISPU_Compiledf2(DIPADOM_DIFIP, "DIFIP", 5L);
+  MASLISPU_Compiledf2(DIPADOM_DIREAD, "DIREAD", 6L);
+  MASLISPU_Compiledp2(DIPADOM_DIWRIT, "DIWRIT", 6L);
+  MASLISPU_Compiledf2(DIPADOM_DIPBCP, "DIPBCP", 6L);
+  MASLISPU_Compiledf2(DIPADOM_DIPEXP, "DIPEXP", 6L);
+  MASLISPU_Compiledf2(DIPADOM_DIPDIF, "DIPDIF", 6L);
+  MASLISPU_Compiledf1(DIPADOM_DIPLIR, "DIPLIR", 6L);
+  MASLISPU_Compiledf1(DIPADOM_DIPNEG, "DIPNEG", 6L);
+  MASLISPU_Compiledf2(DIPADOM_DIPROD, "DIPROD", 6L);
+  MASLISPU_Compiledf2(DIPADOM_DIPSUM, "DIPSUM", 6L);
+  MASLISPU_Compiledf2(DIPADOM_DIPFAC, "DIPFAC", 6L);
+  MASLISPU_Compiledf2(DIPADOM_DIPSFF, "DIPSFF", 6L);
+  MASLISPU_Compiledf2(DIPADOM_DIPS, "DIPS", 4L);
+  MASLISPU_Compiledf2(DIPADOM_DIPNF, "DIPNF", 5L);
+  MASLISPU_Compiledp0(CGBMAIN_CGBIN, "CGBIN", 5L);
+  MASLISPU_Compiledp1(CGBMISC_CGBOPT, "CGBOPT", 6L);
+  MASLISPU_Compiledp0(CGBMISC_CGBOPTWRITE, "CGBOPTWRITE", 11L);
+  MASLISPU_Compiledf0(CGBDSTR_CdpRead, "CDPREAD", 7L);
+  MASLISPU_Compiledp1(CGBDSTR_CdpWrite, "CDPWRITE", 8L);
+  MASLISPU_Compiledf1(CGBMAIN_GSYS, "GSYS", 4L);
+  MASLISPU_Compiledf1(CGBMAIN_GSYSF, "GSYSF", 5L);
+  MASLISPU_Compiledf1(CGBMAIN_GSYSDIM, "GSYSDIM", 7L);
+  MASLISPU_Compiledf1(CGBMAIN_GSYSRED, "GSYSRED", 7L);
+  MASLISPU_Compiledp1(CGBDSTR_GsWrite, "GSYSWRITE", 9L);
+  MASLISPU_Compiledf1(CGBMAIN_CGBFGSYS, "CGBFGSYS", 8L);
+  MASLISPU_Compiledf1(CGBMAIN_CGBGLOBRED, "CGBGLOBRED", 10L);
+  MASLISPU_Compiledf1(CGBMAIN_CGBQFF, "CGBQFF", 6L);
+  MASLISPU_Compiledp1(CGBMAIN_CGBQFWRITE, "CGBQFWRITE", 10L);
+  MASLISPU_Compiledp1(CGBDSTR_CgbWrite, "CGBWRITE", 8L);
+  MASLISPU_Compiledp1(CGBDSTR_PdWrite, "PdWRITE", 7L);
+  MASLISPU_Compiledf2(DIPGB_DIPSP, "DIPSP", 5L);
+  MASLISPU_Compiledf2(DIPGB_DIPNOR, "DIPNOR", 6L);
+  MASLISPU_Compiledf1(DIPGB_DILIS, "DILIS", 5L);
+  MASLISPU_Compiledf2(DIPGB_DIPGB, "DIPGB", 5L);
+  MASLISPU_Compiledf2(DIPGB_DIIFSP, "DIIFSP", 6L);
+  MASLISPU_Compiledf3(DIPGB_DIIFNF, "DIIFNF", 6L);
+  MASLISPU_Compiledf1(DIPGB_DIIFLS, "DIIFLS", 6L);
+  MASLISPU_Compiledf2(DIPGB_DIIFGB, "DIIFGB", 6L);
+  MASLISPU_Compiledf2(DIPDDGB_DIDPSPOL, "DIDPSPOL", 8L);
+  MASLISPU_Compiledf2(DIPDDGB_DIDPGPOL, "DIDPGPOL", 8L);
+  MASLISPU_Compiledf3(DIPDDGB_DIDPDNF, "DIDPDNF", 7L);
+  MASLISPU_Compiledf3(DIPDDGB_DIDPENF, "DIDPENF", 7L);
+  MASLISPU_Compiledf1(DIPDDGB_DIDPCPLMS1, "DIDPCPLMS1", 10L);
+  MASLISPU_Compiledf1(DIPDDGB_DIDPELIMDGB, "DIDPELIMDGB", 11L);
+  MASLISPU_Compiledf1(DIPDDGB_DIDPREDDGB, "DIDPREDDGB", 10L);
+  MASLISPU_Compiledf2(DIPDDGB_DIDPLM1, "DIDPLM1", 7L);
+  MASLISPU_Compiledf3(DIPDDGB_DIDPTDR, "DIDPTDR", 7L);
+  MASLISPU_Compiledf2(DIPDDGB_DIDPDGB, "DIDPDGB", 7L);
+  MASLISPU_Compiledf3(DIPDDGB_DIDPEGB, "DIDPEGB", 7L);
+  MASLISPU_Compiledp1(DIPDCGB_SetDCGBopt, "SetDCGBopt", 10L);
+  MASLISPU_Compiledp1(DIPDCGB_SetTraceLevel, "SetTraceLevel", 13L);
+  MASLISPU_Compiledp1(DIPDCGB_SetDecompProc, "SetDecompProc", 13L);
+  MASLISPU_Compiledp1(DIPDCGB_SetUpdateProc, "SetUpdateProc", 13L);
+  MASLISPU_Compiledp1(DIPDCGB_SetVarOrdOpt, "SetVarOrdOpt", 12L);
+  MASLISPU_Compiledp1(DIPDCGB_SetReduceExp, "SetReduceExp", 12L);
+  MASLISPU_Compiledp1(DIPDCGB_SetFacSugar, "SetFacSugar", 11L);
+  MASLISPU_Compiledp1(DIPDCGB_SetBranchProc, "SetBranchProc", 13L);
+  MASLISPU_Compiledp0(DIPDCGB_WriteDCGBopt, "WriteDCGBopt", 12L);
+  MASLISPU_Compiledf1(DIPDCGB_GroebnerBases1, "GB1", 3L);
+  MASLISPU_Compiledf2(DIPDCGB_GroebnerBases2, "GB2", 3L);
+  MASLISPU_Compiledf1(DIPAGB_DIPAGB, "DIPAGB", 6L);
+  MASLISPU_Compiledp1(DIPAGB_LRNWRIT, "LRNWRIT", 7L);
+  MASLISPU_Compiledp1(DIPAGB_SetDIPAGBOptions, "SetDIPAGBOptions", 16L);
+  MASLISPU_Compiledp1(DIPAGB_SetDIPAGBTraceFlag, "SetDIPAGBTraceFlag", 18L);
+  MASLISPU_Compiledp1(DIPAGB_SetDIPAGBStrategy, "SetDIPAGBStrategy", 17L);
+  MASLISPU_Compiledp1(DIPAGB_SetDIPAGBVariableWeight, "SetDIPAGBVariableWeight", 23L);
+  MASLISPU_Compiledp0(DIPAGB_WriteDIPAGBOptions, "WriteDIPAGBOptions", 18L);
+  MASLISPU_Compiledp0(DIPAGB_WriteDIPAGBTraceFlag, "WriteDIPAGBTraceFlag", 20L);
+  MASLISPU_Compiledp0(DIPAGB_WriteDIPAGBStrategy, "WriteDIPAGBStrategy", 19L);
+  MASLISPU_Compiledp0(DIPAGB_WriteDIPAGBVariableWeight, "WriteDIPAGBVariableWeight", 25L);
+  MASLISPU_Compiledf3(DINNGB_DINNCP, "DINNCP", 6L);
+  MASLISPU_Compiledf3(DINNGB_DNNLGB, "DNNLGB", 6L);
+  MASLISPU_Compiledf3(DINNGB_DNNRGB, "DNNRGB", 6L);
+  MASLISPU_Compiledf3(DINNGB_DNN2GB, "DNN2GB", 6L);
+  MASLISPU_Compiledf3(DINNGB_DNNTGB, "DNNTGB", 6L);
+  MASLISPU_Compiledf2(DIPTOOLS_DIPPOWER, "DIPPOWER", 8L);
+  MASLISPU_Compiledf2(DIPTOOLS_DILPROD, "DILPROD", 7L);
+  MASLISPU_Compiledp2v2(DIPTOOLS_DIPFDIPP, "DIPFDIPP", 8L);
+  MASLISPU_Compiledp3v2(DIPTOOLS_DIPPFDIP, "DIPPFDIP", 8L);
+  MASLISPU_Compiledf2(DIPTOOLS_DIPCONV, "DIPCONV", 7L);
+  MASLISPU_Compiledf2(DIPTOOLS_DILCONV, "DILCONV", 7L);
+}
+
+void BEGIN_MASLOADE()
+{
+  static BOOLEAN has_been_called = FALSE;
+
+  if (!has_been_called) {
+    has_been_called = TRUE;
+
+    BEGIN_MASLISPU();
+    BEGIN_DIPADOM();
+    BEGIN_MASADOM();
+    BEGIN_DIPTOOLS();
+    BEGIN_DINNGB();
+    BEGIN_DOMAF();
+    BEGIN_DOMI();
+    BEGIN_DOMFF();
+    BEGIN_DOMIP();
+    BEGIN_DOMMD();
+    BEGIN_DOMMI();
+    BEGIN_DOMRF();
+    BEGIN_DOMRN();
+    BEGIN_DOMRP();
+    BEGIN_DOMC();
+    BEGIN_CGBMAIN();
+    BEGIN_CGBDSTR();
+    BEGIN_CGBMISC();
+    BEGIN_DOMQ();
+    BEGIN_DOMO();
+    BEGIN_DOMAPF();
+    BEGIN_DIPGB();
+    BEGIN_DIPDDGB();
+    BEGIN_DIPDCGB();
+    BEGIN_DIPAGB();
+    BEGIN_ADTOOLS();
+
+  }
+}

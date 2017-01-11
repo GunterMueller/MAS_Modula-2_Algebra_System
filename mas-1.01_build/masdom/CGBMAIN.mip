@@ -1,0 +1,1154 @@
+(* ----------------------------------------------------------------------------
+ * $Id: CGBMAIN.mip,v 1.14 1996/06/08 16:47:11 pesch Exp $
+ * ----------------------------------------------------------------------------
+ * This file is part of MAS.
+ * ----------------------------------------------------------------------------
+ * Copyright (c) 1989 - 1996 Universitaet Passau
+ * ----------------------------------------------------------------------------
+ * $Log: CGBMAIN.mip,v $
+ * Revision 1.14  1996/06/08 16:47:11  pesch
+ * Reformatted, removed obsolete procedures.
+ *
+ * Revision 1.13  1996/04/24 12:09:52  pesch
+ * Used EVOWRITE instead of WRORD for writing term orders.
+ * Removed WRORD.
+ * Reformatted import lists.
+ *
+ * Revision 1.12  1995/03/23  16:05:45  pesch
+ * Added new data structure Colp for coloured polynomials.
+ *
+ * Revision 1.11  1995/03/06  15:49:34  pesch
+ * Added new procedure GSYSF, Groebner system with factorization. This uses
+ * the new procedures GBSYSF and CONSGBF (also added).
+ *
+ * Added new procedures DIP2AD, AD2DIP and DIPPFACTAV.
+ *
+ * Fixed error in CHECK.
+ *
+ * New option for factorization of conditions: factorize with optimization
+ * of variable ordering.
+ *
+ * Revision 1.10  1994/11/28  20:54:46  dolzmann
+ * Procedure import from PQBASE instead of import from PQSMPL.
+ *
+ * Revision 1.9  1994/04/15  19:18:06  pesch
+ * Fixed (just introduced) bug in GSYS.
+ *
+ * Revision 1.8  1994/04/14  16:46:09  dolzmann
+ * Syntactical errors (found by Mocka) corrected.
+ *
+ * Revision 1.7  1994/04/12  14:00:11  pesch
+ * Added blank to argument of CLTIS.
+ *
+ * Revision 1.6  1994/04/12  13:39:28  pesch
+ * Replaced some FIRST,... by the appropriate functions.
+ *
+ * Revision 1.5  1994/04/09  18:05:58  pesch
+ * Reformatted parts of the CGB sources. Updated comments in CGB*.md.
+ *
+ * Revision 1.4  1994/04/06  13:06:47  pesch
+ * Modified GSYSDIM, DIMIS. Dimension of empty GB is returned now.
+ *
+ * Revision 1.3  1994/03/30  14:41:13  pesch
+ * Added new function GSYSRED.
+ * Replaced some FIRSTs,... by contructors.
+ *
+ * Revision 1.2  1994/03/14  16:42:57  pesch
+ * Minor changes requested by A. Dolzmann
+ *
+ * Revision 1.1  1994/03/11  15:58:13  pesch
+ * Major changes to CGB.
+ * C-Preprocessor now used for .mip files. The corresponding .mi files have
+ * been removed.
+ * Many new CGB-Functions and fixes of old ones.
+ *
+ * Revision 1.2  1992/02/12  17:31:16  pesch
+ * Moved CONST definition to the right place
+ *
+ * Revision 1.1  1992/01/22  15:09:29  kredel
+ * Initial revision
+ *
+ * ----------------------------------------------------------------------------
+ *)
+
+#include "debug.h"
+
+IMPLEMENTATION MODULE CGBMAIN;
+
+(* Comprehensive-Groebner-Bases Main Programs Implementation Module. *)
+
+(* Derived from an ALDES program written by Elke Schoenfeld,
+   Universitaet Passau, 1991. *)
+
+(* Import lists and declarations. *)
+
+FROM CGBAPPL	IMPORT	CGBQUA, CPART, DIMEXE, GBHELP, GTEST, INTDIM, MCOEF,
+			NFEXEC, NSET, WRCONJ, WRDIMS, WRQFN0, WRTEST;
+
+FROM CGBDSTR	IMPORT	CdWrite, CdpCd, CdpPs, CdpVd, CgbCd, CgbCons, CgbI,
+			CgbP, CgbVd, ColpConsCond, CondEmpty, CondParts,
+			CondWrite, FdCons, FormFCond, GsCd, GsCons, GsParts,
+			GsS, GsVd, GsWrite, PdCons, RDSYS, VdV;
+
+FROM CGBFUNC	IMPORT	ADDCON, AINB, CGBCOL, CGBFRM, CGBLM, CGBLPM, DCLWR,
+			DET, DETPOL, DWRIT, EQPLCL, FINDBC, FINDCP, FINDRM,
+			GREPOL, MKPOL, REDSRT, SETCOL, TESTHT, VERIFY, WMEMB,
+			WRTERM; 
+
+FROM CGBMISC	IMPORT	CGBPAR, COLOUR, DIFPF, EvordReset, EvordSet, FLWRITE,
+			PAR, ValisReset, ValisSet, dummyfactorize;
+
+FROM CGBSYS	IMPORT	ADDCGB, CHDEGL, CMULT, COLDIF, COLPRD, FINCOL,
+			FINDPI, GBDIFF, GBSYS, GBSYSF, GBUPD, GLEXTP, GLOBRE,
+			GRED, GSRED, GSYSN0, KEYCOL, MINPP, MKACOL, MKCGB,
+			MKCOL, MKN0, MKN1, MKNEWP, MKPAIR, NFORM, NFTOP,
+			PRSCOP, RDNORM, REDUCT, REFIND, REXTP, RMGRT, SPOL,
+			UPDPP, VRNORM, WHSRT, WUPD;
+
+FROM DIPADOM	IMPORT	DIFIP, DILRD, DILWR, DIPBCP, DIPDIF, DIPEXP, DIPNEG,
+			DIPROD, DIPSUM, DIREAD, DIWRIT;
+
+FROM DIPC	IMPORT	DILBSO, DIPEVL, DIPFMO, DIPLBC, DIPLPM, DIPMAD,
+			DIPMCP, DIPTDG, EVCOMP, EVDIF, EVLCM, EVMT, EVORD,
+			EVOWRITE, EVSIGN, EVSUM, GRLEX, IGRLEX, INVLEX, LEX,
+			REVILEX, REVITDG, REVLEX, REVTDEG, VALIS;
+
+FROM DIPDIM	IMPORT	DILDIM, IXSUBS;
+
+FROM MASADOM	IMPORT	ADCNST, ADDDREAD, ADDDWRIT, ADDIF, ADEXP, ADFACT,
+			ADFI, ADFIP, ADGCD, ADGCDC, ADINV, ADINVT, ADLCM,
+			ADNEG, ADONE, ADPROD, ADQUOT, ADREAD, ADSIGN, ADSUM,
+			ADTOIP, ADVLDD, ADWRIT, DomSummary;
+
+FROM MASBIOS	IMPORT	BKSP, BLINES, CREAD, CREADB, DIGIT, LETTER, LISTS,
+			MASORD, SWRITE;
+
+FROM MASBIOSU	IMPORT	CLTIS;
+
+FROM MASERR	IMPORT	ERROR, fatal, harmless, severe, spotless;
+
+FROM MASSTOR	IMPORT	ADV, COMP, FIRST, INV, LENGTH, LIST, LIST1, RED,
+			SFIRST, SIL, SRED, TIME;
+
+FROM MASSYM2	IMPORT	SREAD1, UWRITE;
+
+FROM MLOGBASE	IMPORT	ET, FALSUM, FORMKBINOP, FORMKFOR, FORMKUNOP, IMP,
+			NON, VEL, VERUM;
+
+FROM PQBASE	IMPORT	EQU, pqmkaf;
+
+FROM SACLIST	IMPORT	ADV2, ADV3, AREAD, AWRITE, CINV, CLOUT, COMP2, COMP3,
+			CONC, EQUAL, FIRST2, FIRST3, FIRST4, FOURTH, LAST,
+			LIST2, LIST3, LIST4, LIST5, LWRITE, MEMBER, OWRITE,
+			RED2, SECOND, THIRD;
+
+FROM SACPOL	IMPORT	VLREAD, VLWRIT;
+
+
+CONST CGBS = 1; RCGB = 2; CGBD  = 3; CGBQ   = 4;
+      TEST = 5; NF   = 6; GREEN = 7; RGREEN = 8;
+
+
+CONST rcsidi = "$Id: CGBMAIN.mip,v 1.14 1996/06/08 16:47:11 pesch Exp $";
+CONST copyrighti = "Copyright (c) 1989 - 1996 Universitaet Passau";
+
+PROCEDURE CDINIT(CD: LIST): LIST;
+(* Case distinction init. 
+CD is a case distinction.
+Returns a case distinction with conditions as required by PAR.Cond*. *)
+VAR RET, COND, CZ, CN, P: LIST;
+BEGIN
+DEB_BEGIN(CDINIT);
+     RET:=SIL;
+     WHILE CD<>SIL DO
+     	  ADV(CD, COND,CD);
+     	  CondParts(COND,CZ,CN);
+     	  WHILE CZ<>SIL DO
+	       ADV(CZ, P,CZ);
+	       RET:=UPDCAS(PAR.Factorize(P),RET,0);
+     	  END;
+     	  WHILE CN<>SIL DO
+	       ADV(CN, P,CN);
+	       RET:=UPDCAS(PAR.Factorize(P),RET,1);
+     	  END;
+     END;
+     RETURN(RET);
+END CDINIT;
+
+PROCEDURE GSYS(CDP: LIST): LIST;
+(* Groebner system.
+CDP is case distinction and polynomial set.
+Returns a Groebner system for CDP. *)
+VAR RET, CD: LIST;
+BEGIN
+DEB_BEGIN(GSYS);
+     EvordSet(PAR.TermOrderPol);
+     ValisSet(VdV(CdpVd(CDP)));
+     DILBSO(FIRST(CdpPs(CDP)));
+     CD:=CDINIT(CdpCd(CDP));
+     RET:=GsCons(GBSYS(CD,FIRST(CdpPs(CDP))),CdpVd(CDP),CD);
+     EvordReset();
+     ValisReset();
+     RETURN(RET);
+END GSYS;
+
+PROCEDURE GSYSF(CDP: LIST): LIST;
+(* Groebner system with factorization.
+CDP is case distinction and polynomial set.
+Returns a Groebner system for CDP. *)
+VAR RET, CD: LIST;
+BEGIN
+DEB_BEGIN(GSYSF);
+     EvordSet(PAR.TermOrderPol);
+     ValisSet(VdV(CdpVd(CDP)));
+     DILBSO(FIRST(CdpPs(CDP)));
+     CD:=CDINIT(CdpCd(CDP));
+     RET:=GsCons(GBSYSF(CD,FIRST(CdpPs(CDP))),CdpVd(CDP),CD);
+     EvordReset();
+     ValisReset();
+     RETURN(RET);
+END GSYSF;
+
+PROCEDURE GSYSDIM(GS: LIST): LIST;
+(* Groebner system dimension.
+GS is a Groebner system.
+Returns the parametric dimension for GS.
+*)
+VAR CD, DL, S, VD, PD, CP, COND, PLIST, F, FVD, MAXVL: LIST;
+BEGIN
+DEB_BEGIN(GSYSDIM);
+     IF GsS(GS) = SIL THEN RETURN(SIL); END; 
+     EvordSet(PAR.TermOrderPol);
+     GsParts(GS, S,VD,CD);
+     ValisSet(VdV(VD));
+     PD:=SIL; 
+     WHILE S <> SIL DO
+          ADV(S, CP,S);
+          FIRST2(CP, COND,PLIST); 
+          DL:=DIMIS(GREPOL(PLIST),VdV(VD), MAXVL);
+          F:=FormFCond(COND, FVD);
+          PD:=COMP(FdCons(F,DL,MAXVL),PD)
+     END; 
+     EvordReset();
+     ValisReset();
+     RETURN(PdCons(PD,FVD));
+END GSYSDIM;
+
+PROCEDURE DIMIS(PL,VL: LIST; VAR MAXVL: LIST): LIST; 
+(* Dimension and maximal independent set.
+PL is a list of polynomials.
+VL is the variable list.
+MAXVL need not be initialized.
+Returns the dimension of PP and a maximal independent set in MAXVL. *)
+VAR DL, M, S, var: LIST; 
+BEGIN
+     MAXVL:=VL;
+     IF PL = SIL THEN RETURN(LENGTH(VL)); END; (* empty set *)
+     DILDIM(PL, DL,S,M); (*Call dimension. *)
+     IF DL <> -1 THEN MAXVL:=IXSUBS(VL,S); END; 
+     RETURN(DL);
+END DIMIS; 
+
+PROCEDURE GSYSRED(GS: LIST): LIST;
+(* Reduce Groebner system.
+GS is a Groebner system.
+Returns a reduced Groeber system for GS.
+*)
+VAR S: LIST;
+BEGIN
+DEB_BEGIN(GSYSRED);
+     EvordSet(PAR.TermOrderPol);
+     ValisSet(VdV(GsVd(GS)));
+     S:=GSRED(GsS(GS));
+     EvordReset();
+     ValisReset();
+     RETURN(GsCons(S,GsVd(GS),GsCd(GS)));
+END GSYSRED;
+
+PROCEDURE CGBFGSYS(S: LIST): LIST;
+(* Comprehensive Groebner basis from Groebner system.
+S is a Groebner system.
+Returns a comprehensive Groebner basis.
+*)
+VAR CGB, I: LIST;
+BEGIN
+DEB_BEGIN(CGBFGSYS);
+     EvordSet(PAR.TermOrderPol);
+     ValisSet(VdV(GsVd(S)));
+     MKCGB(GsS(S), CGB,I);
+     CGB:=DIPLPM(CGB);
+     EvordReset();
+     ValisReset();
+     RETURN(CgbCons(CGB,I,GsVd(S),GsCd(S)));
+END CGBFGSYS;
+
+PROCEDURE CGBGLOBRED(CGB: LIST): LIST;
+(* Comprehensive Groebner basis global reduce.
+CGB is a comprehensive Groebner basis.
+Returns a global reduced comprehensive Groebner basis.
+*)
+VAR   COND, COL, NCO, PCO, PLIST, POL, QP, PL, C, P: LIST; 
+
+BEGIN
+DEB_BEGIN(CGBGLOBRED);
+     IF CgbP(CGB) = SIL THEN RETURN(CGB); END; 
+     EvordSet(PAR.TermOrderPol);
+     ValisSet(VdV(CgbVd(CGB)));
+     P:=CgbP(CGB);
+     COND:=CCOVER(CgbCd(CGB));
+     (*Colour P relative to COND. *)
+     PLIST:=SIL; 
+     REPEAT
+           ADV(P, POL,P);
+           PLIST:=COMP(ColpConsCond(POL,COND),PLIST);
+     UNTIL P=SIL;
+     PLIST:=INV(PLIST); 
+     (*Check degree and remove green monomials. *)
+     PCO:=CHDEGL(PLIST);
+     IF PCO <> SIL THEN (*Constant polynomial in CGB? *)
+       EvordReset();
+       ValisReset();
+       RETURN(CgbCons(LIST1(FIRST(PCO)),CgbI(CGB),CgbVd(CGB),CgbCd(CGB)));
+     END;
+     (*Remove extraneous polynomials. *)
+     PLIST:=GLEXTP(RMGRT(COND,PLIST)); 
+     IF (PLIST = SIL) THEN 
+       EvordReset();
+       ValisReset();
+       RETURN(CgbCons(SIL,CgbI(CGB),CgbVd(CGB),CgbCd(CGB)));
+     END; 
+     IF (RED(PLIST) = SIL) THEN 
+       EvordReset();
+       ValisReset();
+       RETURN(CgbCons(LIST1(FIRST(FIRST(PLIST))),CgbI(CGB),
+              CgbVd(CGB),CgbCd(CGB)));
+     END; 
+     QP:=PLIST; 
+     (*Global reduction. *) 
+     C:=SIL; 
+     WHILE PLIST <> SIL DO
+          ADV(PLIST, PCO,PLIST); 
+          RDNORM(COND,PCO,QP, NCO);
+          RDNORM(COND,NCO,C, NCO); 
+          IF (NCO <> SIL) AND (WMEMB(FIRST(NCO),C) = 0)
+            THEN C:=COMP(NCO,C); END; 
+     END;
+     C:=CGBLPM(C); 
+     PL:=SIL;
+     WHILE C<>SIL DO
+   	   ADV(C, POL, C);
+     	   PL:=COMP(FIRST(POL),PL);
+     END;
+     EvordReset();
+     ValisReset();
+     RETURN(CgbCons(PL,CgbI(CGB),CgbVd(CGB),CgbCd(CGB)));
+END CGBGLOBRED;
+
+(* obsolete *) PROCEDURE CGBQFWRITE(CGB: LIST);
+VAR COND, PLIST,P,POL: LIST;
+BEGIN
+     IF FIRST(CGB)=SIL THEN RETURN; END;
+     EvordSet(PAR.TermOrderPol);
+     ValisSet(VdV(THIRD(CGB)));
+     P:=FIRST(CGB);
+     COND:=CCOVER(FOURTH(CGB));
+     (*Colour P relative to COND. *)
+     PLIST:=SIL; 
+     REPEAT
+           ADV(P, POL,P);
+           PLIST:=COMP(ColpConsCond(POL,COND),PLIST);
+     UNTIL P=SIL;
+     CGBQUA(PLIST);
+     EvordReset();
+     ValisReset();
+END CGBQFWRITE;
+
+PROCEDURE CGBQFF(CGB: LIST): LIST;
+(* Comprehensive Groebner basis quantifier free formula.
+CGB is a comprehensive Groebner basis.
+Returns a formula containing a condition for the existence of common zeroes
+of the polynomials in CGB.
+*)
+VAR COND, PLIST,P,POL, PHI, PHIL,
+    B, COEF, COEFLI, LS, PA, PCO, QQ, RS, SL, TL, TT, V, DOM, VARL,
+      var, PP, C, F, D: LIST; 
+BEGIN
+DEB_BEGIN(CGBQFF);
+     IF CgbP(CGB)=SIL THEN RETURN(VERUM); END;
+     EvordSet(PAR.TermOrderPol);
+     ValisSet(VdV(CgbVd(CGB)));
+     P:=CgbP(CGB);
+     COND:=CCOVER(CgbCd(CGB));
+     (*Colour P relative to COND. *)
+     PLIST:=SIL; 
+     REPEAT
+           ADV(P, POL,P);
+           PLIST:=COMP(ColpConsCond(POL,COND),PLIST);
+     UNTIL P=SIL;
+     PP:=PLIST;
+     PCO:=CHDEGL(PP); 
+     IF PCO <> SIL THEN
+       EvordReset();
+       ValisReset();
+       RETURN(FALSUM);
+     END; 
+     P:=PP; 
+     PHIL:=SIL;
+     CLTIS(LISTS("RN -1 "));
+     D:=ADDDREAD();
+     WHILE P <> SIL DO 
+          ADV(P, PCO,P);
+          MCOEF(PCO, COEFLI,COEF,B); 
+     	  IF B=1
+            THEN PHI:=VERUM;  (* There is a non-zero
+     	    	    	      	  monomial with deg>0 *) 
+            ELSE
+     	      IF COEF=SIL 
+     	        THEN PHI:=VERUM; (* There is no constant monomial *)
+     	       	ELSE 
+   	            IF COEFLI=SIL (* There are no monomials with deg>0 *)
+                      THEN
+                          IF COEF <> 0 
+                            THEN PHI:=pqmkaf(EQU,DIFPF(COEF,D,DOM,VARL));
+     	       	    	    ELSE
+     	       	    	      	EvordReset();
+     	       	    	      	ValisReset();
+     	       	    	        RETURN(FALSUM); (* Constant monomial is <>0 *)
+                          END;
+                      ELSE
+     	       	    	  F:=SIL;
+     	       	    	  REPEAT
+     	       	    	        ADV(COEFLI, C,COEFLI);
+     	       	    	        F:=COMP(pqmkaf(EQU,DIFPF(C,D,DOM,VARL)),F);
+     	       	    	  UNTIL COEFLI=SIL;
+                          PHI:=FORMKFOR(ET,F);
+                          IF COEF <> 0 
+                            THEN
+     	                        PHI:=FORMKBINOP(IMP,PHI,
+                                                pqmkaf(EQU,
+                                                      DIFPF(COEF,D,DOM,VARL)));
+                            ELSE  (* Constant monomial is <>0 *)
+                                PHI:=FORMKUNOP(NON,PHI);
+     	       	    	  END;
+     	       	    END;
+              END; 
+          END; 
+     	  IF PHI<>VERUM THEN PHIL:=COMP(PHI,PHIL); END;
+     END;
+     EvordReset();
+     ValisReset();
+     IF PHIL=SIL THEN RETURN(VERUM); END;
+     RETURN(FORMKFOR(ET,PHIL));
+END CGBQFF;
+
+
+(***********************************************)
+(* The following is mostly obsolete -- mp      *)
+(***********************************************)
+
+PROCEDURE CGBIN(); 
+(*Comprehensive-Groebner-Basis input. The input is read from the
+stream. Start computation by call of CGBOUT. *)
+VAR   AC, C, CONDS, NFS, NRLIST, PP, PPS, VD, V, D, OPT, PARX, TP, PR: LIST; 
+BEGIN
+DEB_BEGIN(CGBIN);
+(*1*) C:=CREADB(); BKSP(); 
+(*2*) WHILE C <> MASORD(".") DO 
+           VD:=DVREAD();
+	   FIRST3(VD, V,D,OPT);
+	   FIRST3(OPT, PARX,TP,PR);
+	   PAR.outputlevel:=1;
+	   IF PARX=1 THEN PAR.Factorize:=ADFACT; PAR.factorize:=TRUE;
+     	             ELSE PAR.Factorize:=dummyfactorize; PAR.factorize:=FALSE;
+     	   END;
+           IF TP=0 THEN PAR.NormalForm:=NFTOP; PAR.normalform:=0;
+     	           ELSE PAR.NormalForm:=NFORM; PAR.normalform:=1; END;
+           CONDS:=CONINI(VD); 
+           PPS:=RDSYS(VD);
+           FIRST2(PPS, PP,NFS); 
+           CHDOM(CONDS,PP, CONDS,PP); 
+           CHDOM(CONDS,NFS, CONDS,NFS);
+           PPS:=LIST2(PP,NFS); 
+           NRLIST:=EXECRD();
+           AC:=LIST4(CONDS,PPS,VD,NRLIST); 
+           C:=CREADB();
+           BKSP();
+           CGBOUT(AC);
+      END; 
+(*5*) RETURN;
+END CGBIN; 
+
+
+PROCEDURE CGBOUT(AC: LIST); 
+(*Comprehensive-Groebner-Basis execute and output.
+AC contains the input data set ( case distinction, 2 polynomial
+systems, polynomial descriptor, list of options ). *)
+VAR   C, CGB, CGB0, CGB1, CGBL, COND, D, DIML, GS, HCGB, I,
+      NFS, NOUT, NRLIST, OPT, PARX, PP, PPS, PR, RCGBS, SL,
+      TL, TP, V, VD, XT: LIST;
+BEGIN
+DEB_BEGIN(CGBOUT);
+(*1*) (*Prepare input. *) 
+      FIRST4(AC, C,PPS,VD,NRLIST);
+      FIRST2(PPS, PP,NFS);
+      FIRST3(VD, V,D,OPT);
+      FIRST3(OPT, PARX,TP,PR);
+      SWRITE("Comprehensive-Groebner-Basis System "); BLINES(1);
+      SWRITE("Domain: "); ADDDWRIT(D); BLINES(0);
+      SWRITE("Ring: D"); VLWRIT(V); BLINES(1); EVOWRITE(EVORD); BLINES(0);
+      SWRITE("Factorization: "); OWRITE(PARX); BLINES(0);
+      SWRITE("Reduction Algorithm: ");
+      IF TP = 0 THEN SWRITE("NFTOP"); ELSE SWRITE("NFORM");END; BLINES(0);
+      SWRITE("Starting with Case Distinction: "); CdWrite(C);
+      IF PP = SIL THEN RETURN; END;
+      SWRITE("Polynomial System: ");
+      PP:=INV(DIPLPM(PP));
+      DILWR(PP,VALIS); BLINES(0);
+      COND:=CCOVER(C);
+      SL:=0; TL:=0; 
+      XT:=TIME();
+(*2*) (*Compute Groebner-System and Comprehensive-Groebner-Basis. *)
+      IF MEMBER(CGBS,NRLIST) = 1 THEN 
+        GS:=GBSYS(C,PP);
+        IF MEMBER(GREEN,NRLIST) = 1 THEN WRTITL(GREEN); GGREEN(GS);
+                                    ELSE WRTITL(CGBS); WRGBS(GS); END;
+        MKCGB(GS, CGB,I);
+        CGBL:=GLOBRE(COND,CGB);
+        WRCGB(CGBL,I);
+        SL:=1; TL:=1;
+      END;
+(*3*) (*Compute reduced Groebner-System and reduced
+        Comprehensive-Groebner-Basis. *)
+      IF MEMBER(RCGB,NRLIST) = 1 THEN
+         IF TL = 0 THEN GS:=GBSYS(C,PP); END;
+         GS:=GSRED(GS);
+         IF MEMBER(GREEN,NRLIST) = 1 THEN WRTITL(RGREEN); GGREEN(GS);
+                                     ELSE WRTITL(RCGBS); WRGBS(GS); END;
+         MKCGB(GS, CGB,I);
+         CGBL:=GLOBRE(COND,CGB);
+         WRRCGB(CGBL,I);
+         SL:=1; TL:=1;
+      END;
+(*4*) (*Comprehensive-Groebner-Basis, quantifier free formula. *)
+      IF MEMBER(CGBQ,NRLIST) = 1 THEN
+         IF TL = 0 THEN CGBL:=GLOBRE(COND,PP); END;
+         WRTITL(CGBQ); HCGB:=GREPOL(CGBL); CGBQUA(CGBL); SL:=1; 
+      END;
+(*5*) (*Comprehensive-Groebner-Basis, parametric dimension. *)
+      IF MEMBER(CGBD,NRLIST) = 1 THEN
+         IF TL = 0 THEN DET(C,PP, D,GS); END;
+         WRTITL(CGBD); DIML:=DIMEXE(GS,V); WRDIMS(DIML); SL:=1;
+      END;
+(*6*) (*Groebner test. *)
+      IF MEMBER(TEST,NRLIST) = 1 THEN
+         IF TL = 0 THEN CGB:=PP; ELSE CGB:=CGBFRM(CGBL); END;
+         WRTITL(TEST); GTEST(C,CGB, CGB0,CGB1);
+         WRTEST(C,CGB,CGB0,CGB1); SL:=1;
+     END;
+(*7*) (*Test for parametric ideal membership. *)
+      IF (MEMBER(NF,NRLIST) = 1) AND (NFS <> SIL) THEN
+        WRTITL(NF);
+        SWRITE("for the following polynomials: "); DILWR(NFS,VALIS);
+        BLINES(0);
+        IF TL = 0 THEN CGB:=PP; ELSE CGB:=CGBFRM(CGBL); END;
+        NFEXEC(C,NFS,CGB, NOUT); NFWRIT(NOUT); SL:=1;
+      END;
+(*8*) (*Error in reading options. *)
+      IF SL = 0 THEN ERROR(fatal,"Error in reading options "); END;
+      BLINES(1);
+      SWRITE("******************************************************");
+      BLINES(0); AWRITE(TIME()-XT); SWRITE("ms."); BLINES(0);
+      SWRITE("******************************************************");
+      BLINES(1);
+(*11*) RETURN; 
+END CGBOUT;
+
+
+PROCEDURE DVREAD(): LIST; 
+(*Polynom descriptor read. *)
+VAR   C, CP, D, FAC, OPT, PR, TP, V, VD, XX: LIST; 
+BEGIN
+DEB_BEGIN(DVREAD);
+(*1*) (*Domain descriptor. *)
+      D:=ADDDREAD(); 
+(*2*) (*Variables list. *) 
+      V:=VLREAD(); 
+(*3*) (*Read term ordering. *) 
+      C:=CREADB();
+      CP:=INVLEX; 
+      IF C <> MASORD("/") THEN BKSP(); ELSE C:=CREAD(); XX:=0; 
+         IF    C = MASORD("L") THEN XX:=1; CP:=INVLEX; 
+         ELSIF C = MASORD("B") THEN XX:=1; CP:=REVTDEG; 
+         ELSIF C = MASORD("G") THEN XX:=1; CP:=IGRLEX; 
+         ELSIF C = MASORD("S") THEN XX:=1; CP:=REVILEX; END; 
+         IF XX = 0 THEN SWRITE("Error reading ordering"); (*DIBUFF;*) END; 
+         C:=CREADB(); 
+         IF C <> MASORD("/") THEN SWRITE("Error reading ordering"); 
+                                  (*DIBUFF;*) END; 
+      END; 
+(*4*) (*Read factorization. *)
+      C:=CREADB(); BKSP(); FAC:=0; 
+      IF C = MASORD("F") THEN C:=CREADB(); FAC:=1; END; 
+(*5*) (*Read option for reduction. *)
+      C:=CREADB(); BKSP(); TP:=0; 
+      IF C = MASORD("N") THEN C:=CREADB(); TP:=1; END; 
+(*6*) (*Read swrite option. *) 
+      C:=CREADB(); BKSP(); PR:=0; 
+      IF C = MASORD("P") THEN C:=CREADB(); PR:=1; END; 
+(*7*) (*Global variables and return list. *)
+      OPT:=LIST3(FAC,TP,PR); 
+      VALIS:=V; EVORD:=CP; PAR.TermOrderPol:=CP;
+      VD:=LIST3(V,D,OPT); 
+(*10*) RETURN(VD);
+END DVREAD; 
+
+
+
+
+PROCEDURE CONINI(VD: LIST): LIST; 
+(*Initialize case distinction. VD is the domain descriptor. CONS is
+the case distinction read from the input stream. *)
+VAR   C, CON, CONS, D, V, X: LIST; 
+BEGIN
+DEB_BEGIN(CONINI);
+(*1*) FIRST2(VD, V,D);
+      CONS:=SIL; 
+      REPEAT 
+            CON:=SIL;
+            CONDRD(V,D,0,CON, CON); 
+            CONDRD(V,D,1,CON, CON); 
+	    CONS:=CONC(CONS,CON);
+	    (* --- to do ---: OK? *)
+            C:=CREADB(); BKSP(); 
+      UNTIL C = MASORD("."); 
+      C:=CREADB(); 
+      IF C <> MASORD(".") THEN ERROR(harmless,"Error1 found by CONINI."); END; 
+(*4*) RETURN(CONS);
+END CONINI; 
+
+
+PROCEDURE CONDRD(V,D,B,DALT: LIST; VAR DNEU: LIST); 
+(* Conditions read.  V is the variables list, D is the domain
+descriptor, DALT is a case distinction.
+DNEU contains DALT and new coefficients, which
+are zero, if B=0. If B=1 they are not zero. *)
+VAR   A, AE, AL, ALIST, AS, C, C1: LIST; 
+BEGIN
+DEB_BEGIN(CONDRD);
+(*1*) (* Read input up to list of coefficients. *)
+      DNEU:=DALT; 
+      C:=CREADB(); 
+      IF DIGIT(C) THEN BKSP(); C:=AREAD(); END; 
+      IF (C <> MASORD("(")) AND (C <> B) THEN
+        ERROR(harmless,"Error1 found by CONDRD."); RETURN; END; 
+      C1:=CREADB(); 
+      IF (C = MASORD("(")) AND (C1 <> MASORD(")")) THEN
+        ERROR(harmless,"Error2 found by CONDRD."); RETURN; END; 
+      IF (C = B) AND (C1 <> MASORD("(")) THEN
+        ERROR(harmless,"Error3 found by CONDRD."); RETURN; END; 
+      IF (C = MASORD("(")) AND (C1 = MASORD(")")) THEN RETURN; END; 
+(*2*) (*Read list of polynomials. Update DNEU. *) 
+      IF ((C = MASORD("0")) OR (C = MASORD("1"))) AND (C1 = MASORD("(")) THEN
+        REPEAT
+              C:=CREADB(); 
+              IF C = MASORD(",") THEN C:=CREADB(); END; 
+              IF C <> MASORD(")") THEN
+                BKSP();
+                A:=DIREAD(V,D); 
+                CHDOM(DNEU,LIST1(A), DNEU,AS);
+                A:=FIRST(AS); 
+                DIPMAD(A, AL,AE,A); 
+     	        ALIST:=PAR.Factorize(AL);
+                DNEU:=UPDCAS(ALIST,DNEU,B);
+              END; 
+        UNTIL C = MASORD(")"); 
+      END; 
+(*5*) RETURN;
+END CONDRD; 
+
+
+PROCEDURE UPDCAS(ALIST,DALT,B: LIST): LIST; 
+(*Update case distinction. ALIST is a list of coefficients (a1,... ,an).
+DALT is a case distinction. If B=0 then DNEU is a case distinction
+including DALT and ( a1=0,... , an=0 ). If B=1 then DNEU is a
+case distinction including DALT and (a1<>0,... , an<>0).
+ADDCON computes a complete case distinction including DALT and
+(a1,... ,an). Then the well formed conditions are composed. *)
+VAR   A, CON, COND0, COND1, D, DNEU, HELP, SL, X, XCOND: LIST; 
+BEGIN
+DEB_BEGIN(UPDCAS);
+(*1*) (*Case alist empty. *) 
+      IF ALIST = SIL THEN RETURN(DALT); END; 
+      DNEU:=SIL; 
+(*2*) (*Case ALIST not empty and DALT empty. *) 
+      IF DALT = SIL THEN
+        X:=ADDCON(ALIST,CondEmpty());
+        WHILE X <> SIL DO
+             ADV(X, XCOND,X); 
+     	     CondParts(XCOND, COND0,COND1); 
+             IF    (COND0 <> SIL) AND (B = 0) THEN DNEU:=COMP(XCOND,DNEU);
+             ELSIF (COND0 =  SIL) AND (B = 1) THEN DNEU:=COMP(XCOND,DNEU);
+             END; 
+        END; 
+        RETURN(DNEU);
+      END; 
+(*3*) (*Case ALIST not empty and DALT not empty. *)
+      D:=DALT; 
+      WHILE D <> SIL DO
+           ADV(D, CON,D);
+           X:=ADDCON(ALIST,CON);
+           WHILE X <> SIL DO
+                ADV(X, XCOND,X);
+                SL:=0;
+                HELP:=ALIST; 
+                REPEAT 
+                      ADV(HELP, A,HELP);
+     	       	      IF PAR.CondEval(XCOND,A)=zero THEN SL:=1; END;
+     (* --- to do ---: will not work if reduce set method is used, since
+       PAR.COND_... = zero may never happen *)
+                UNTIL (SL = 1) OR (HELP = SIL); 
+                IF (SL = 1) AND (B = 0) THEN DNEU:=COMP(XCOND,DNEU); END; 
+                IF (SL = 0) AND (B = 1) THEN DNEU:=COMP(XCOND,DNEU); END; 
+            END; 
+      END; 
+(*4*) IF DNEU = SIL THEN ERROR(harmless,"Error found by UPDCAS."); END; 
+(*7*) RETURN(DNEU); 
+END UPDCAS; 
+
+
+PROCEDURE CCOVER(CONS: LIST): LIST; 
+(*Cover condition. CONS is a case distinction. C is a condition, so
+that CONS covers C. *)
+VAR   C, C0, C1, COND, COND0, COND1: LIST; 
+BEGIN
+DEB_BEGIN(CCOVER);
+(*1*) (*Case CONS empty. *) 
+      IF CONS = SIL THEN RETURN(CondEmpty()); END; 
+(*2*) (*Case CONS contains 1 condition. *)
+      ADV(CONS, COND,CONS); 
+      IF CONS = SIL THEN RETURN(COND); END; 
+(*3*) (*Case CONS contains more than 1 condition. *)
+      FIRST2(COND, COND0,COND1); 
+      RETURN(LIST2(SCOV(COND0,CONS,0),SCOV(COND1,CONS,1)));
+END CCOVER; 
+
+
+PROCEDURE SCOV(CONDA,CONS,B: LIST): LIST; 
+(* Search condition. CONDA is a list of coefficients. 
+CONS is a list of conditions. If B=0 then SCOV returns all 
+coefficients, that are in CONDA and in the zero list of each 
+condition in CONS. If B=1 then SCOV returns all coefficients, 
+that are in CONDA and in the not-zero list of each condition in 
+CONS. *)
+VAR   A, CC, COND, CONDS, COND0, COND1, SL: LIST; 
+BEGIN
+DEB_BEGIN(SCOV);
+      IF CONS=SIL THEN RETURN(SIL); END; (* --- to do ---: OK? *)
+(*1*) CC:=SIL; 
+(*2*) WHILE CONDA <> SIL DO
+           ADV(CONDA, A,CONDA);
+           CONDS:=CONS;
+           REPEAT 
+                 ADV(CONDS, COND,CONDS);
+                 CondParts(COND, COND0,COND1); 
+                 IF B = 0 THEN SL:=MEMBER(A,COND0);
+                          ELSE SL:=MEMBER(A,COND1); END; 
+           UNTIL (SL = 0) OR (CONDS = SIL); 
+           IF SL = 1 THEN CC:=COMP(A,CC); END; 
+      END; 
+(*5*) RETURN(CC);
+END SCOV; 
+
+
+PROCEDURE CHDOM(CONDS,PPS: LIST; VAR CONS,PP: LIST); 
+(*Change domain. CONDS is a case distinction. PPS is a list of
+polynomials with coefficient from an arbitrary domain. This list is
+converted to a list PP of integral polynomials. Each polynomial
+containing fractions, is mutliplied with the lcm of the coefficient-
+denominators. CONS contains CONDS and conditions to assure that 
+the prime-factors of each lcm are not zero. This procedure makes 
+sense for rational-polynomials only. For integral-polynomials it 
+will work, but create overhead by copying PPS to PP *)
+VAR   BA, POL: LIST; 
+BEGIN
+DEB_BEGIN(CHDOM);
+(*1*) CONS:=CONDS;
+      PP:=SIL; 
+      (* test *) ; PP:=PPS; RETURN; (* --- to do --- : why??? *)
+      IF PPS = SIL THEN RETURN; END; (* No Input, nothing to do *)
+      WHILE PPS <> SIL DO (* For every polynomial in the list *)
+            ADV(PPS, POL,PPS); 
+            PP:=COMP(ADTOIP(POL,BA),PP); (* convert polynomial *)
+            IF NOT ADCNST(BA) THEN CONS:=UPDCAS(ADFACT(BA),CONS,1); END;
+              (* If the lcm of coefficient-denominators is non-constant
+                 factorize lcm and for every prime-factor p of the lcm
+                 append "p ne 0" to the list of conditions.
+                 Note: If POL is an integral-polynomial then BA=1 and
+                       ADCNST(BA). Therefore this is correct for
+                       integral-polynomials too. *)
+      END;
+(*8*) END CHDOM; 
+
+(*
+--- to do --- move to ratpol!
+PROCEDURE DFACT(A: LIST; VAR LCM: LIST): LIST;
+*)
+(*
+PROCEDURE CIFRF(A: LIST; VAR B,BL: LIST); 
+(*Construct distributive integral function POL from rational
+function polynomial. A is a distributive rational function polynomial,
+B is the positive associate integral function polynomial of A.
+BL is the lcm of denominators of base coefficients.
+(see DIIFRF in ADIPS). *)
+VAR   AL, AL1, ALP, ALP1, AP, ASP, CL, D, DP, EL, FL, RL, SL, VL:
+     LIST; 
+BEGIN
+(*1*) (*a=0. *) 
+      IF A = 0 THEN B:=0; RETURN; END; 
+(*2*) (*Decompose base coefficient. *)
+      DIPMAD(A, ALP1,EL,AP); 
+      ADV(ALP1, AL1,DP);
+      FIRST2(DP, FL,VL); 
+      IF FL <> 6 THEN SWRITE("Error in DIIFRF"); RETURN; END; 
+      D:=LIST2(7,VL);
+      SL:=RFSIGN(AL1);
+      RL:=RFNOV(AL1);
+      BL:=RFDEN(AL1); 
+(*3*) (*LCM of denominators of base coefficients. *) 
+      WHILE AP <> SIL DO
+           DIPMAD(AP, ALP1,EL,AP);
+           AL1:=FIRST(ALP1); 
+           AL:=RFDEN(AL1);
+           BL:=IPLCM(RL,BL,AL);
+      END; 
+(*4*) (*Multiply with lcm and remove denominators. *) 
+      IF SL < 0 THEN BL:=IPNEG(RL,BL); END; 
+      B:=SIL; AP:=A; 
+      WHILE AP <> SIL DO
+           DIPMAD(AP, ALP1,EL,AP);
+           AL1:=FIRST(ALP1); 
+           CL:=RFNUM(AL1);
+           AL:=RFDEN(AL1);
+           IPQR(RL,BL,AL, ALP,ASP); 
+           CL:=IPPROD(RL,CL,ALP); 
+           CL:=LIST2(RL,CL);
+           CL:=COMP(CL,D); 
+           B:=DIPMCP(EL,CL,B);
+      END; 
+      BL:=LIST2(RL,BL); BL:=COMP(BL,D); B:=INV(B); 
+(*7*) RETURN;
+END CIFRF; 
+--- to do ---*)
+
+PROCEDURE EXECRD(): LIST; 
+(*Exec read. The list nrlist of options is read from the input
+stream. *)
+VAR   A, C, NP, NR, NRLIST, S: LIST; 
+BEGIN
+DEB_BEGIN(EXECRD);
+(*1*) C:=CREADB(); 
+      IF C <> MASORD(".") 
+        THEN ERROR(harmless,"Error found by EXECRD."); RETURN(SIL); END; 
+      NRLIST:=SIL; 
+(*2*) (*read exec. *)
+      C:=CREADB();
+      NP:=SIL; 
+(*3*) (*check options. *) 
+      IF LETTER(C) THEN
+        BKSP();
+        S:=SREAD1(); 
+        IF EQUAL(S,LISTS("EXEC")) = 1 THEN
+          REPEAT
+                C:=CREADB(); 
+                IF C <> MASORD(".") THEN
+                  BKSP();
+                  A:=SREAD1();
+                  SEENR(A,NR); 
+                  IF NR <> SIL THEN NRLIST:=COMP(NR,NRLIST); END; 
+                END; 
+          UNTIL C = MASORD("."); 
+        ELSE 
+          ERROR(harmless,"Error found by EXECRD.");
+          RETURN(NRLIST);
+        END; 
+      END; 
+(*4*) IF NRLIST = SIL THEN ERROR(harmless,"Error found by EXECRD."); END; 
+(*7*) RETURN(NRLIST); 
+END EXECRD; 
+
+
+PROCEDURE SEENR(AC: LIST; VAR NR: LIST); 
+(*Find key for option. AC is an option. NR is the key for AC. *)
+VAR   NM, SL: LIST; 
+BEGIN
+DEB_BEGIN(SEENR);
+(*1*) (*Comprehensive-Groebner-Basis. *) 
+      IF EQUAL(AC,LISTS("CGB")) = 1 THEN SL:=1; END; 
+      NM:=LISTS("CGB"); 
+      IF EQUAL(AC,NM) = 1 THEN NR:=1; RETURN; END; 
+(*2*) (*Reduced comprehensive-groebner-basis. *) 
+      NM:=LISTS("RCGB"); 
+      IF EQUAL(AC,NM) = 1 THEN NR:=2; RETURN; END; 
+(*3*) (*Dimension of a groebner-system. *)
+      NM:=LISTS("CGBD"); 
+      IF EQUAL(AC,NM) = 1 THEN NR:=3; RETURN; END; 
+(*4*) (*Quantifier free formula of a comprehensive-groebner-basis. *) 
+      NM:=LISTS("CGBQ"); 
+      IF EQUAL(AC,NM) = 1 THEN NR:=4; RETURN; END; 
+(*5*) (*Groebner test. *) 
+      NM:=LISTS("TEST"); 
+      IF EQUAL(AC,NM) = 1 THEN NR:=5; RETURN; END; 
+(*6*) (*Normalform. *)
+      NM:=LISTS("NF"); 
+      IF EQUAL(AC,NM) = 1 THEN NR:=6; RETURN; END; 
+(*7*) (*Groebner-System without green terms. *) 
+      NM:=LISTS("GREEN"); 
+      IF EQUAL(AC,NM) = 1 THEN NR:=7; RETURN; END; 
+(*8*) (*error. *) ERROR(harmless,"Error found by SEENR.");
+(*11*) RETURN;
+END SEENR; 
+
+
+PROCEDURE WRTITL(NR: LIST); 
+(*Write title. *)
+BEGIN
+DEB_BEGIN(WRTITL);
+(*1*) IF (NR <= 0) OR (NR >= 8) THEN RETURN; END; 
+(*2*) SWRITE("***********************************************"); 
+      BLINES(0); 
+      SWRITE("**                                           **"); 
+      BLINES(0); 
+(*3*) CASE INTEGER(NR) OF
+           1 : SWRITE("**              Groebner-System              **"); |
+           2 : SWRITE("**          Reduced groebner-system          **"); |
+           3 : SWRITE("**           Parametric dimension            **"); |
+           4 : SWRITE("**          Quantifier free formula          **"); |
+           5 : SWRITE("**               Groebner test               **"); |
+           6 : SWRITE("**    Testing parametric ideal membership    **"); |
+           7 : SWRITE("**    Groebner-System without green terms    **"); |
+           8 : SWRITE("**          Reduced groebner-system          **"); 
+               BLINES(0); 
+               SWRITE("**            without green terms            **"); 
+               END; 
+      BLINES(0); 
+(*4*) SWRITE("**                                           **"); 
+      BLINES(0); 
+      SWRITE("***********************************************"); 
+      BLINES(0); 
+(*7*) RETURN; END WRTITL; 
+
+
+PROCEDURE WRGBS(PLS: LIST); 
+(*Write groebner-system. PLS is a list of
+pairs, each pair containing a condition and a polynomials list,
+where each polynomial is coloured wrt the condition. The conditions
+and the polynomials are written on the output stream, sorted by
+polynomial systems. *)
+VAR   COND, HELEM, HLIST, HPP, I, J, PELEM, PLIST: LIST; 
+BEGIN
+DEB_BEGIN(WRGBS);
+(*1*) (*Case PLS empty. *) 
+      IF PLS = SIL THEN SWRITE("Empty."); BLINES(0); RETURN; END; 
+      BLINES(0); 
+(*2*) (*Case PLS not empty. *)
+      I:=0; J:=0; 
+      WHILE PLS <> SIL DO
+           ADV(PLS, PELEM,PLS);
+           FIRST2(PELEM, COND,PLIST); 
+           CondWrite(COND); 
+           I:=1; HPP:=PLS; PLS:=SIL; 
+           WHILE HPP <> SIL DO 
+                ADV(HPP, HELEM,HPP); 
+                HLIST:=SECOND(HELEM);
+                IF EQPLCL(PLIST,HLIST) = 1 THEN CondWrite(FIRST(HELEM)); I:=I+1; 
+                                           ELSE PLS:=COMP(HELEM,PLS); END; 
+            END; 
+            PLS:=INV(PLS); 
+            J:=J+I; 
+            OWRITE(I); 
+            IF I=1 THEN SWRITE(" Condition."); 
+                   ELSE SWRITE(" Conditions."); END;
+            BLINES(1); 
+            SWRITE("Basis: ");
+            DCLWR(PLIST,0);
+      END; 
+(*5*) RETURN;
+END WRGBS; 
+
+
+PROCEDURE WRCGB(CGB,I: LIST); 
+(*Write comprehensive-groebner-basis. CGB is a list of coloured
+polynomials forming a comprehensive-groebner-basis. I is the number of
+conditions of the groebner-system. CGB and I are written on the
+output stream. *)
+BEGIN
+DEB_BEGIN(WRCGB);
+(*1*) BLINES(0); SWRITE("Comprehensive-Groebner-Basis: "); BLINES(0); 
+      IF CGB = SIL THEN SWRITE("Empty."); BLINES(0); ELSE DCLWR(CGB,0); END;
+      OWRITE(I);
+      IF I=1 THEN SWRITE(" Condition."); ELSE SWRITE(" Conditions."); END;
+      BLINES(1);
+(*4*) RETURN;
+END WRCGB; 
+
+
+PROCEDURE WRRCGB(CGB,I: LIST); 
+(*Write reduced comprehensive-groebner-basis. CGB is a list of coloured
+polynomials forming a reduced comprehensive-groebner-basis. I is the
+number of conditions of the groebner-system. CGB and I are
+written on the output stream. *)
+BEGIN
+DEB_BEGIN(WRRCGB);
+(*1*) BLINES(1); SWRITE("Reduced Comprehensive-Groebner-Basis: "); BLINES(0); 
+      IF CGB = SIL THEN SWRITE("Empty."); BLINES(0); ELSE DCLWR(CGB,0); END;
+      OWRITE(I);
+      IF I=1 THEN SWRITE(" Condition."); ELSE SWRITE(" Conditions."); END;
+      BLINES(1);
+(*5*) RETURN;
+END WRRCGB; 
+
+
+PROCEDURE GGREEN(GS: LIST); 
+(*Write groebner-system without green monomials. GS is a list of
+pairs, each pair containing a condition and a polynomials list,
+where each polynomial is coloured wrt the condition. The conditions
+and the polynomials are written on the output stream without green
+coloured monomials. *)
+VAR   COND, P, PLIST, XELEM: LIST; 
+BEGIN
+DEB_BEGIN(GGREEN);
+(*1*) (*Case GS empty. *) 
+      IF GS = SIL THEN RETURN; END; 
+      BLINES(1); 
+(*2*) (*Case GS not empty. *)
+      REPEAT
+            ADV(GS, XELEM,GS);
+            FIRST2(XELEM, COND,PLIST); 
+            SWRITE("Groebner-Basis: ");
+            CondWrite(COND); 
+            IF PLIST = SIL THEN SWRITE("Empty."); BLINES(0);
+                           ELSE DCLWR(PLIST,0); P:=CGBCOL(COND,PLIST); END; 
+      UNTIL GS=SIL;
+(*5*) RETURN;
+END GGREEN; 
+
+
+PROCEDURE NWRIT0(N: LIST); 
+(*Normalforms write. N is a set of tripels each containing a condition,
+a polynomial coloured green wrt the condition and a factor c. The
+polynomials form a set of normalforms. The conditions and the factors
+are written on the output stream. *)
+VAR   C, COND, PCO: LIST; 
+BEGIN
+DEB_BEGIN(NWRIT0);
+(*1*) (*Case N empty. *) 
+      BLINES(1); 
+      IF N = SIL THEN SWRITE("Empty."); BLINES(0); RETURN; END;
+      SWRITE("Polynomial completely reduced wrt "); 
+      SWRITE("the following conditions: "); BLINES(0);
+(*2*) (*Case N not empty. *)
+      REPEAT 
+            ADV3(N, COND,PCO,C,N);
+            CondWrite(COND); 
+            SWRITE("Factor: "); ADWRIT(C); BLINES(0);
+      UNTIL N=SIL;
+(*5*) RETURN;
+END NWRIT0; 
+
+
+PROCEDURE NWRIT1(N: LIST); 
+(*Normalforms write. N is a set of tripels each containing a condition,
+a polynomial not coloured green wrt the condition and a factor c. The
+polynomials form a set of normalforms. The conditions, the polynomials
+and the factors are written on the output stream. *)
+VAR   C, COL, COND, PCO, POL: LIST; 
+BEGIN
+DEB_BEGIN(NWRIT1);
+(*1*) (*Case N empty. *) 
+     BLINES(1); 
+      IF N = SIL THEN SWRITE("Empty."); BLINES(0); RETURN; END;
+      SWRITE("Polynomial not completely reduced wrt "); 
+      SWRITE("the following conditions: "); BLINES(0);
+(*2*) (*Case N not empty. *)
+      REPEAT
+            ADV3(N, COND,PCO,C,N);
+            CondWrite(COND); 
+            FIRST2(PCO, POL,COL);
+            SWRITE("Reduced to: "); BLINES(0); 
+            DILWR(LIST1(POL),VALIS); BLINES(0);
+            SWRITE("Factor: "); ADWRIT(C); BLINES(0);
+      UNTIL N=SIL;
+(*5*) RETURN;
+END NWRIT1; 
+
+
+PROCEDURE WPAIRS(PS: LIST); 
+(*Write pairs of polynomials. PS is a list of tripels, each tripel
+containing two coloured polynomials and the product of their highest
+terms wrt their colour. The polynomials are written on the output
+stream. *)
+VAR   EL, F, F1, FCOL, G, G1, GCOL, PAIR: LIST; 
+BEGIN
+DEB_BEGIN(WPAIRS);
+(*1*) (*Case PS is empty. *)
+      SWRITE("Pairs: "); BLINES(0); 
+      IF PS = SIL THEN OWRITE(SIL); BLINES(0); RETURN; END; 
+(*2*) (*Case PS not empty. *)
+      REPEAT
+            ADV(PS, PAIR,PS);
+            FIRST3(PAIR, EL,F1,G1);
+            FIRST2(F1, F,FCOL);
+            FIRST2(G1, G,GCOL); 
+            SWRITE("POL1: "); DILWR(LIST1(F),VALIS); BLINES(0); 
+            SWRITE("POL2: "); DILWR(LIST1(G),VALIS); BLINES(0);
+      UNTIL PS=SIL;
+      BLINES(1); 
+(*5*) RETURN;
+END WPAIRS; 
+
+
+PROCEDURE WPLIST(PL: LIST); 
+(*Write polynomials and pairs. PL is a list of tripels, each tripel
+containing a condition, a set of polynomials coloured wrt the
+condition and a set of pairs of polynomials, constructed from
+the set of polynomials. The condition, the polynomials and the
+pairs are written on the output stream. *)
+VAR   COND, PAIRS, PP: LIST; 
+BEGIN
+DEB_BEGIN(WPLIST);
+(*1*) (*Case PL is empty. *)
+      SWRITE("Pairslist: "); BLINES(0); 
+      IF PL = SIL THEN OWRITE(PL); BLINES(0); RETURN; END; 
+(*2*) (*Case PL not empty. *)
+      REPEAT
+            ADV3(PL, COND,PP,PAIRS,PL); 
+            CondWrite(COND); 
+            SWRITE("Basis: "); BLINES(0);
+            DCLWR(PP,0); BLINES(0);
+            WPAIRS(PAIRS);
+      UNTIL PL=SIL;
+(*5*) RETURN;
+END WPLIST; 
+
+
+PROCEDURE NFWRIT(NOUT: LIST); 
+(*Normalforms write. The polynomials for which the test for parametric
+ideal membership has been executed are written on the output stream
+their normalforms. For each polynomial the quantifier free formula
+is written on the output stream. *)
+VAR   NN0, NN1, POL: LIST; 
+BEGIN
+DEB_BEGIN(NFWRIT);
+(*2*) WHILE NOUT <> SIL DO
+           ADV3(NOUT, POL,NN0,NN1,NOUT); 
+           SWRITE("Tested polynomial: "); DILWR(LIST1(POL),VALIS); 
+           IF NN0 <> SIL THEN NWRIT0(NN0); END; 
+           IF NN1 <> SIL THEN NWRIT1(NN1); END; 
+           WRQFN0(NN0); BLINES(0);
+     END; 
+(*5*) RETURN;
+END NFWRIT; 
+
+END CGBMAIN.
+
+(* -EOF- *)

@@ -1,0 +1,554 @@
+(* ----------------------------------------------------------------------------
+ * $Id: CGBAPPL.mip,v 1.6 1996/06/08 16:47:05 pesch Exp $
+ * ----------------------------------------------------------------------------
+ * This file is part of MAS.
+ * ----------------------------------------------------------------------------
+ * Copyright (c) 1989 - 1996 Universitaet Passau
+ * ----------------------------------------------------------------------------
+ * $Log: CGBAPPL.mip,v $
+ * Revision 1.6  1996/06/08 16:47:05  pesch
+ * Reformatted, removed obsolete procedures.
+ *
+ * Revision 1.5  1995/03/23  16:05:39  pesch
+ * Added new data structure Colp for coloured polynomials.
+ *
+ * Revision 1.4  1994/04/14  16:46:05  dolzmann
+ * Syntactical errors (found by Mocka) corrected.
+ *
+ * Revision 1.3  1994/04/09  18:05:52  pesch
+ * Reformatted parts of the CGB sources. Updated comments in CGB*.md.
+ *
+ * Revision 1.2  1994/03/14  16:42:50  pesch
+ * Minor changes requested by A. Dolzmann
+ *
+ * Revision 1.1  1994/03/11  15:58:07  pesch
+ * Major changes to CGB.
+ * C-Preprocessor now used for .mip files. The corresponding .mi files have
+ * been removed.
+ * Many new CGB-Functions and fixes of old ones.
+ *
+ * Revision 1.2  1992/02/12  17:31:13  pesch
+ * Moved CONST definition to the right place
+ *
+ * Revision 1.1  1992/01/22  15:09:24  kredel
+ * Initial revision
+ *
+ * ----------------------------------------------------------------------------
+ *)
+
+#include "debug.h"
+
+IMPLEMENTATION MODULE CGBAPPL;
+
+(* Comprehensive-Groebner-Bases Applications Implementation Module. *)
+
+(* Derived from an ALDES program written by Elke Schoenfeld, 
+   Universitaet Passau, 1991. *) 
+
+
+(* Import lists and declarations. *)
+
+FROM CGBDSTR	IMPORT	ColIsEmpty, ColParts, ColpCons, ColpConsCond,
+			ColpParts, CondParts, CondWrite;
+
+FROM CGBFUNC	IMPORT	ADDCON, AINB, CGBCOL, CGBFRM, CGBLM, CGBLPM, DCLWR,
+			DET, DETPOL, DWRIT, EQPLCL, FINDBC, FINDCP, FINDRM,
+			GREPOL, MKPOL, REDSRT, SETCOL, TESTHT, VERIFY, WMEMB; 
+
+FROM CGBMISC    IMPORT 
+#ifdef DEBUG
+     	       	    FLWRITE,
+#endif
+     	       	    COLOUR, PAR;
+
+FROM CGBSYS	IMPORT	ADDCGB, CHDEGL, CMULT, COLDIF, COLPRD, FINCOL,
+			FINDPI, GBDIFF, GBSYS, GBUPD, GLEXTP, GLOBRE, GRED,
+			GSRED, GSYSN0, KEYCOL, MINPP, MKACOL, MKCGB, MKCOL,
+			MKN0, MKN1, MKNEWP, MKPAIR, NFORM, NFTOP, PRSCOP,
+			RDNORM, REDUCT, REFIND, REXTP, RMGRT, SPOL, UPDPP,
+			VRNORM, WHSRT, WUPD;
+
+FROM DIPADOM	IMPORT	DIFIP, DILRD, DILWR, DIPBCP, DIPDIF, DIPEXP, DIPNEG,
+			DIPROD, DIPSUM, DIREAD, DIWRIT;
+
+FROM DIPC	IMPORT	DIPEVL, DIPFMO, DIPLBC, DIPLPM, DIPMAD, DIPMCP,
+			DIPTDG, EVCOMP, EVDIF, EVLCM, EVMT, EVORD, EVSIGN,
+			EVSUM, GRLEX, IGRLEX, INVLEX, LEX, REVILEX, REVITDG,
+			REVLEX, REVTDEG, VALIS; 
+
+FROM DIPDIM	IMPORT	DILDIM, IXSUBS;
+
+FROM MASADOM	IMPORT	ADDDREAD, ADDDWRIT, ADDIF, ADEXP, ADFACT, ADFI,
+			ADFIP, ADGCD, ADGCDC, ADINV, ADINVT, ADLCM, ADNEG,
+			ADONE, ADPROD, ADQUOT, ADREAD, ADSIGN, ADSUM, ADTOIP,
+			ADVLDD, ADWRIT, DomSummary;
+
+FROM MASBIOS	IMPORT	BKSP, BLINES, CREAD, CREADB, DIGIT, LETTER, LISTS,
+			MASORD, SWRITE;
+
+FROM MASSTOR	IMPORT	ADV, COMP, FIRST, INV, LIST, LIST1, RED, SFIRST, SIL,
+			SRED, TIME; 
+
+FROM SACLIST	IMPORT	ADV2, ADV3, AREAD, AWRITE, CINV, CLOUT, COMP2, COMP3,
+			CONC, EQUAL, FIRST2, FIRST3, FIRST4, LAST, LIST2,
+			LIST3, LIST4, LIST5, LWRITE, MEMBER, OWRITE, RED2,
+			SECOND, THIRD;
+
+FROM SACPOL	IMPORT	VLREAD, VLWRIT;
+
+(*muss wieder weg. *)
+VAR LMARG, RMARG: LIST;
+
+CONST rcsidi = "$Id: CGBAPPL.mip,v 1.6 1996/06/08 16:47:05 pesch Exp $";
+CONST copyrighti = "Copyright (c) 1989 - 1996 Universitaet Passau";
+
+
+PROCEDURE GTEST(C,P: LIST; VAR C0,C1: LIST); 
+(*Groebner-Test. C is a condition and P is a list of polynomials.
+PAR is a parameter for the factorization of coefficients.
+GTEST verifies, whether P is a comprehensive-groebner-basis wrt C.
+C0 contains the conditions so that P is no groebner basis.
+C1 contains the conditions so that P is a groebner basis. *)
+VAR   CC0, CC1, COND, DEL, PAIRS, PCO, PELEM, PLIST, PPL: LIST; 
+BEGIN
+(*1*) C0:=SIL; C1:=SIL; 
+      IF (P = SIL)  THEN RETURN; END;
+      IF (RED(P) = SIL) THEN RETURN; END;
+(*2*) (*Determine. *)
+      DET(C,P, DEL,PPL); 
+(*3*) (*Check. *) 
+      WHILE PPL <> SIL DO 
+           ADV(PPL, PELEM,PPL);
+           FIRST2(PELEM, COND,PLIST);
+           PCO:=CHDEGL(PLIST); 
+           IF (PCO = SIL) AND (RED(PLIST) <> SIL) THEN
+             PAIRS:=MKPAIR(PLIST); 
+             IF PAIRS <> SIL THEN 
+               GBHELP(COND,PAIRS,PLIST,CC0,CC1); 
+               C0:=CONC(C0,CC0);
+               C1:=CONC(C1,CC1);
+             ELSE 
+               IF MEMBER(COND,C0) = 0 THEN C0:=COMP(COND,C0); END; 
+             END; 
+           ELSE
+             IF MEMBER(COND,C0) = 0 THEN C0:=COMP(COND,C0); END; 
+           END;
+      END; 
+(*6*) RETURN;
+END GTEST; 
+
+
+PROCEDURE GBHELP(COND,PPAIRS,P: LIST; VAR C0,C1: LIST); 
+(*Groebner test help. COND is a condition. PPAIRS is the polynomial
+pairs list of P. P is a list of determined and coloured polynomials
+relative to COND. PAR is a parameter for the factorization of
+coefficients. 
+C0 contains the successors of COND so that p is no groebner basis.
+C1 contains the successors of COND so that p is a groebner basis. *)
+VAR   FCO, GCO, HCO, N0, N1, PAIR, PAIRS: LIST; 
+BEGIN
+(*1*) PAIRS:=PPAIRS; C0:=SIL; C1:=SIL; 
+(*2*) (*Construct spolynomial. *) 
+      WHILE PAIRS <> SIL DO
+           ADV(PAIRS, PAIR,PAIRS); 
+           FCO:=SECOND(PAIR);
+           GCO:=THIRD(PAIR);
+           HCO:=SPOL(COND,FCO,GCO); 
+           IF HCO <> SIL THEN
+     	     PAR.NormalForm(COND,HCO,P, N0,N1);
+             IF N1 = SIL THEN
+                  IF MEMBER(COND,C0)=0 THEN C0:=COMP(COND,C0); END; 
+             END; 
+             IF N0 = SIL THEN 
+                  IF MEMBER(COND,C1)=0 THEN C1:=COMP(COND,C1); END; 
+             END; 
+             IF (N0<>SIL) AND (N1<>SIL) THEN NSET(N0,N1,C0,C1, C0,C1); END; 
+           ELSE 
+             C0:=COMP(COND,C0); 
+           END; 
+      END; 
+(*5*) RETURN;
+END GBHELP; 
+
+
+PROCEDURE NSET(NN0,NN1,CC0,CC1: LIST; VAR C0,C1: LIST); 
+(*Normalform set.
+NN0 is a set of tripels (ga,pco,c), where ga is a condition,
+pco is a normalform determined and coloured completely green by ga
+and c is a multiplicative factor.
+NN1 is a set of tripels (ga,pco,c), where ga is a condition,
+pco is a normalform determined and not coloured completely green by ga
+and c is a multiplicative factor.
+CC0 and CC1 are lists of conditions.
+The conditions in NN0, that are not in CC1, are added to CC0.
+The conditions in NN1 are added to CC1. *)
+VAR   C, COND, N0, N1, PCO: LIST; 
+BEGIN
+(*1*) C0:=CC0; C1:=CC1;
+      N0:=NN0; N1:=NN1; 
+(*2*) WHILE N1 <> SIL DO
+           ADV3(N1, COND,PCO,C,N1); 
+           IF MEMBER(COND,C1) = 0 THEN C1:=COMP(COND,C1); END; 
+      END; 
+(*3*) WHILE N0 <> SIL DO
+           ADV3(N0, COND,PCO,C,N0); 
+           IF (MEMBER(COND,C0)=0) AND (MEMBER(COND,C1)=0)
+             THEN C0:=COMP(COND,C0); END; 
+      END; 
+(*6*) RETURN;
+END NSET; 
+
+
+PROCEDURE WRTEST(C,PP,CGB0,CGB1: LIST); 
+(*Write groebner test. C is a condition. PP is a list of polynomials.
+CGB0 contains the successors of C so that p is no groebner basis.
+CGB1 contains the successors of C so that p is a groebner basis.
+The conditions are written on the output stream. *)
+VAR   C0, C1, COND, SL, TL: LIST; 
+BEGIN
+(*1*) SWRITE("Groebner test for "); BLINES(1); 
+      IF C <> SIL THEN DWRIT(C); END; 
+      DILWR(PP,VALIS);
+      C0:=CGB0; C1:=CGB1; BLINES(0); 
+      IF (C0 <> SIL) AND (C1 <> SIL) THEN
+         SWRITE(" Conditions such that G is groebner basis ");
+         TL:=0; BLINES(1); 
+         WHILE C0 <> SIL DO
+              ADV(C0, COND,C0);
+              SL:=CPART(COND,C1); 
+              IF SL = 0 THEN SL:=CPART(COND,C0); END; 
+              IF SL = 0 THEN CondWrite(COND); TL:=1; END; 
+         END; 
+         IF TL = 0 THEN SWRITE("sorry, none. "); BLINES(0); END; 
+      END; 
+(*2*) IF C1 <> SIL THEN
+        SWRITE(" Conditions such that G is no groebner basis "); 
+        BLINES(1); 
+        WHILE C1 <> SIL DO
+             ADV(C1, COND,C1);
+             IF CPART(COND,C1) = 0 THEN BLINES(1); CondWrite(COND); END; 
+        END; 
+      END; 
+(*3*) IF CGB1 = SIL THEN SWRITE(" G is comprehensive-groebner-basis "); END; 
+      BLINES(0);
+(*6*) RETURN;
+END WRTEST; 
+
+
+PROCEDURE CPART(COND,CONDS: LIST): LIST; 
+(*Condition part. COND is a condition. CONDS is a list of conditions.
+SL=1 if COND is a member of CNDS or a successor of a condition in
+CONDS. SL=0 else. *)
+(* --- to do ---: check using reduced sets, GB ??? *)
+VAR   A, A0, A1, COND0, COND1, SL, X: LIST; 
+BEGIN
+(*1*) SL:=0; 
+      IF CONDS = SIL THEN RETURN(SL); END; 
+(*2*) X:=CONDS;
+      CondParts(COND, COND0,COND1); 
+      REPEAT
+            ADV(X, A,X);
+            CondParts(A, A0,A1);
+            SL:=AINB(COND0,A0); 
+            IF SL = 1 THEN SL:=AINB(COND1,A1); END; 
+      UNTIL (X = SIL) OR (SL = 1); 
+(*5*) RETURN(SL);
+END CPART; 
+
+
+(* obsolete *) PROCEDURE CGBQUA(PP: LIST); 
+(*Comprehensive-Groebner-Basis quantifier free formula. PP is a list
+of coloured polynomials. The quantifier free formular epsilon is
+written on the output stream. *)
+VAR   B, COEF, COEFLI, LS, P, PA, PCO, QQ, RS, SL, TL, TT, V,
+      var: LIST; 
+BEGIN
+DEB_BEGIN(CGBQUA);
+     IF PP = SIL THEN RETURN; END; 
+     BLINES(1);
+     V:=VALIS;
+     TT:=SIL; 
+     WHILE V <> SIL DO ADV(V, var,V); TT:=COMP(0,TT); END; 
+     PCO:=CHDEGL(PP); 
+     IF PCO <> SIL THEN SWRITE("false"); BLINES(0); RETURN; END; 
+     P:=PP; SL:=0; 
+     WHILE P <> SIL DO 
+          ADV(P, PCO,P);
+          MCOEF(PCO, COEFLI,COEF,B); 
+          IF (COEF <> SIL) AND (B = 0) THEN
+            SL:=1; 
+            IF COEF <> 0 THEN
+              QQ:=DIPFMO(COEF,TT); 
+              IF TL = 1 THEN SWRITE("  and"); BLINES(1); END; 
+              TL:=1; SWRITE("( ( ");  
+              DIWRIT(QQ,VALIS); SWRITE("  = 0  "); SWRITE(")"); 
+              IF COEFLI <> SIL THEN SWRITE("  or  "); BLINES(1); END; 
+             END; 
+             WHILE COEFLI <> SIL DO
+                  ADV(COEFLI, PA,COEFLI); 
+                  SWRITE("("); ADWRIT(PA); SWRITE(" <> 0  "); SWRITE(")");
+                  IF COEFLI <> SIL THEN SWRITE("  or"); END; 
+             END; 
+             SWRITE(")");
+          END; 
+     END; 
+     IF SL = 0 THEN SWRITE("true"); BLINES(0); END; 
+     BLINES(1); 
+END CGBQUA; 
+
+
+PROCEDURE MCOEF(PCO: LIST; VAR COEFLI,COEF,TL: LIST); 
+(*Make coefficient list. PCO is a coloured polynomial.
+COEFLI is the list of red and white coefficients in PCO, so that the
+degree of the terms in PCO is not zero.
+COEF=() if exists no monomial in PCO  whose coefficient is coloured
+white and whose term is of deg zero or exists a monomial in PCO whose
+coefficient is coloured green and whose term has degree zero.
+COEF=0 if exists a monomial in PCO  whose coefficient is coloured
+red and whose term is of deg zero.
+Else coef is the white coefficient in PCO whose term is of deg zero.
+TL = 1 if exists a red coloured coefficient whose term has
+degree > 0. Else TL = 0 *)
+VAR   COL, CRED, CWHITE, PA, PE, POL: LIST; 
+BEGIN
+(*1*) COEFLI:=SIL; COEF:=SIL;
+      IF PCO = SIL THEN RETURN; END;
+      ColpParts(PCO, POL,COL); 
+      IF ColIsEmpty(COL) THEN RETURN; END; 
+(*2*) TL:=0;
+      ColParts(COL, CRED,CWHITE); 
+      REPEAT
+            DIPMAD(POL, PA,PE,POL);
+            IF ADSIGN(PA) = -1 THEN PA:=ADNEG(PA); END; 
+            IF MEMBER(PE,CRED) = 1 THEN
+              IF POL = SIL THEN
+                IF DIPTDG(DIPFMO(PA,PE)) <> 0 THEN TL:=1; ELSE COEF:=0; END; 
+              ELSE
+                TL:=1;
+              END; 
+            ELSE 
+              IF WMEMB(PE,CWHITE) = 1 THEN
+                IF POL = SIL THEN
+                  IF DIPTDG(DIPFMO(PA,PE)) = 0 THEN COEF:=PA;
+                           ELSE IF MEMBER(PA,COEFLI) = 0 THEN
+                                  COEFLI:=COMP(PA,COEFLI); END;
+                  END; 
+                ELSE
+                  IF MEMBER(PA,COEFLI) = 0 THEN COEFLI:=COMP(PA,COEFLI); END; 
+                END; 
+              END; 
+            END; 
+      UNTIL (POL = SIL) OR (TL = 1); 
+      IF TL = 1 THEN COEFLI:=SIL; RETURN; END; 
+(*3*) COEFLI:=INV(COEFLI); 
+(*6*) RETURN;
+END MCOEF; 
+
+
+PROCEDURE NFEXEC(C,PPS,PP: LIST; VAR NOUT: LIST); 
+(*Parametric ideal membership exec. C is a condition. PPS is a list
+of polynomials to be tested. PP is a list of polynomials forming a
+comprehensive-groebner-basis. PAR is a parameter for the factorization
+of coefficients.
+NOUT is a list containing each polynomial of PPS and the conditions
+and normalforms so that it is a member of the ideal and those so that
+it is no member of the ideal. *)
+VAR   COL, COND, D, N0, N1, NN0, NN1, PELEM, PL, PLIST, POL, PPL,
+      PS, X: LIST; 
+BEGIN
+(*1*) (*Determine PP. *) 
+     NOUT:=SIL;
+     DET(C,PP, D,PL); 
+(*2*) (*Test polynomials. *)
+     PS:=PPS; 
+     WHILE PS <> SIL DO
+          ADV(PS, POL,PS);
+          NN0:=SIL; NN1:=SIL; 
+          PPL:=PL; 
+          WHILE PPL <> SIL DO
+               ADV(PPL, PELEM,PPL); 
+               FIRST2(PELEM, COND,PLIST);
+               PLIST:=REXTP(PLIST); 
+               PAR.NormalForm(COND,ColpConsCond(POL,COND),PLIST, N0,N1);
+	       NN0:=CONC(NN0,N0);
+               NN1:=CONC(NN1,N1);
+          END; 
+          NOUT:=COMP3(POL,NN0,NN1,NOUT);
+      END; 
+(*5*) RETURN;
+END NFEXEC;
+
+
+PROCEDURE WRQFN0(N0: LIST); 
+(*Write quantifier free formula for parametric ideal membership.
+N0 is a list of tripel (cond,pco,c), where cond is a condition,
+pco is a normalform coloured completely green by cond
+and c is a multiplicative factor.
+The formula is written on the output stream. *)
+VAR   AT, C, C0, COND, COND0, COND1, LS, NN0, PA, PCO, RS, TT, V, 
+      var: LIST; 
+BEGIN
+(*1*) SWRITE("Quantifier free formula for "); 
+      SWRITE("parametric ideal membership "); BLINES(1); 
+      IF N0 = SIL THEN SWRITE("false "); BLINES(0); RETURN; END; 
+(*2*) (*Format. *)
+      BLINES(1); LS:=LMARG; RS:=RMARG; LMARG:=3; RMARG:=70; BLINES(0);
+      V:=VALIS; TT:=SIL; 
+      WHILE V <> SIL DO ADV(V, var,V); TT:=COMP(0,TT); END; 
+(*3*) (*Write conditions. *)
+      NN0:=N0; 
+      WHILE NN0 <> SIL DO
+           ADV3(NN0, COND,PCO,C,NN0);
+           CondParts(COND, COND0,COND1);
+           C0:=COND0;
+           SWRITE("("); 
+           WHILE COND0 <> SIL DO
+                ADV(COND0, PA,COND0); 
+                AT:=DIPFMO(PA,TT);
+                SWRITE("("); DIWRIT(AT,VALIS); SWRITE(" eq 0  "); SWRITE(")"); 
+                IF COND0 <> SIL THEN SWRITE("  and "); END; 
+           END; 
+           IF (C0 <> SIL) AND (COND1 <> SIL) THEN 
+             SWRITE("  and "); BLINES(0); END; 
+           WHILE COND1 <> SIL DO
+                ADV(COND1, PA,COND1);
+                AT:=DIPFMO(PA,TT); SWRITE("("); DIWRIT(AT,VALIS); 
+                SWRITE(" neq 0  "); SWRITE(")"); 
+                IF COND1 <> SIL THEN SWRITE("  and "); END; 
+           END; 
+           SWRITE(")"); BLINES(0); 
+           IF NN0 <> SIL THEN SWRITE(" OR "); BLINES(0); END; 
+      END; 
+(*4*) LMARG:=LS; RMARG:=RS; BLINES(0); 
+(*7*) RETURN;
+END WRQFN0; 
+
+
+PROCEDURE DIMEXE(GS,V: LIST): LIST; 
+(*Parametric dimension exec. GS is a groebner-system. V is the
+variables list. For each element of the groebner-system the dimension
+is computed. DIML is a list of conditions and dimensions. *)
+VAR   COND, DIML, DL, PLIST, X, XELEM: LIST; 
+BEGIN
+(*1*) IF GS = SIL THEN RETURN(SIL); END; 
+(*2*) X:=GS; DIML:=SIL; 
+      WHILE X <> SIL DO
+           ADV(X, XELEM,X);
+           FIRST2(XELEM, COND,PLIST); 
+           CondWrite(COND);
+           SWRITE("Groebner basis "); 
+           IF PLIST = SIL THEN
+             SWRITE("Basis is empty ");
+             BLINES(1);
+           ELSE
+             DCLWR(PLIST,0);
+             DL:=INTDIM(V,CGBCOL(COND,PLIST));
+             BLINES(0); 
+             IF DL <> SIL THEN DIML:=COMP2(COND,DL,DIML); END; 
+           END; 
+      END; 
+(*5*) RETURN(DIML);
+END DIMEXE; 
+
+
+PROCEDURE INTDIM(V,PP: LIST): LIST; 
+(*See intdim of dip. V is the variables list. PP is a list of
+polynomials. DL is the dimension of PP. *)
+VAR   DL, M, ML, S, VV, var: LIST; 
+BEGIN
+(*1*) IF PP = SIL THEN
+         SWRITE("Basis is empty"); BLINES(0); 
+         VV:=VALIS; DL:=0; 
+         WHILE VV <> SIL DO ADV(VV, var,VV); DL:=DL+1; END; 
+         SWRITE("dimension ="); OWRITE(DL); BLINES(1);
+         RETURN(DL);
+      END; 
+(*3*) (*Call dimension. *)
+      DILDIM(PP, DL,S,M); 
+(*4*) (*Write dimension. *)
+      SWRITE("dimension ="); OWRITE(DL); BLINES(1); 
+      IF DL <> -1 THEN
+        VV:=IXSUBS(V,S);
+        SWRITE("maximal independent set ="); VLWRIT(VV); BLINES(1); 
+        SWRITE("M     ="); SWRITE("("); 
+        WHILE M <> SIL DO
+             ADV(M, ML,M);
+             VV:=IXSUBS(V,ML); 
+              VLWRIT(VV); 
+              IF M <> SIL THEN SWRITE(","); END; 
+        END; 
+        SWRITE(")"); BLINES(1);
+      END; 
+(*7*) RETURN(DL);
+END INTDIM; 
+
+
+PROCEDURE WRDIMS(DIML: LIST); 
+(*Write dimension. DIML is a list of conditions and dimensions.
+The quantifier free formula for parametric dimension is written on
+the output stream. *)
+VAR   COND, CONDS, DIM, DIMO, DL, X, XP: LIST; 
+BEGIN
+(*1*) IF DIML = SIL THEN RETURN; END; 
+      SWRITE("Quantifier free formula for "); BLINES(0); 
+      SWRITE("parametric dimension "); BLINES(1); 
+(*2*) X:=DIML; DIMO:=SIL; 
+      WHILE X <> SIL DO
+           ADV2(X, COND,DIM,X); CONDS:=SIL; 
+           IF MEMBER(DIM,DIMO) = 0 THEN
+              DIMO:=COMP(DIM,DIMO);
+              CONDS:=COMP(COND,CONDS);
+              XP:=X; 
+              WHILE XP <> SIL DO
+                   ADV2(XP, COND,DL,XP); 
+                   IF DL = DIM THEN CONDS:=COMP(COND,CONDS); END; 
+              END; 
+              SWRITE("dimension = "); OWRITE(DIM); BLINES(0); 
+               WRCONJ(CONDS);
+            END; 
+      END; 
+      BLINES(1); 
+(*5*) RETURN;
+END WRDIMS; 
+
+
+PROCEDURE WRCONJ(CONDS: LIST); 
+(*Write conjunction. CONDS is a list of conditions. The conjunction
+over all conditions is written on the output stream. *)
+VAR   AT, C, C0, COND, COND0, COND1, LS, PA, RS, TT, V, var: LIST; 
+BEGIN
+(*1*) IF CONDS = SIL THEN SWRITE("false "); BLINES(0); RETURN; END; 
+(*2*) (*Format. *)
+      BLINES(1); LS:=LMARG; RS:=RMARG; LMARG:=3; 
+      RMARG:=70; BLINES(0); V:=VALIS; TT:=SIL; 
+      WHILE V <> SIL DO ADV(V, var,V); TT:=COMP(0,TT); END; 
+(*3*) C:=CONDS; 
+      WHILE C <> SIL DO
+           ADV(C, COND,C);
+           CondParts(COND, COND0,COND1);
+           C0:=COND0;
+	   SWRITE("("); 
+           WHILE COND0 <> SIL DO
+                ADV(COND0, PA,COND0); 
+                AT:=DIPFMO(PA,TT);
+                SWRITE("("); DIWRIT(AT,VALIS); SWRITE(" eq 0  "); SWRITE(")"); 
+                IF COND0 <> SIL THEN SWRITE("  AND "); END; 
+           END; 
+           IF (C0 <> SIL) AND (COND1 <> SIL) THEN
+             SWRITE("  and "); BLINES(0); END; 
+           WHILE COND1 <> SIL DO
+                ADV(COND1, PA,COND1); 
+                AT:=DIPFMO(PA,TT);
+                SWRITE("("); DIWRIT(AT,VALIS); SWRITE(" neq 0  "); SWRITE(")");
+                IF COND1 <> SIL THEN SWRITE("  and "); END; 
+           END; 
+           SWRITE(")"); BLINES(0); 
+           IF C <> SIL THEN SWRITE(" or "); BLINES(0); END; 
+      END; 
+(*4*) LMARG:=LS; RMARG:=RS; BLINES(0); 
+(*7*) RETURN;
+END WRCONJ; 
+
+END CGBAPPL.
+
+(* -EOF- *)

@@ -1,0 +1,593 @@
+#include "SYSTEM_.h"
+
+#ifndef DEFINITION_MASSTOR
+#include "MASSTOR.h"
+#endif
+
+#ifndef DEFINITION_MASERR
+#include "MASERR.h"
+#endif
+
+#ifndef DEFINITION_MASADOM
+#include "MASADOM.h"
+#endif
+
+#ifndef DEFINITION_SACLIST
+#include "SACLIST.h"
+#endif
+
+#ifndef DEFINITION_SACRN
+#include "SACRN.h"
+#endif
+
+#ifndef DEFINITION_SACPOL
+#include "SACPOL.h"
+#endif
+
+#ifndef DEFINITION_SACRPOL
+#include "SACRPOL.h"
+#endif
+
+#ifndef DEFINITION_DIPC
+#include "DIPC.h"
+#endif
+
+#ifndef DEFINITION_DIPRN
+#include "DIPRN.h"
+#endif
+
+#ifndef DEFINITION_DIPRNPOL
+#include "DIPRNPOL.h"
+#endif
+
+#ifndef DEFINITION_DIPAGB
+#include "DIPAGB.h"
+#endif
+
+#ifndef DEFINITION_DIPGB
+#include "DIPGB.h"
+#endif
+
+#ifndef DEFINITION_DOMRP
+#include "DOMRP.h"
+#endif
+
+CHAR DOMRP_rcsid [] = "$Id: DOMRP.md,v 1.1 1992/06/12 13:48:04 kredel Exp $";
+CHAR DOMRP_copyright [] = "Copyright (c) 1989 - 1992 Universitaet Passau";
+MASADOM_Domain DOMRP_DOMRPD;
+
+static CHAR rcsidi [] = "$Id: DOMRP.mi,v 1.5 1994/06/06 16:06:55 rose Exp $";
+static CHAR copyrighti [] = "Copyright (c) 1989 - 1992 Universitaet Passau";
+static MASSTOR_LIST DDIF ARGS((MASSTOR_LIST C_169_A, MASSTOR_LIST B));
+static MASSTOR_LIST DEXP ARGS((MASSTOR_LIST C_168_A, MASSTOR_LIST NL));
+static MASSTOR_LIST DFI ARGS((MASSTOR_LIST D, MASSTOR_LIST C_167_A));
+static MASSTOR_LIST DFIP ARGS((MASSTOR_LIST D, MASSTOR_LIST C_166_A));
+static MASSTOR_LIST DGCD ARGS((MASSTOR_LIST C_165_A, MASSTOR_LIST B));
+static void DGCDE ARGS((MASSTOR_LIST C_164_A, MASSTOR_LIST B, MASSTOR_LIST *C, MASSTOR_LIST *U, MASSTOR_LIST *V));
+static MASSTOR_LIST DINV ARGS((MASSTOR_LIST C_163_A));
+static MASSTOR_LIST DINVT ARGS((MASSTOR_LIST C_162_A));
+static MASSTOR_LIST DLCM ARGS((MASSTOR_LIST C_161_A, MASSTOR_LIST B));
+static MASSTOR_LIST DNEG ARGS((MASSTOR_LIST C_160_A));
+static MASSTOR_LIST DONE ARGS((MASSTOR_LIST C_159_A));
+static MASSTOR_LIST DPNF ARGS((MASSTOR_LIST G, MASSTOR_LIST P));
+static MASSTOR_LIST DPROD ARGS((MASSTOR_LIST C_158_A, MASSTOR_LIST B));
+static MASSTOR_LIST DPSP ARGS((MASSTOR_LIST C_157_A, MASSTOR_LIST B));
+static MASSTOR_LIST DPSUGNF ARGS((MASSTOR_LIST G, MASSTOR_LIST P));
+static MASSTOR_LIST DPSUGSP ARGS((MASSTOR_LIST C_156_A, MASSTOR_LIST B));
+static void DQR ARGS((MASSTOR_LIST C_155_A, MASSTOR_LIST B, MASSTOR_LIST *Q, MASSTOR_LIST *R));
+static MASSTOR_LIST DQUOT ARGS((MASSTOR_LIST C_154_A, MASSTOR_LIST B));
+static MASSTOR_LIST DREAD ARGS((MASSTOR_LIST D));
+static MASSTOR_LIST DREM ARGS((MASSTOR_LIST C_153_A, MASSTOR_LIST B));
+static MASSTOR_LIST DSIGN ARGS((MASSTOR_LIST C_152_A));
+static MASSTOR_LIST DSUM ARGS((MASSTOR_LIST C_151_A, MASSTOR_LIST B));
+static void DWRIT ARGS((MASSTOR_LIST C_150_A));
+static MASSTOR_LIST DDDRD ARGS(());
+static void DDDWR ARGS((MASSTOR_LIST D));
+static MASSTOR_LIST DVLDD ARGS((MASSTOR_LIST D));
+
+
+static MASSTOR_LIST DDIF
+# ifdef __STDC__
+(MASSTOR_LIST C_169_A, MASSTOR_LIST B)
+# else
+(C_169_A, B)
+MASSTOR_LIST C_169_A, B;
+# endif
+{
+  MASSTOR_LIST AL, AP, BL, BP, C, CL, RL;
+
+  MASSTOR_ADV(C_169_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  MASSTOR_ADV(B, &BL, &BP);
+  CL = SACRPOL_RPDIF(RL, AL, BL);
+  C = MASSTOR_COMP(CL, AP);
+  return C;
+}
+
+static MASSTOR_LIST DEXP
+# ifdef __STDC__
+(MASSTOR_LIST C_168_A, MASSTOR_LIST NL)
+# else
+(C_168_A, NL)
+MASSTOR_LIST C_168_A, NL;
+# endif
+{
+  MASSTOR_LIST AL, AP, C, CL, RL;
+
+  MASSTOR_ADV(C_168_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  CL = DIPRNPOL_RPEXP(RL, AL, NL);
+  C = MASSTOR_COMP(CL, AP);
+  return C;
+}
+
+static MASSTOR_LIST DFI
+# ifdef __STDC__
+(MASSTOR_LIST D, MASSTOR_LIST C_167_A)
+# else
+(D, C_167_A)
+MASSTOR_LIST D, C_167_A;
+# endif
+{
+  MASSTOR_LIST C, CL, RL, AL;
+
+  D = MASSTOR_RED(D);
+  RL = MASSTOR_FIRST(D);
+  AL = SACRN_RNINT(C_167_A);
+  CL = SACPOL_PINV(0, AL, RL);
+  C = MASSTOR_COMP(CL, D);
+  return C;
+}
+
+static MASSTOR_LIST DFIP
+# ifdef __STDC__
+(MASSTOR_LIST D, MASSTOR_LIST C_166_A)
+# else
+(D, C_166_A)
+MASSTOR_LIST D, C_166_A;
+# endif
+{
+  MASSTOR_LIST C, CL, RL;
+
+  D = MASSTOR_RED(D);
+  RL = MASSTOR_FIRST(D);
+  CL = SACRPOL_RPFIP(RL, C_166_A);
+  C = MASSTOR_COMP(CL, D);
+  return C;
+}
+
+static MASSTOR_LIST DGCD
+# ifdef __STDC__
+(MASSTOR_LIST C_165_A, MASSTOR_LIST B)
+# else
+(C_165_A, B)
+MASSTOR_LIST C_165_A, B;
+# endif
+{
+  MASSTOR_LIST AL, AP, BL, BP, C, CL, RL;
+
+  MASSTOR_ADV(C_165_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  MASSTOR_ADV(B, &BL, &BP);
+  if (RL != 1) {
+    MASERR_ERROR(MASERR_severe, "Only rational univariate polynomial in GCD", 42L);
+  }
+  CL = DIPRNPOL_RUPGCD(AL, BL);
+  C = MASSTOR_COMP(CL, AP);
+  return C;
+}
+
+static void DGCDE
+# ifdef __STDC__
+(MASSTOR_LIST C_164_A, MASSTOR_LIST B, MASSTOR_LIST *C, MASSTOR_LIST *U, MASSTOR_LIST *V)
+# else
+(C_164_A, B, C, U, V)
+MASSTOR_LIST C_164_A, B;
+MASSTOR_LIST *C, *U, *V;
+# endif
+{
+  MASSTOR_LIST AL, AP, BL, BP, CL, RL, UL, VL;
+
+  MASSTOR_ADV(C_164_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  MASSTOR_ADV(B, &BL, &BP);
+  if (RL != 1) {
+    MASERR_ERROR(MASERR_severe, "Only rational univariate polynomial in EGCD", 43L);
+  }
+  DIPRNPOL_RUPEGC(AL, BL, &CL, &UL, &VL);
+  *C = MASSTOR_COMP(CL, AP);
+  *U = MASSTOR_COMP(UL, AP);
+  *V = MASSTOR_COMP(VL, AP);
+}
+
+static MASSTOR_LIST DINV
+# ifdef __STDC__
+(MASSTOR_LIST C_163_A)
+# else
+(C_163_A)
+MASSTOR_LIST C_163_A;
+# endif
+{
+  MASSTOR_LIST AL, AP, C, CL, QL, RL, EL;
+
+  MASSTOR_ADV(C_163_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  EL = SACPOL_PINV(0, SACRN_RNINT(1), RL);
+  SACRPOL_RPQR(RL, EL, AL, &CL, &QL);
+  if (QL != 0) {
+    MASERR_ERROR(MASERR_severe, "Remainder non zero in rational polynomial INV", 45L);
+  }
+  C = MASSTOR_COMP(CL, AP);
+  return C;
+}
+
+static MASSTOR_LIST DINVT
+# ifdef __STDC__
+(MASSTOR_LIST C_162_A)
+# else
+(C_162_A)
+MASSTOR_LIST C_162_A;
+# endif
+{
+  MASSTOR_LIST AL, AP, TL, RL;
+
+  MASSTOR_ADV(C_162_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  AL = DIPRNPOL_RPABS(RL, AL);
+  TL = DIPRNPOL_RPCONST(RL, AL);
+  if (TL != 1) {
+    TL = 0;
+  }
+  return TL;
+}
+
+static MASSTOR_LIST DLCM
+# ifdef __STDC__
+(MASSTOR_LIST C_161_A, MASSTOR_LIST B)
+# else
+(C_161_A, B)
+MASSTOR_LIST C_161_A, B;
+# endif
+{
+  MASSTOR_LIST AL, AP, BL, BP, C, CL, RL;
+
+  MASSTOR_ADV(C_161_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  MASSTOR_ADV(B, &BL, &BP);
+  if (RL != 1) {
+    MASERR_ERROR(MASERR_severe, "Only rational univariate polynomial in LCM", 42L);
+  }
+  CL = DIPRNPOL_RUPLCM(AL, BL);
+  C = MASSTOR_COMP(CL, AP);
+  return C;
+}
+
+static MASSTOR_LIST DNEG
+# ifdef __STDC__
+(MASSTOR_LIST C_160_A)
+# else
+(C_160_A)
+MASSTOR_LIST C_160_A;
+# endif
+{
+  MASSTOR_LIST AL, AP, C, CL, RL;
+
+  MASSTOR_ADV(C_160_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  CL = SACRPOL_RPNEG(RL, AL);
+  C = MASSTOR_COMP(CL, AP);
+  return C;
+}
+
+static MASSTOR_LIST DONE
+# ifdef __STDC__
+(MASSTOR_LIST C_159_A)
+# else
+(C_159_A)
+MASSTOR_LIST C_159_A;
+# endif
+{
+  MASSTOR_LIST AL, AP, SL, RL;
+
+  MASSTOR_ADV(C_159_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  SL = DIPRNPOL_RPONE(RL, AL);
+  return SL;
+}
+
+static MASSTOR_LIST DPNF
+# ifdef __STDC__
+(MASSTOR_LIST G, MASSTOR_LIST P)
+# else
+(G, P)
+MASSTOR_LIST G, P;
+# endif
+{
+  return DIPGB_DIIFNF(G, 0, P);
+}
+
+static MASSTOR_LIST DPROD
+# ifdef __STDC__
+(MASSTOR_LIST C_158_A, MASSTOR_LIST B)
+# else
+(C_158_A, B)
+MASSTOR_LIST C_158_A, B;
+# endif
+{
+  MASSTOR_LIST AL, AP, BL, BP, C, CL, RL;
+
+  MASSTOR_ADV(C_158_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  MASSTOR_ADV(B, &BL, &BP);
+  CL = SACRPOL_RPPROD(RL, AL, BL);
+  C = MASSTOR_COMP(CL, AP);
+  return C;
+}
+
+static MASSTOR_LIST DPSP
+# ifdef __STDC__
+(MASSTOR_LIST C_157_A, MASSTOR_LIST B)
+# else
+(C_157_A, B)
+MASSTOR_LIST C_157_A, B;
+# endif
+{
+  return DIPGB_DIIFSP(C_157_A, B);
+}
+
+static MASSTOR_LIST DPSUGNF
+# ifdef __STDC__
+(MASSTOR_LIST G, MASSTOR_LIST P)
+# else
+(G, P)
+MASSTOR_LIST G, P;
+# endif
+{
+  return DIPAGB_EDIIFSUGNF(G, P);
+}
+
+static MASSTOR_LIST DPSUGSP
+# ifdef __STDC__
+(MASSTOR_LIST C_156_A, MASSTOR_LIST B)
+# else
+(C_156_A, B)
+MASSTOR_LIST C_156_A, B;
+# endif
+{
+  return DIPAGB_EDIIFSUGSP(C_156_A, B);
+}
+
+static void DQR
+# ifdef __STDC__
+(MASSTOR_LIST C_155_A, MASSTOR_LIST B, MASSTOR_LIST *Q, MASSTOR_LIST *R)
+# else
+(C_155_A, B, Q, R)
+MASSTOR_LIST C_155_A, B;
+MASSTOR_LIST *Q, *R;
+# endif
+{
+  MASSTOR_LIST AL, AP, BL, BP, QL, RL, CL;
+
+  MASSTOR_ADV(C_155_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  MASSTOR_ADV(B, &BL, &BP);
+  SACRPOL_RPQR(RL, AL, BL, &QL, &CL);
+  *Q = MASSTOR_COMP(QL, AP);
+  *R = MASSTOR_COMP(CL, AP);
+  return;
+}
+
+static MASSTOR_LIST DQUOT
+# ifdef __STDC__
+(MASSTOR_LIST C_154_A, MASSTOR_LIST B)
+# else
+(C_154_A, B)
+MASSTOR_LIST C_154_A, B;
+# endif
+{
+  MASSTOR_LIST AL, AP, BL, BP, C, CL, QL, RL;
+
+  MASSTOR_ADV(C_154_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  MASSTOR_ADV(B, &BL, &BP);
+  SACRPOL_RPQR(RL, AL, BL, &CL, &QL);
+  C = MASSTOR_COMP(CL, AP);
+  return C;
+}
+
+static MASSTOR_LIST DREAD
+# ifdef __STDC__
+(MASSTOR_LIST D)
+# else
+(D)
+MASSTOR_LIST D;
+# endif
+{
+  MASSTOR_LIST C, CL, RL, V, DP;
+
+  D = MASSTOR_RED(D);
+  MASSTOR_ADV(D, &RL, &DP);
+  V = MASSTOR_FIRST(DP);
+  CL = DIPRN_DIRPRD(V);
+  DIPC_PFDIP(CL, &RL, &CL);
+  C = MASSTOR_COMP(CL, D);
+  return C;
+}
+
+static MASSTOR_LIST DREM
+# ifdef __STDC__
+(MASSTOR_LIST C_153_A, MASSTOR_LIST B)
+# else
+(C_153_A, B)
+MASSTOR_LIST C_153_A, B;
+# endif
+{
+  MASSTOR_LIST AL, AP, BL, BP, QL, CL, RL, R;
+
+  MASSTOR_ADV(C_153_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  MASSTOR_ADV(B, &BL, &BP);
+  SACRPOL_RPQR(RL, AL, BL, &QL, &CL);
+  R = MASSTOR_COMP(CL, AP);
+  return R;
+}
+
+static MASSTOR_LIST DSIGN
+# ifdef __STDC__
+(MASSTOR_LIST C_152_A)
+# else
+(C_152_A)
+MASSTOR_LIST C_152_A;
+# endif
+{
+  MASSTOR_LIST AL, SL, RL, AP;
+
+  MASSTOR_ADV(C_152_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  SL = DIPRNPOL_RPSIGN(RL, AL);
+  return SL;
+}
+
+static MASSTOR_LIST DSUM
+# ifdef __STDC__
+(MASSTOR_LIST C_151_A, MASSTOR_LIST B)
+# else
+(C_151_A, B)
+MASSTOR_LIST C_151_A, B;
+# endif
+{
+  MASSTOR_LIST AL, AP, BL, BP, C, CL, RL;
+
+  MASSTOR_ADV(C_151_A, &AL, &AP);
+  RL = MASSTOR_FIRST(AP);
+  MASSTOR_ADV(B, &BL, &BP);
+  CL = SACRPOL_RPSUM(RL, AL, BL);
+  C = MASSTOR_COMP(CL, AP);
+  return C;
+}
+
+static void DWRIT
+# ifdef __STDC__
+(MASSTOR_LIST C_150_A)
+# else
+(C_150_A)
+MASSTOR_LIST C_150_A;
+# endif
+{
+  MASSTOR_LIST AL, RL, V, AP;
+
+  SACLIST_ADV2(C_150_A, &AL, &RL, &AP);
+  V = MASSTOR_FIRST(AP);
+  AL = DIPC_DIPFP(RL, AL);
+  DIPRN_DIRPWR(AL, V, -1);
+  return;
+}
+
+static MASSTOR_LIST DDDRD
+# ifdef __STDC__
+()
+# else
+()
+# endif
+{
+  MASSTOR_LIST V, RL, C;
+
+  V = SACPOL_VLREAD();
+  RL = MASSTOR_LENGTH(V);
+  C = SACLIST_LIST3(0, RL, V);
+  return C;
+}
+
+static void DDDWR
+# ifdef __STDC__
+(MASSTOR_LIST D)
+# else
+(D)
+MASSTOR_LIST D;
+# endif
+{
+  MASSTOR_LIST V;
+
+  D = MASSTOR_RED(D);
+  V = SACLIST_SECOND(D);
+  SACPOL_VLWRIT(V);
+  return;
+}
+
+static MASSTOR_LIST DVLDD
+# ifdef __STDC__
+(MASSTOR_LIST D)
+# else
+(D)
+MASSTOR_LIST D;
+# endif
+{
+  MASSTOR_LIST V;
+
+  D = MASSTOR_RED(D);
+  V = SACLIST_SECOND(D);
+  return V;
+}
+
+void DOMRP_DomLoadRP
+# ifdef __STDC__
+()
+# else
+()
+# endif
+{
+  MASADOM_Domain d;
+
+  d = MASADOM_NewDom("RP", 2L, "Rational Polynomial", 19L);
+  DOMRP_DOMRPD = d;
+  MASADOM_SetDifFunc(d, DDIF);
+  MASADOM_SetExpFunc(d, DEXP);
+  MASADOM_SetFIntFunc(d, DFI);
+  MASADOM_SetFIPolFunc(d, DFIP);
+  MASADOM_SetGcdFunc(d, DGCD);
+  MASADOM_SetGcdeFunc(d, DGCDE);
+  MASADOM_SetInvFunc(d, DINV);
+  MASADOM_SetInvTFunc(d, DINVT);
+  MASADOM_SetLcmFunc(d, DLCM);
+  MASADOM_SetNegFunc(d, DNEG);
+  MASADOM_SetOneFunc(d, DONE);
+  MASADOM_SetProdFunc(d, DPROD);
+  MASADOM_SetQrFunc(d, DQR);
+  MASADOM_SetQuotFunc(d, DQUOT);
+  MASADOM_SetReadFunc(d, DREAD);
+  MASADOM_SetRemFunc(d, DREM);
+  MASADOM_SetSignFunc(d, DSIGN);
+  MASADOM_SetSumFunc(d, DSUM);
+  MASADOM_SetWritFunc(d, DWRIT);
+  MASADOM_SetDdrdFunc(d, DDDRD);
+  MASADOM_SetDdwrFunc(d, DDDWR);
+  MASADOM_SetVlddFunc(d, DVLDD);
+  MASADOM_SetPNormFunc(d, DPNF);
+  MASADOM_SetPSpolFunc(d, DPSP);
+  MASADOM_SetPSugNormFunc(d, DPSUGNF);
+  MASADOM_SetPSugSpolFunc(d, DPSUGSP);
+}
+
+void BEGIN_DOMRP()
+{
+  static BOOLEAN has_been_called = FALSE;
+
+  if (!has_been_called) {
+    has_been_called = TRUE;
+
+    BEGIN_MASADOM();
+    BEGIN_MASSTOR();
+    BEGIN_MASERR();
+    BEGIN_MASADOM();
+    BEGIN_SACLIST();
+    BEGIN_SACRN();
+    BEGIN_SACPOL();
+    BEGIN_SACRPOL();
+    BEGIN_DIPC();
+    BEGIN_DIPRN();
+    BEGIN_DIPRNPOL();
+    BEGIN_DIPAGB();
+    BEGIN_DIPGB();
+
+  }
+}

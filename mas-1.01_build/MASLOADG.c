@@ -1,0 +1,114 @@
+#include "SYSTEM_.h"
+
+#ifndef DEFINITION_GSYMFUIN
+#include "GSYMFUIN.h"
+#endif
+
+#ifndef DEFINITION_GSYMFURN
+#include "GSYMFURN.h"
+#endif
+
+#ifndef DEFINITION_GSYMINP
+#include "GSYMINP.h"
+#endif
+
+#ifndef DEFINITION_MASLISPU
+#include "MASLISPU.h"
+#endif
+
+#ifndef DEFINITION_NOETHER
+#include "NOETHER.h"
+#endif
+
+#ifndef DEFINITION_TIPRNGB
+#include "TIPRNGB.h"
+#endif
+
+#ifndef DEFINITION_SACPOL
+#include "SACPOL.h"
+#endif
+
+#ifndef DEFINITION_SUBST
+#include "SUBST.h"
+#endif
+
+#ifndef DEFINITION_MASLOADG
+#include "MASLOADG.h"
+#endif
+
+CHAR MASLOADG_rcsid [] = "$Id: MASLOADG.md,v 1.1 1995/11/05 15:29:37 pesch Exp $";
+CHAR MASLOADG_copyright [] = "Copyright (c) 1995 Universitaet Passau";
+
+static CHAR rcsidi [] = "$Id: MASLOADG.mi,v 1.2 1996/06/08 18:51:42 pesch Exp $";
+static CHAR copyrighti [] = "Copyright (c) 1995 Universitaet Passau";
+
+
+void MASLOADG_InitExternalsG
+# ifdef __STDC__
+()
+# else
+()
+# endif
+{
+  MASLISPU_Compiledf0(GSYMINP_GSPREAD, "GSPREAD", 7L);
+  MASLISPU_Compiledf0(GSYMINP_GSRREAD, "GSRREAD", 7L);
+  MASLISPU_Compiledf0(SACPOL_VLREAD, "VLREAD", 6L);
+  MASLISPU_Compiledp0(GSYMFUIN_GSYINF, "GSYINF", 6L);
+  MASLISPU_Compiledp1(GSYMFUIN_GSYPGW, "GSYPGW", 6L);
+  MASLISPU_Compiledp1(GSYMFUIN_GSYNSP, "GSYNSP", 6L);
+  MASLISPU_Compiledf1(GSYMFUIN_GSYPGR, "GSYPGR", 6L);
+  MASLISPU_Compiledf1(GSYMFUIN_GSYSPG, "GSYSPG", 6L);
+  MASLISPU_Compiledf1(GSYMFUIN_GSYORD, "GSYORD", 6L);
+  MASLISPU_Compiledp2v2(GSYMFUIN_GINCUT, "GINCUT", 6L);
+  MASLISPU_Compiledp2v3(GSYMFUIN_GINRED, "GINRED", 6L);
+  MASLISPU_Compiledf1(GSYMFUIN_GINBAS, "GINBAS", 6L);
+  MASLISPU_Compiledf2(GSYMFUIN_GINORP, "GINORP", 6L);
+  MASLISPU_Compiledf2(GSYMFUIN_GINOPL, "GINOPL", 6L);
+  MASLISPU_Compiledf3(GSYMFUIN_GINCHK, "GINCHK", 6L);
+  MASLISPU_Compiledp2v2(GSYMFURN_GRNCUT, "GRNCUT", 6L);
+  MASLISPU_Compiledp2v3(GSYMFURN_GRNRED, "GRNRED", 6L);
+  MASLISPU_Compiledf1(GSYMFURN_GRNBAS, "GRNBAS", 6L);
+  MASLISPU_Compiledf1(GSYMFURN_GRNGGB, "GRNGGB", 6L);
+  MASLISPU_Compiledf2(GSYMFURN_GRNORP, "GRNORP", 6L);
+  MASLISPU_Compiledf2(GSYMFURN_GRNOPL, "GRNOPL", 6L);
+  MASLISPU_Compiledf3(GSYMFURN_GRNCHK, "GRNCHK", 6L);
+  MASLISPU_Compiledp0(NOETHER_NOEINF, "NOEINF", 6L);
+  MASLISPU_Compiledp1(NOETHER_NOENSP, "NOENSP", 6L);
+  MASLISPU_Compiledp2v3(NOETHER_NOERED, "NOERED", 6L);
+  MASLISPU_Compiledf2(NOETHER_NOEL32, "NOEL32", 6L);
+  MASLISPU_Compiledf2(NOETHER_NOEPOW, "NOEPOW", 6L);
+  MASLISPU_Compiledf2(NOETHER_NOEPSM, "NOEPSM", 6L);
+  MASLISPU_Compiledf2(NOETHER_NOEPIP, "NOEPIP", 6L);
+  MASLISPU_Compiledf2(NOETHER_NOEPRM, "NOEPRM", 6L);
+  MASLISPU_Compiledf3(NOETHER_NOEPPR, "NOEPPR", 6L);
+  MASLISPU_Compiledp0(SUBST_SUBINF, "SUBINF", 6L);
+  MASLISPU_Compiledp1(SUBST_SUBSGW, "SUBSGW", 6L);
+  MASLISPU_Compiledp2v3(SUBST_SUBRED, "SUBRED", 6L);
+  MASLISPU_Compiledf1(SUBST_SUBSGR, "SUBSGR", 6L);
+  MASLISPU_Compiledf1(SUBST_SUBORD, "SUBORD", 6L);
+  MASLISPU_Compiledf2(SUBST_SUBORP, "SUBORP", 6L);
+  MASLISPU_Compiledf2(SUBST_SUBSYM, "SUBSYM", 6L);
+  MASLISPU_Compiledf2(SUBST_SUBOPL, "SUBOPL", 6L);
+  MASLISPU_Compiledf2(SUBST_SUBPOW, "SUBPOW", 6L);
+  MASLISPU_Compiledf3(SUBST_SUBCHK, "SUBCHK", 6L);
+  MASLISPU_Compiledp2v2(TIPRNGB_DIREGB, "DIREGB", 6L);
+}
+
+void BEGIN_MASLOADG()
+{
+  static BOOLEAN has_been_called = FALSE;
+
+  if (!has_been_called) {
+    has_been_called = TRUE;
+
+    BEGIN_GSYMFUIN();
+    BEGIN_GSYMFURN();
+    BEGIN_GSYMINP();
+    BEGIN_MASLISPU();
+    BEGIN_NOETHER();
+    BEGIN_TIPRNGB();
+    BEGIN_SACPOL();
+    BEGIN_SUBST();
+
+  }
+}

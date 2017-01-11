@@ -1,0 +1,10 @@
+#define DEFINITION_TIPRNGB
+
+#ifndef DEFINITION_MASSTOR
+#include "MASSTOR.h"
+#endif
+
+extern CHAR TIPRNGB_rcsid[];
+extern CHAR TIPRNGB_copyright[];
+extern void TIPRNGB_DIREGB ARGS((MASSTOR_LIST P, MASSTOR_LIST TF, MASSTOR_LIST *GB, MASSTOR_LIST *GBM));
+extern void BEGIN_TIPRNGB();

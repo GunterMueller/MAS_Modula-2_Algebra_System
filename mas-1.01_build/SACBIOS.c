@@ -1,0 +1,109 @@
+#include "SYSTEM_.h"
+
+#ifndef DEFINITION_MASELEM
+#include "MASELEM.h"
+#endif
+
+#ifndef DEFINITION_MASBIOS
+#include "MASBIOS.h"
+#endif
+
+#ifndef DEFINITION_SACBIOS
+#include "SACBIOS.h"
+#endif
+
+CHAR SACBIOS_rcsid [] = "$Id: SACBIOS.md,v 1.2 1992/02/12 17:32:01 pesch Exp $";
+CHAR SACBIOS_copyright [] = "Copyright (c) 1989 - 1992 Universitaet Passau";
+
+static CHAR rcsidi [] = "$Id: SACBIOS.mi,v 1.3 1992/10/15 16:25:03 kredel Exp $";
+static CHAR copyrighti [] = "Copyright (c) 1989 - 1992 Universitaet Passau";
+
+
+void SACBIOS_CWRIT2
+# ifdef __STDC__
+(MASELEM_GAMMAINT C1, MASELEM_GAMMAINT C2)
+# else
+(C1, C2)
+MASELEM_GAMMAINT C1, C2;
+# endif
+{
+  MASBIOS_CWRITE(C1);
+  MASBIOS_CWRITE(C2);
+  return;
+}
+
+void SACBIOS_CWRIT3
+# ifdef __STDC__
+(MASELEM_GAMMAINT C1, MASELEM_GAMMAINT C2, MASELEM_GAMMAINT C3)
+# else
+(C1, C2, C3)
+MASELEM_GAMMAINT C1, C2, C3;
+# endif
+{
+  MASBIOS_CWRITE(C1);
+  MASBIOS_CWRITE(C2);
+  MASBIOS_CWRITE(C3);
+  return;
+}
+
+void SACBIOS_CWRIT4
+# ifdef __STDC__
+(MASELEM_GAMMAINT C1, MASELEM_GAMMAINT C2, MASELEM_GAMMAINT C3, MASELEM_GAMMAINT C4)
+# else
+(C1, C2, C3, C4)
+MASELEM_GAMMAINT C1, C2, C3, C4;
+# endif
+{
+  MASBIOS_CWRITE(C1);
+  MASBIOS_CWRITE(C2);
+  MASBIOS_CWRITE(C3);
+  MASBIOS_CWRITE(C4);
+  return;
+}
+
+void SACBIOS_CWRIT5
+# ifdef __STDC__
+(MASELEM_GAMMAINT C1, MASELEM_GAMMAINT C2, MASELEM_GAMMAINT C3, MASELEM_GAMMAINT C4, MASELEM_GAMMAINT C5)
+# else
+(C1, C2, C3, C4, C5)
+MASELEM_GAMMAINT C1, C2, C3, C4, C5;
+# endif
+{
+  MASBIOS_CWRITE(C1);
+  MASBIOS_CWRITE(C2);
+  MASBIOS_CWRITE(C3);
+  MASBIOS_CWRITE(C4);
+  MASBIOS_CWRITE(C5);
+  return;
+}
+
+void SACBIOS_CWRIT6
+# ifdef __STDC__
+(MASELEM_GAMMAINT C1, MASELEM_GAMMAINT C2, MASELEM_GAMMAINT C3, MASELEM_GAMMAINT C4, MASELEM_GAMMAINT C5, MASELEM_GAMMAINT C6)
+# else
+(C1, C2, C3, C4, C5, C6)
+MASELEM_GAMMAINT C1, C2, C3, C4, C5, C6;
+# endif
+{
+  MASBIOS_CWRITE(C1);
+  MASBIOS_CWRITE(C2);
+  MASBIOS_CWRITE(C3);
+  MASBIOS_CWRITE(C4);
+  MASBIOS_CWRITE(C5);
+  MASBIOS_CWRITE(C6);
+  return;
+}
+
+void BEGIN_SACBIOS()
+{
+  static BOOLEAN has_been_called = FALSE;
+
+  if (!has_been_called) {
+    has_been_called = TRUE;
+
+    BEGIN_MASELEM();
+    BEGIN_MASELEM();
+    BEGIN_MASBIOS();
+
+  }
+}

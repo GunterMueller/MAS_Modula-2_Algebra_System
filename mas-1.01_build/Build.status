@@ -1,0 +1,2083 @@
+cd .; autoconf
+chmod +x ./configure
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. '' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o ADTOOLS.o ADTOOLS.c
+ADTOOLS.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from ADTOOLS.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ADTOOLS.c: In function ‘ADTOOLS_ADDDFSTR’:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: implicit declaration of function ‘memcpy’ [-Wimplicit-function-declaration]
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+ADTOOLS.c:74:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(s, O_1, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: incompatible implicit declaration of built-in function ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+ADTOOLS.c:74:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(s, O_1, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: note: include ‘<string.h>’ or provide a declaration of ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+ADTOOLS.c:74:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(s, O_1, CHAR)
+   ^
+ar rv libmas.a ADTOOLS.o
+r - ADTOOLS.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'ADTOOLS.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPADOM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPADOM.o DIPADOM.c
+DIPADOM.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPADOM.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPADOM.o
+r - DIPADOM.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPADOM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPAGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPAGB.o DIPAGB.c
+DIPAGB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPAGB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPAGB.o
+r - DIPAGB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPAGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPDCGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPDCGB.o DIPDCGB.c
+DIPDCGB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPDCGB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPDCGB.o
+r - DIPDCGB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPDCGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPDDGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPDDGB.o DIPDDGB.c
+DIPDDGB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPDDGB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPDDGB.o
+r - DIPDDGB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPDDGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPGB.o DIPGB.c
+DIPGB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPGB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPGB.o
+r - DIPGB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPTOOLS.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPTOOLS.o DIPTOOLS.c
+DIPTOOLS.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPTOOLS.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPTOOLS.o
+r - DIPTOOLS.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPTOOLS.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMAF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DOMAF.o DOMAF.c
+DOMAF.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DOMAF.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DOMAF.o
+r - DOMAF.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMAF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMAPF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DOMAPF.o DOMAPF.c
+DOMAPF.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DOMAPF.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DOMAPF.o
+r - DOMAPF.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMAPF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DOMC.o DOMC.c
+DOMC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DOMC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DOMC.o
+r - DOMC.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMFF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DOMFF.o DOMFF.c
+DOMFF.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DOMFF.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DOMFF.o
+r - DOMFF.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMFF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMI.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DOMI.o DOMI.c
+DOMI.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DOMI.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DOMI.o
+r - DOMI.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMI.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMIP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DOMIP.o DOMIP.c
+DOMIP.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DOMIP.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DOMIP.o
+r - DOMIP.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMIP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMMD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DOMMD.o DOMMD.c
+DOMMD.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DOMMD.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DOMMD.o
+r - DOMMD.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMMD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMMI.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DOMMI.o DOMMI.c
+DOMMI.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DOMMI.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DOMMI.o
+r - DOMMI.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMMI.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DOMO.o DOMO.c
+DOMO.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DOMO.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DOMO.o
+r - DOMO.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMQ.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DOMQ.o DOMQ.c
+DOMQ.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DOMQ.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DOMQ.o
+r - DOMQ.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMQ.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMRF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DOMRF.o DOMRF.c
+DOMRF.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DOMRF.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DOMRF.o
+r - DOMRF.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMRF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMRN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DOMRN.o DOMRN.c
+DOMRN.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DOMRN.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DOMRN.o
+r - DOMRN.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMRN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMRP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DOMRP.o DOMRP.c
+DOMRP.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DOMRP.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DOMRP.o
+r - DOMRP.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DOMRP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASADOM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASADOM.o MASADOM.c
+MASADOM.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASADOM.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+MASADOM.c: In function ‘MASADOM_NewDom’:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: implicit declaration of function ‘memcpy’ [-Wimplicit-function-declaration]
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MASADOM.c:1563:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(s, O_1, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: incompatible implicit declaration of built-in function ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MASADOM.c:1563:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(s, O_1, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: note: include ‘<string.h>’ or provide a declaration of ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MASADOM.c:1563:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(s, O_1, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: incompatible implicit declaration of built-in function ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MASADOM.c:1564:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(S, O_2, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: note: include ‘<string.h>’ or provide a declaration of ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MASADOM.c:1564:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(S, O_2, CHAR)
+   ^
+ar rv libmas.a MASADOM.o
+r - MASADOM.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASADOM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'CGBAPPL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o CGBAPPL.o CGBAPPL.c
+CGBAPPL.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from CGBAPPL.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a CGBAPPL.o
+r - CGBAPPL.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'CGBAPPL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'CGBDSTR.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o CGBDSTR.o CGBDSTR.c
+CGBDSTR.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from CGBDSTR.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a CGBDSTR.o
+r - CGBDSTR.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'CGBDSTR.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'CGBFUNC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o CGBFUNC.o CGBFUNC.c
+CGBFUNC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from CGBFUNC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a CGBFUNC.o
+r - CGBFUNC.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'CGBFUNC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'CGBMAIN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o CGBMAIN.o CGBMAIN.c
+CGBMAIN.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from CGBMAIN.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a CGBMAIN.o
+r - CGBMAIN.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'CGBMAIN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'CGBMISC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o CGBMISC.o CGBMISC.c
+CGBMISC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from CGBMISC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a CGBMISC.o
+r - CGBMISC.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'CGBMISC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'CGBSYS.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o CGBSYS.o CGBSYS.c
+CGBSYS.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from CGBSYS.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a CGBSYS.o
+r - CGBSYS.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'CGBSYS.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'ADEXTRA.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o ADEXTRA.o ADEXTRA.c
+ADEXTRA.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from ADEXTRA.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a ADEXTRA.o
+r - ADEXTRA.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'ADEXTRA.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPCJ.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPCJ.o DIPCJ.c
+DIPCJ.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPCJ.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPCJ.o
+r - DIPCJ.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPCJ.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPDCIB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPDCIB.o DIPDCIB.c
+DIPDCIB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPDCIB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPDCIB.o
+r - DIPDCIB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPDCIB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPIB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPIB.o DIPIB.c
+DIPIB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPIB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+DIPIB.c: In function ‘DIPIB_ADPNFJ’:
+DIPIB.c:127:52: warning: passing argument 4 of ‘Jdomain.A[(long int)DomNum + -1l].NFJ’ from incompatible pointer type [-Wincompatible-pointer-types]
+     (*Jdomain.A[(INTEGER)DomNum - 1].NFJ)(G, P, h, reduced);
+                                                    ^
+DIPIB.c:127:52: note: expected ‘MASSTOR_LIST * {aka long int *}’ but argument is of type ‘BOOLEAN * {aka unsigned char *}’
+DIPIB.c: In function ‘DIPIB_DIPCOM’:
+DIPIB.c:365:26: warning: passing argument 3 of ‘DIPIBOpt.ISJ’ from incompatible pointer type [-Wincompatible-pointer-types]
+   (*DIPIBOpt.ISJ)(F, &G, &reduced);
+                          ^
+DIPIB.c:365:26: note: expected ‘MASSTOR_LIST * {aka long int *}’ but argument is of type ‘BOOLEAN * {aka unsigned char *}’
+DIPIB.c:380:53: warning: passing argument 3 of ‘DIPIBOpt.ISJ’ from incompatible pointer type [-Wincompatible-pointer-types]
+             (*DIPIBOpt.ISJ)(MASSTOR_COMP(f, G), &G, &reduced);
+                                                     ^
+DIPIB.c:380:53: note: expected ‘MASSTOR_LIST * {aka long int *}’ but argument is of type ‘BOOLEAN * {aka unsigned char *}’
+DIPIB.c: In function ‘DIPIB_DIPIB3’:
+DIPIB.c:448:45: warning: passing argument 3 of ‘DIPIBOpt.ISJ’ from incompatible pointer type [-Wincompatible-pointer-types]
+     (*DIPIBOpt.ISJ)(SACLIST_CONC(F, G), &G, &reduced);
+                                             ^
+DIPIB.c:448:45: note: expected ‘MASSTOR_LIST * {aka long int *}’ but argument is of type ‘BOOLEAN * {aka unsigned char *}’
+DIPIB.c: In function ‘DIPIB_ADEPNFJ’:
+DIPIB.c:509:53: warning: passing argument 4 of ‘Jdomain.A[(long int)DomNum + -1l].NFJ2’ from incompatible pointer type [-Wincompatible-pointer-types]
+     (*Jdomain.A[(INTEGER)DomNum - 1].NFJ2)(G, P, h, reduced);
+                                                     ^
+DIPIB.c:509:53: note: expected ‘MASSTOR_LIST * {aka long int *}’ but argument is of type ‘BOOLEAN * {aka unsigned char *}’
+DIPIB.c: In function ‘DIPIB_ADPNFJS’:
+DIPIB.c:994:66: warning: passing argument 7 of ‘Jdomain.A[(long int)DomNum + -1l].NFJ3’ from incompatible pointer type [-Wincompatible-pointer-types]
+     (*Jdomain.A[(INTEGER)DomNum - 1].NFJ3)(G1, G2, G3, G4, P, h, reduced);
+                                                                  ^
+DIPIB.c:994:66: note: expected ‘MASSTOR_LIST * {aka long int *}’ but argument is of type ‘BOOLEAN * {aka unsigned char *}’
+DIPIB.c: In function ‘DIPIB_SetDIPIBSelect’:
+DIPIB.c:1302:21: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+     DIPIBOpt.Select = DIPCJ_DIPSSM;
+                     ^
+DIPIB.c:1305:21: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+     DIPIBOpt.Select = DIPCJ_DIPFIRST;
+                     ^
+DIPIB.c: In function ‘DIPIB_SetDIPIBISJ’:
+DIPIB.c:1323:18: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+     DIPIBOpt.ISJ = DIPIB_DILISJ;
+                  ^
+DIPIB.c:1326:18: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+     DIPIBOpt.ISJ = DIPIB_DIPIRLJ;
+                  ^
+DIPIB.c: In function ‘DIPIB_SetDomainNFJ’:
+DIPIB.c:1359:35: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+     Jdomain.A[(INTEGER)i - 1].NFJ = DIPIB_DIPNFJ;
+                                   ^
+DIPIB.c:1360:36: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+     Jdomain.A[(INTEGER)i - 1].NFJ2 = DIPIB_DIPENFJ;
+                                    ^
+DIPIB.c:1361:36: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+     Jdomain.A[(INTEGER)i - 1].NFJ3 = DIPIB_DIPNFJS;
+                                    ^
+DIPIB.c:1363:33: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+   Jdomain.A[(INTEGER)2 - 1].NFJ = DIPIB_DIPINFJ;
+                                 ^
+DIPIB.c:1364:34: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+   Jdomain.A[(INTEGER)2 - 1].NFJ2 = DIPIB_DIPEINFJ;
+                                  ^
+DIPIB.c:1365:34: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+   Jdomain.A[(INTEGER)2 - 1].NFJ3 = DIPIB_DIPINFJS;
+                                  ^
+DIPIB.c:1366:33: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+   Jdomain.A[(INTEGER)3 - 1].NFJ = DIPIB_DIPINFJ;
+                                 ^
+DIPIB.c:1367:34: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+   Jdomain.A[(INTEGER)3 - 1].NFJ2 = DIPIB_DIPEINFJ;
+                                  ^
+DIPIB.c:1368:34: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+   Jdomain.A[(INTEGER)3 - 1].NFJ3 = DIPIB_DIPINFJS;
+                                  ^
+DIPIB.c:1369:34: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+   Jdomain.A[(INTEGER)12 - 1].NFJ = DIPIB_DIPINFJ;
+                                  ^
+DIPIB.c:1370:35: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+   Jdomain.A[(INTEGER)12 - 1].NFJ2 = DIPIB_DIPEINFJ;
+                                   ^
+DIPIB.c:1371:35: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+   Jdomain.A[(INTEGER)12 - 1].NFJ3 = DIPIB_DIPINFJS;
+                                   ^
+DIPIB.c: In function ‘BEGIN_DIPIB’:
+DIPIB.c:1397:12: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+     Select = DIPCJ_DIPSSM;
+            ^
+ar rv libmas.a DIPIB.o
+r - DIPIB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPIB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPIIB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPIIB.o DIPIIB.c
+DIPIIB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPIIB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+DIPIIB.c: In function ‘DIPIIB_InitDIPIIB’:
+DIPIIB.c:469:10: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+   Select = DIPCJ_DIPSSM;
+          ^
+DIPIIB.c: In function ‘DIPIIB_SetDIPIIBSelect’:
+DIPIIB.c:482:22: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+     DIPIIBOpt.Select = DIPCJ_DIPSSM;
+                      ^
+ar rv libmas.a DIPIIB.o
+r - DIPIIB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPIIB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPRNIB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPRNIB.o DIPRNIB.c
+DIPRNIB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPRNIB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPRNIB.o
+r - DIPRNIB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPRNIB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'ALDPARSE.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o ALDPARSE.o ALDPARSE.c
+ALDPARSE.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from ALDPARSE.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a ALDPARSE.o
+r - ALDPARSE.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'ALDPARSE.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLISP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLISP.o MASLISP.c
+MASLISP.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLISP.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASLISP.o
+r - MASLISP.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLISP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLISPU.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLISPU.o MASLISPU.c
+MASLISPU.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLISPU.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASLISPU.o
+r - MASLISPU.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLISPU.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASPARSE.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASPARSE.o MASPARSE.c
+MASPARSE.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASPARSE.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASPARSE.o
+r - MASPARSE.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASPARSE.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASREP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASREP.o MASREP.c
+MASREP.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASREP.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASREP.o
+r - MASREP.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASREP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASSPEC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASSPEC.o MASSPEC.c
+MASSPEC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASSPEC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASSPEC.o
+r - MASSPEC.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASSPEC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASSYM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASSYM.o MASSYM.c
+MASSYM.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASSYM.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASSYM.o
+r - MASSYM.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASSYM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASSYM2.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASSYM2.o MASSYM2.c
+MASSYM2.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASSYM2.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASSYM2.o
+r - MASSYM2.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASSYM2.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MODVAR.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MODVAR.o MODVAR.c
+MODVAR.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MODVAR.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+MODVAR.c: In function ‘MODVAR_MVDeclareL’:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: implicit declaration of function ‘memcpy’ [-Wimplicit-function-declaration]
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MODVAR.c:64:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(comment, O_1, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: incompatible implicit declaration of built-in function ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MODVAR.c:64:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(comment, O_1, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: note: include ‘<string.h>’ or provide a declaration of ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MODVAR.c:64:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(comment, O_1, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: incompatible implicit declaration of built-in function ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MODVAR.c:65:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(name, O_2, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: note: include ‘<string.h>’ or provide a declaration of ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MODVAR.c:65:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(name, O_2, CHAR)
+   ^
+MODVAR.c: In function ‘MODVAR_MVDeclareB’:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: incompatible implicit declaration of built-in function ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MODVAR.c:95:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(comment, O_3, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: note: include ‘<string.h>’ or provide a declaration of ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MODVAR.c:95:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(comment, O_3, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: incompatible implicit declaration of built-in function ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MODVAR.c:96:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(name, O_4, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: note: include ‘<string.h>’ or provide a declaration of ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+MODVAR.c:96:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(name, O_4, CHAR)
+   ^
+ar rv libmas.a MODVAR.o
+r - MODVAR.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MODVAR.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACSYM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACSYM.o SACSYM.c
+SACSYM.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACSYM.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACSYM.o
+r - SACSYM.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACSYM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACSYM2.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACSYM2.o SACSYM2.c
+SACSYM2.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACSYM2.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACSYM2.o
+r - SACSYM2.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACSYM2.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOG.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLOG.o MASLOG.c
+MASLOG.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLOG.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASLOG.o
+r - MASLOG.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOG.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MLDEMO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MLDEMO.o MLDEMO.c
+MLDEMO.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MLDEMO.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MLDEMO.o
+r - MLDEMO.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MLDEMO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MLOGBASE.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MLOGBASE.o MLOGBASE.c
+MLOGBASE.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MLOGBASE.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MLOGBASE.o
+r - MLOGBASE.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MLOGBASE.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MLOGIO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MLOGIO.o MLOGIO.c
+MLOGIO.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MLOGIO.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MLOGIO.o
+r - MLOGIO.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MLOGIO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'PQBASE.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o PQBASE.o PQBASE.c
+PQBASE.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from PQBASE.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a PQBASE.o
+r - PQBASE.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'PQBASE.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'PQSMPL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o PQSMPL.o PQSMPL.c
+PQSMPL.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from PQSMPL.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+PQSMPL.c: In function ‘PQSMPL_DLSWRITE’:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: implicit declaration of function ‘memcpy’ [-Wimplicit-function-declaration]
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+PQSMPL.c:954:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(S, O_1, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: incompatible implicit declaration of built-in function ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+PQSMPL.c:954:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(S, O_1, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: note: include ‘<string.h>’ or provide a declaration of ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+PQSMPL.c:954:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(S, O_1, CHAR)
+   ^
+PQSMPL.c: In function ‘DLSWRIT1’:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: incompatible implicit declaration of built-in function ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+PQSMPL.c:975:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(S, O_2, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: note: include ‘<string.h>’ or provide a declaration of ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+PQSMPL.c:975:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(S, O_2, CHAR)
+   ^
+PQSMPL.c: In function ‘DLPQPRT’:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: warning: incompatible implicit declaration of built-in function ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+PQSMPL.c:1036:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(S, O_3, CHAR)
+   ^
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:196:20: note: include ‘<string.h>’ or provide a declaration of ‘memcpy’
+    array = (type *)memcpy(FREE_POINTER, (char *)array, ARRAY_SIZE); \
+                    ^
+PQSMPL.c:1036:3: note: in expansion of macro ‘COPY_OPEN_ARRAY’
+   COPY_OPEN_ARRAY(S, O_3, CHAR)
+   ^
+ar rv libmas.a PQSMPL.o
+r - PQSMPL.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'PQSMPL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'RQEPRRC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o RQEPRRC.o RQEPRRC.c
+RQEPRRC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from RQEPRRC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a RQEPRRC.o
+r - RQEPRRC.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'RQEPRRC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'TFORM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o TFORM.o TFORM.c
+TFORM.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from TFORM.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a TFORM.o
+r - TFORM.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'TFORM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOAD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLOAD.o MASLOAD.c
+MASLOAD.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLOAD.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASLOAD.o
+r - MASLOAD.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOAD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADA.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLOADA.o MASLOADA.c
+MASLOADA.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLOADA.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASLOADA.o
+r - MASLOADA.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADA.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLOADB.o MASLOADB.c
+MASLOADB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLOADB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+MASLOADB.c:76:9: warning: type defaults to ‘int’ in declaration of ‘GetPRIME’ [-Wimplicit-int]
+ static  GetPRIME ARGS(());
+         ^
+MASLOADB.c: In function ‘MASLOADB_InitExternalsB’:
+MASLOADB.c:88:23: warning: passing argument 1 of ‘MASLISPU_Compiledf0’ from incompatible pointer type [-Wincompatible-pointer-types]
+   MASLISPU_Compiledf0(GetPRIME, "PRIME", 5L);
+                       ^
+In file included from MASLOADB.c:4:0:
+MASLISPU.h:41:13: note: expected ‘MASLISPU_PROCF0 {aka long int (*)()}’ but argument is of type ‘int (*)()’
+ extern void MASLISPU_Compiledf0 ARGS((MASLISPU_PROCF0 F, CHAR S[], LONGCARD ));
+             ^
+MASLOADB.c: At top level:
+MASLOADB.c:160:9: warning: return type defaults to ‘int’ [-Wimplicit-int]
+ static  GetPRIME
+         ^
+ar rv libmas.a MASLOADB.o
+r - MASLOADB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLOADC.o MASLOADC.c
+MASLOADC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLOADC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASLOADC.o
+r - MASLOADC.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLOADD.o MASLOADD.c
+MASLOADD.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLOADD.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASLOADD.o
+r - MASLOADD.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADE.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLOADE.o MASLOADE.c
+MASLOADE.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLOADE.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASLOADE.o
+r - MASLOADE.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADE.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADG.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLOADG.o MASLOADG.c
+MASLOADG.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLOADG.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASLOADG.o
+r - MASLOADG.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADG.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADJ.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLOADJ.o MASLOADJ.c
+MASLOADJ.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLOADJ.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+MASLOADJ.c: In function ‘MASLOADJ_InitExternalsJ’:
+MASLOADJ.c:51:25: warning: passing argument 1 of ‘MASLISPU_Compiledp2v2’ from incompatible pointer type [-Wincompatible-pointer-types]
+   MASLISPU_Compiledp2v2(DIPIB_ADPNFJ, "ADPNFJ", 6L);
+                         ^
+In file included from MASLOADJ.c:24:0:
+MASLISPU.h:49:13: note: expected ‘MASLISPU_PROCP2V2 {aka void (*)(long int,  long int,  long int *, long int *)}’ but argument is of type ‘void (*)(MASSTOR_LIST,  MASSTOR_LIST,  MASSTOR_LIST *, BOOLEAN *) {aka void (*)(long int,  long int,  long int *, unsigned char *)}’
+ extern void MASLISPU_Compiledp2v2 ARGS((MASLISPU_PROCP2V2 F, CHAR S[], LONGCARD ));
+             ^
+MASLOADJ.c:52:25: warning: passing argument 1 of ‘MASLISPU_Compiledp1v2’ from incompatible pointer type [-Wincompatible-pointer-types]
+   MASLISPU_Compiledp1v2(DIPIB_DILISJ, "DILISJ", 6L);
+                         ^
+In file included from MASLOADJ.c:24:0:
+MASLISPU.h:47:13: note: expected ‘MASLISPU_PROCP1V2 {aka void (*)(long int,  long int *, long int *)}’ but argument is of type ‘void (*)(MASSTOR_LIST,  MASSTOR_LIST *, BOOLEAN *) {aka void (*)(long int,  long int *, unsigned char *)}’
+ extern void MASLISPU_Compiledp1v2 ARGS((MASLISPU_PROCP1V2 F, CHAR S[], LONGCARD ));
+             ^
+MASLOADJ.c:59:23: warning: passing argument 1 of ‘MASLISPU_Compiledp1’ from incompatible pointer type [-Wincompatible-pointer-types]
+   MASLISPU_Compiledp1(DIPIB_SetDIPIBCancel, "SetDIPIBCancel", 14L);
+                       ^
+In file included from MASLOADJ.c:24:0:
+MASLISPU.h:36:13: note: expected ‘MASLISPU_PROCP1 {aka void (*)(long int)}’ but argument is of type ‘void (*)(CARDINAL) {aka void (*)(long unsigned int)}’
+ extern void MASLISPU_Compiledp1 ARGS((MASLISPU_PROCP1 F, CHAR S[], LONGCARD ));
+             ^
+MASLOADJ.c:69:23: warning: passing argument 1 of ‘MASLISPU_Compiledf3’ from incompatible pointer type [-Wincompatible-pointer-types]
+   MASLISPU_Compiledf3(DIPRNIB_DIRPNFJ, "DIRPNFJ", 7L);
+                       ^
+In file included from MASLOADJ.c:24:0:
+MASLISPU.h:44:13: note: expected ‘MASLISPU_PROCF3 {aka long int (*)(long int,  long int,  long int)}’ but argument is of type ‘MASSTOR_LIST (*)(MASSTOR_LIST,  MASSTOR_LIST) {aka long int (*)(long int,  long int)}’
+ extern void MASLISPU_Compiledf3 ARGS((MASLISPU_PROCF3 F, CHAR S[], LONGCARD ));
+             ^
+ar rv libmas.a MASLOADJ.o
+r - MASLOADJ.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADJ.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLOADL.o MASLOADL.c
+MASLOADL.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLOADL.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASLOADL.o
+r - MASLOADL.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLOADM.o MASLOADM.c
+MASLOADM.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLOADM.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASLOADM.o
+r - MASLOADM.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADQ.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLOADQ.o MASLOADQ.c
+MASLOADQ.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLOADQ.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASLOADQ.o
+r - MASLOADQ.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADQ.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADS.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASLOADS.o MASLOADS.c
+MASLOADS.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASLOADS.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASLOADS.o
+r - MASLOADS.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASLOADS.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASU.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASU.o MASU.c
+MASU.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASU.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASU.o
+r - MASU.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASU.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASYMDIP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASYMDIP.o MASYMDIP.c
+MASYMDIP.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASYMDIP.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASYMDIP.o
+r - MASYMDIP.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASYMDIP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MLMASLOG.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MLMASLOG.o MLMASLOG.c
+MLMASLOG.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MLMASLOG.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MLMASLOG.o
+r - MLMASLOG.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MLMASLOG.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MLMLDEMO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MLMLDEMO.o MLMLDEMO.c
+MLMLDEMO.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MLMLDEMO.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MLMLDEMO.o
+r - MLMLDEMO.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MLMLDEMO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MLPQSMPL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MLPQSMPL.o MLPQSMPL.c
+MLPQSMPL.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MLPQSMPL.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MLPQSMPL.o
+r - MLPQSMPL.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MLPQSMPL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'GSYMFUIN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o GSYMFUIN.o GSYMFUIN.c
+GSYMFUIN.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from GSYMFUIN.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a GSYMFUIN.o
+r - GSYMFUIN.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'GSYMFUIN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'GSYMFURN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o GSYMFURN.o GSYMFURN.c
+GSYMFURN.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from GSYMFURN.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a GSYMFURN.o
+r - GSYMFURN.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'GSYMFURN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'GSYMINP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o GSYMINP.o GSYMINP.c
+GSYMINP.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from GSYMINP.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a GSYMINP.o
+r - GSYMINP.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'GSYMINP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'LINALGI.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o LINALGI.o LINALGI.c
+LINALGI.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from LINALGI.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a LINALGI.o
+r - LINALGI.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'LINALGI.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'LINALGRN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o LINALGRN.o LINALGRN.c
+LINALGRN.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from LINALGRN.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a LINALGRN.o
+r - LINALGRN.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'LINALGRN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'NOETHER.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o NOETHER.o NOETHER.c
+NOETHER.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from NOETHER.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a NOETHER.o
+r - NOETHER.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'NOETHER.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACLDIO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACLDIO.o SACLDIO.c
+SACLDIO.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACLDIO.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACLDIO.o
+r - SACLDIO.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACLDIO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SUBST.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SUBST.o SUBST.c
+SUBST.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SUBST.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SUBST.o
+r - SUBST.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SUBST.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SYMMFU.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SYMMFU.o SYMMFU.c
+SYMMFU.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SYMMFU.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SYMMFU.o
+r - SYMMFU.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SYMMFU.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SYZFUNC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SYZFUNC.o SYZFUNC.c
+SYZFUNC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SYZFUNC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SYZFUNC.o
+r - SYZFUNC.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SYZFUNC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SYZGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SYZGB.o SYZGB.c
+SYZGB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SYZGB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SYZGB.o
+r - SYZGB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SYZGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SYZHLP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SYZHLP.o SYZHLP.c
+SYZHLP.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SYZHLP.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SYZHLP.o
+r - SYZHLP.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SYZHLP.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SYZMAIN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SYZMAIN.o SYZMAIN.c
+SYZMAIN.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SYZMAIN.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SYZMAIN.o
+r - SYZMAIN.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SYZMAIN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'TIPRNGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o TIPRNGB.o TIPRNGB.c
+TIPRNGB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from TIPRNGB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a TIPRNGB.o
+r - TIPRNGB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'TIPRNGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DINNGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DINNGB.o DINNGB.c
+DINNGB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DINNGB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DINNGB.o
+r - DINNGB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DINNGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPE.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPE.o DIPE.c
+DIPE.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPE.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPE.o
+r - DIPE.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPE.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASNC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASNC.o MASNC.c
+MASNC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASNC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASNC.o
+r - MASNC.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASNC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASNCC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASNCC.o MASNCC.c
+MASNCC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASNCC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASNCC.o
+r - MASNCC.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASNCC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASNCGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASNCGB.o MASNCGB.c
+MASNCGB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASNCGB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASNCGB.o
+r - MASNCGB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASNCGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPC.o DIPC.c
+DIPC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPC.o
+r - DIPC.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPI.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPI.o DIPI.c
+DIPI.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPI.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPI.o
+r - DIPI.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPI.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPIPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPIPOL.o DIPIPOL.c
+DIPIPOL.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPIPOL.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPIPOL.o
+r - DIPIPOL.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPIPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPRN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPRN.o DIPRN.c
+DIPRN.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPRN.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPRN.o
+r - DIPRN.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPRN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPRNPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPRNPOL.o DIPRNPOL.c
+DIPRNPOL.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPRNPOL.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPRNPOL.o
+r - DIPRNPOL.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPRNPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPTOO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPTOO.o DIPTOO.c
+DIPTOO.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPTOO.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPTOO.o
+r - DIPTOO.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPTOO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACDPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACDPOL.o SACDPOL.c
+SACDPOL.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACDPOL.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACDPOL.o
+r - SACDPOL.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACDPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACIPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACIPOL.o SACIPOL.c
+SACIPOL.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACIPOL.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACIPOL.o
+r - SACIPOL.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACIPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACMPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACMPOL.o SACMPOL.c
+SACMPOL.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACMPOL.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACMPOL.o
+r - SACMPOL.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACMPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACPOL.o SACPOL.c
+SACPOL.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACPOL.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACPOL.o
+r - SACPOL.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACRPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACRPOL.o SACRPOL.c
+SACRPOL.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACRPOL.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACRPOL.o
+r - SACRPOL.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACRPOL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPDEC0.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPDEC0.o DIPDEC0.c
+DIPDEC0.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPDEC0.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPDEC0.o
+r - DIPDEC0.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPDEC0.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPDIM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPDIM.o DIPDIM.c
+DIPDIM.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPDIM.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPDIM.o
+r - DIPDIM.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPDIM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPGCD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPGCD.o DIPGCD.c
+DIPGCD.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPGCD.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPGCD.o
+r - DIPGCD.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPGCD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPIDEAL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPIDEAL.o DIPIDEAL.c
+DIPIDEAL.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPIDEAL.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPIDEAL.o
+r - DIPIDEAL.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPIDEAL.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPIDGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPIDGB.o DIPIDGB.c
+DIPIDGB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPIDGB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPIDGB.o
+r - DIPIDGB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPIDGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPIGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPIGB.o DIPIGB.c
+DIPIGB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPIGB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPIGB.o
+r - DIPIGB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPIGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPRF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPRF.o DIPRF.c
+DIPRF.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPRF.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPRF.o
+r - DIPRF.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPRF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPRNGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPRNGB.o DIPRNGB.c
+DIPRNGB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPRNGB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPRNGB.o
+r - DIPRNGB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPRNGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPROOT.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPROOT.o DIPROOT.c
+DIPROOT.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPROOT.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPROOT.o
+r - DIPROOT.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPROOT.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPZ.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o DIPZ.o DIPZ.c
+DIPZ.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from DIPZ.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a DIPZ.o
+r - DIPZ.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'DIPZ.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASFF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASFF.o MASFF.c
+MASFF.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASFF.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASFF.o
+r - MASFF.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASFF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASPGCD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASPGCD.o MASPGCD.c
+MASPGCD.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASPGCD.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASPGCD.o
+r - MASPGCD.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASPGCD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASUGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASUGB.o MASUGB.c
+MASUGB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASUGB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a MASUGB.o
+r - MASUGB.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'MASUGB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'LINALG.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o LINALG.o LINALG.c
+LINALG.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from LINALG.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a LINALG.o
+r - LINALG.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'LINALG.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'RRADOM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o RRADOM.o RRADOM.c
+RRADOM.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from RRADOM.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a RRADOM.o
+r - RRADOM.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'RRADOM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'RRINT.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o RRINT.o RRINT.c
+RRINT.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from RRINT.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a RRINT.o
+r - RRINT.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'RRINT.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'RRUADOM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o RRUADOM.o RRUADOM.c
+RRUADOM.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from RRUADOM.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a RRUADOM.o
+r - RRUADOM.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'RRUADOM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'RRUINT.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o RRUINT.o RRUINT.c
+RRUINT.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from RRUINT.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a RRUINT.o
+r - RRUINT.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'RRUINT.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACANF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACANF.o SACANF.c
+SACANF.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACANF.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACANF.o
+r - SACANF.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACANF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT1.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACEXT1.o SACEXT1.c
+SACEXT1.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACEXT1.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACEXT1.o
+r - SACEXT1.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT1.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT2.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACEXT2.o SACEXT2.c
+SACEXT2.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACEXT2.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACEXT2.o
+r - SACEXT2.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT2.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT3.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACEXT3.o SACEXT3.c
+SACEXT3.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACEXT3.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACEXT3.o
+r - SACEXT3.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT3.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT4.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACEXT4.o SACEXT4.c
+SACEXT4.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACEXT4.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACEXT4.o
+r - SACEXT4.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT4.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT5.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACEXT5.o SACEXT5.c
+SACEXT5.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACEXT5.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACEXT5.o
+r - SACEXT5.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT5.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT6.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACEXT6.o SACEXT6.c
+SACEXT6.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACEXT6.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACEXT6.o
+r - SACEXT6.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT6.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT7.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACEXT7.o SACEXT7.c
+SACEXT7.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACEXT7.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACEXT7.o
+r - SACEXT7.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT7.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT8.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACEXT8.o SACEXT8.c
+SACEXT8.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACEXT8.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACEXT8.o
+r - SACEXT8.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACEXT8.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACMUFAC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACMUFAC.o SACMUFAC.c
+SACMUFAC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACMUFAC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACMUFAC.o
+r - SACMUFAC.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACMUFAC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACPFAC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACPFAC.o SACPFAC.c
+SACPFAC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACPFAC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACPFAC.o
+r - SACPFAC.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACPFAC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACPGCD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACPGCD.o SACPGCD.c
+SACPGCD.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACPGCD.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACPGCD.o
+r - SACPGCD.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACPGCD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACROOT.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACROOT.o SACROOT.c
+SACROOT.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACROOT.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACROOT.o
+r - SACROOT.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACROOT.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACUPFAC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACUPFAC.o SACUPFAC.c
+SACUPFAC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACUPFAC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmas.a SACUPFAC.o
+r - SACUPFAC.o
+make: Warning: Archive 'libmas.a' seems to have been created in deterministic mode. 'SACUPFAC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASAPF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASAPF.o MASAPF.c
+MASAPF.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASAPF.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a MASAPF.o
+r - MASAPF.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASAPF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASC.o MASC.c
+MASC.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASC.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a MASC.o
+r - MASC.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASC.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASCOMB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASCOMB.o MASCOMB.c
+MASCOMB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASCOMB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a MASCOMB.o
+r - MASCOMB.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASCOMB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASF.o MASF.c
+MASF.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASF.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a MASF.o
+r - MASF.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASF.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASI.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASI.o MASI.c
+MASI.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASI.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a MASI.o
+r - MASI.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASI.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASO.o MASO.c
+MASO.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASO.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a MASO.o
+r - MASO.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASO.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASQ.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASQ.o MASQ.c
+MASQ.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASQ.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a MASQ.o
+r - MASQ.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASQ.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASRN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASRN.o MASRN.c
+MASRN.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASRN.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a MASRN.o
+r - MASRN.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASRN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASSET.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MASSET.o MASSET.c
+MASSET.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MASSET.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a MASSET.o
+r - MASSET.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MASSET.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MathLib.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o MathLib.o MathLib.c
+MathLib.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from MathLib.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+MathLib.c:23:17: warning: conflicting types for built-in function ‘ldexp’
+ static LONGREAL ldexp ARGS((LONGREAL value, INTEGER exp));
+                 ^
+ar rv libmarith.a MathLib.o
+r - MathLib.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'MathLib.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACCOMB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACCOMB.o SACCOMB.c
+SACCOMB.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACCOMB.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a SACCOMB.o
+r - SACCOMB.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACCOMB.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACD.o SACD.c
+SACD.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACD.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a SACD.o
+r - SACD.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACD.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACI.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACI.o SACI.c
+SACI.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACI.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a SACI.o
+r - SACI.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACI.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACM.o SACM.c
+SACM.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACM.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a SACM.o
+r - SACM.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACPRIM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACPRIM.o SACPRIM.c
+SACPRIM.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACPRIM.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a SACPRIM.o
+r - SACPRIM.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACPRIM.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACRN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACRN.o SACRN.c
+SACRN.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACRN.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a SACRN.o
+r - SACRN.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACRN.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACSET.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o SACSET.o SACSET.c
+SACSET.c:1:0: warning: this target machine does not have delayed branches
+ #include "SYSTEM_.h"
+ ^
+In file included from SACSET.c:1:0:
+/usr/local/lib/mtc//lib/include/SYSTEM_.h:218:14: warning: conflicting types for built-in function ‘malloc’
+ extern char *malloc();
+              ^
+ar rv libmarith.a SACSET.o
+r - SACSET.o
+make: Warning: Archive 'libmarith.a' seems to have been created in deterministic mode. 'SACSET.o' will always be updated. Please consider passing the U flag to ar to avoid the problem.
+gcc -finline -finline-functions -fstrength-reduce -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -fexpensive-optimizations -fdelayed-branch -fschedule-insns -fschedule-insns2 -I/usr/local/lib/mtc//lib/include -DDEFAULT_MASINPUTS="\"/usr/local/lib/mas/masinput\"" -I. -I./lib -I.  -c -o clock.o ./maskern/clock.c
+./maskern/clock.c:1:0: warning: this target machine does not have delayed branches
+ /* ----------------------------------------------------------------------------
+ ^
+./maskern/clock.c:36:2: error: #error CLK_TCK undefined, why?
+ #error CLK_TCK undefined, why?
+  ^
+./maskern/clock.c: In function ‘ClocK’:
+./maskern/clock.c:44:52: error: ‘CLK_TCK’ undeclared (first use in this function)
+   return((long)((double)t.tms_utime*1000.0/(double)CLK_TCK));
+                                                    ^
+./maskern/clock.c:44:52: note: each undeclared identifier is reported only once for each function it appears in
+<builtin>: recipe for target 'clock.o' failed
+make: *** [clock.o] Error 1
+rm MLPQSMPL.o DIPTOOLS.o MASNCGB.o MASF.o LINALGRN.o DIPTOO.o NOETHER.o SACEXT3.o DOMFF.o DIPIDGB.o MLOGIO.o SACEXT5.o SYZGB.o DOMAPF.o DIPZ.o MASLOADB.o SACM.o MASPGCD.o DIPIPOL.o MASO.o DOMQ.o SACI.o SACIPOL.o MASUGB.o MASLOADG.o DOMMI.o SACROOT.o SACPRIM.o SACEXT8.o TIPRNGB.o MODVAR.o MASSPEC.o DIPDDGB.o DIPC.o RRUINT.o DOMI.o MASU.o MASLOG.o RRINT.o DOMIP.o MASLOADJ.o MLDEMO.o MASAPF.o DIPAGB.o CGBMISC.o SACEXT6.o MASI.o TFORM.o ADTOOLS.o MASC.o MASLISPU.o RQEPRRC.o MASLOADM.o DOMC.o SACSYM.o SACEXT4.o MASLOADL.o SYZMAIN.o SACPOL.o SUBST.o DIPRN.o MASLOADC.o MASADOM.o DOMRP.o MASSYM.o SACSET.o SACLDIO.o MASQ.o SACD.o DIPI.o DIPIIB.o PQSMPL.o MASLOADE.o MASLOADD.o SYZFUNC.o CGBAPPL.o MASPARSE.o MASRN.o ALDPARSE.o SACSYM2.o LINALG.o SACRPOL.o SACUPFAC.o SACMUFAC.o DOMAF.o SYMMFU.o MASSET.o SYZHLP.o MathLib.o MASSYM2.o DIPDCGB.o MASFF.o LINALGI.o DIPDEC0.o DOMMD.o DIPIGB.o SACPGCD.o SACPFAC.o DIPADOM.o ADEXTRA.o MASLOAD.o MASYMDIP.o MASLISP.o MASLOADA.o MLMLDEMO.o MASLOADS.o MLOGBASE.o DIPRF.o GSYMFURN.o SACDPOL.o DOMRF.o SACMPOL.o DOMRN.o DIPE.o DIPIDEAL.o RRUADOM.o GSYMFUIN.o SACCOMB.o RRADOM.o CGBSYS.o SACEXT1.o DOMO.o CGBFUNC.o DIPRNPOL.o CGBMAIN.o MASCOMB.o DINNGB.o MASREP.o DIPIB.o DIPROOT.o SACANF.o DIPDCIB.o MASLOADQ.o DIPGCD.o DIPCJ.o PQBASE.o SACEXT2.o DIPRNGB.o SACRN.o MLMASLOG.o DIPGB.o MASNC.o GSYMINP.o MASNCC.o CGBDSTR.o DIPRNIB.o DIPDIM.o SACEXT7.o

@@ -1,0 +1,96 @@
+*** /public/gmd/src/mtc/make/Scanner.c.~1~	Tue Aug 18 12:27:22 1992
+--- Scanner.c	Fri Sep  8 18:34:41 1995
+***************
+*** 1,5 ****
+--- 1,22 ----
+  #include "SYSTEM_.h"
+  
++ #if (!(defined __BIG_ENDIAN__))&&(!(defined __LITTLE_ENDIAN__))
++ #ifndef sun
++ #include <sys/machine.h>
++ #else
++ #define BYTE_ORDER LITTLE_ENDIAN
++ #endif
++ #ifndef BYTE_ORDER
++ #error do not know BYTE_ORDER
++ #endif
++ #if (BYTE_ORDER==BIG_ENDIAN)
++ #define __BIG_ENDIAN__
++ #else
++ #define __LITTLE_ENDIAN__
++ #endif
++ #endif
++ 
++ 
+  #ifndef DEFINITION_Checks
+  #include "Checks.h"
+  #endif
+***************
+*** 1585,1591 ****
+      BEGIN_Idents();
+      BEGIN_Errors();
+  
+!     (void)strncpy(Scanner_ScanTabName.A, "Scanner.Tab", sizeof(Scanner_ScanTabName.A));
+      Scanner_Exit = yyExit;
+      yyFileStackPtr = 0;
+      yyStartState = 1;
+--- 1602,1613 ----
+      BEGIN_Idents();
+      BEGIN_Errors();
+  
+! #ifdef __BIG_ENDIAN__
+!     (void)strncpy((char *)Scanner_ScanTabName.A, "Scanner.Tab.be", sizeof(Scanner_ScanTabName.A));
+! #endif
+! #ifdef __LITTLE_ENDIAN__
+!     (void)strncpy((char *)Scanner_ScanTabName.A, "Scanner.Tab.le", sizeof(Scanner_ScanTabName.A));
+! #endif
+      Scanner_Exit = yyExit;
+      yyFileStackPtr = 0;
+      yyStartState = 1;
+*** /public/gmd/src/mtc/make/Parser.c.~1~	Tue Aug 18 12:27:19 1992
+--- Parser.c	Fri Sep  8 18:34:07 1995
+***************
+*** 1,5 ****
+--- 1,22 ----
+  #include "SYSTEM_.h"
+  
++ #if (!(defined __BIG_ENDIAN__))&&(!(defined __LITTLE_ENDIAN__))
++ #ifndef sun
++ #include <sys/machine.h>
++ #else
++ #define BYTE_ORDER LITTLE_ENDIAN
++ #endif
++ #ifndef BYTE_ORDER
++ #error do not know BYTE_ORDER
++ #endif
++ #if (BYTE_ORDER==BIG_ENDIAN)
++ #define __BIG_ENDIAN__
++ #else
++ #define __LITTLE_ENDIAN__
++ #endif
++ #endif
++ 
++ 
+  #ifndef DEFINITION_Positions
+  #include "Positions.h"
+  #endif
+***************
+*** 3757,3762 ****
+      BEGIN_Errors();
+  
+      xxIsInitialized = FALSE;
+!     (void)strncpy(Parser_ParsTabName.A, "Parser.Tab", sizeof(Parser_ParsTabName.A));
+    }
+  }
+--- 3774,3784 ----
+      BEGIN_Errors();
+  
+      xxIsInitialized = FALSE;
+! #ifdef __BIG_ENDIAN__
+!     (void)strncpy((char *)Parser_ParsTabName.A, "Parser.Tab.be", sizeof(Parser_ParsTabName.A));
+! #endif
+! #ifdef __LITTLE_ENDIAN__
+!     (void)strncpy((char *)Parser_ParsTabName.A, "Parser.Tab.le", sizeof(Parser_ParsTabName.A));
+! #endif
+    }
+  }

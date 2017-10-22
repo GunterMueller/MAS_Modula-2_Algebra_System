@@ -1,0 +1,168 @@
+*** /public/gmd/src/reuse/m2c/SYSTEM_.h.~1~	Tue Aug 18 12:08:46 1992
+--- SYSTEM_.h	Fri Sep  8 16:08:57 1995
+***************
+*** 16,21 ****
+--- 16,37 ----
+  /*									*/
+  /************************************************************************/
+  
++ #include <limits.h>
++ #include <float.h>
++ 
++ #ifdef _AIX
++ #pragma alloca
++ #define StackAlloc
++ #endif
++ 
++ #ifdef __NeXT__ 
++ #define StackAlloc
++ #endif
++ 
++ #ifdef sun
++ #define StackAlloc
++ #endif
++ 
+  # ifdef __STDC__
+  # define ARGS(parameters)	parameters
+  # else
+***************
+*** 85,110 ****
+  #define TRUNC(x)	((CARDINAL) (x))
+  #define VAL(T,x)	((T) (x))
+  
+! #define MIN_SHORTINT	(-32768)
+! #define MAX_SHORTINT	32767
+! #define MIN_LONGINT	(-2147483648L)
+! #define MAX_LONGINT	2147483647L
+! #define MIN_SHORTCARD	0
+! #define MAX_SHORTCARD	65535
+  #define MIN_LONGCARD	((LONGCARD)0L)
+! #define MAX_LONGCARD	((LONGCARD)4294967295L)
+  
+  #define MIN_BOOLEAN	FALSE
+  #define MAX_BOOLEAN	TRUE
+  
+  #define MIN_CHAR	((CHAR)'\0')
+! #define MAX_CHAR	((CHAR)'\377')
+  
+! #define MIN_REAL	((REAL)1.40129846432481707e-45)
+! #define MAX_REAL	((REAL)3.40282346638528860e+38)
+! #define MIN_LONGREAL	4.94065645841246544e-324
+! #define MAX_LONGREAL	1.79769313486231470e+308
+  
+  #define ODD(x)		((BOOLEAN)((x) & 01))
+  
+  /*
+--- 101,134 ----
+  #define TRUNC(x)	((CARDINAL) (x))
+  #define VAL(T,x)	((T) (x))
+  
+! #ifndef SHRT_MIN
+! #error missing limits
+! #endif
+! 
+! #define MIN_SHORTINT	SHRT_MIN
+! #define MAX_SHORTINT	SHRT_MAX
+! #define MIN_LONGINT	LONG_MIN
+! #define MAX_LONGINT	LONG_MAX
+! #define MIN_SHORTCARD	((SHORTCARD)0U)
+! #define MAX_SHORTCARD	USHRT_MAX
+  #define MIN_LONGCARD	((LONGCARD)0L)
+! #define MAX_LONGCARD	ULONG_MAX
+  
+  #define MIN_BOOLEAN	FALSE
+  #define MAX_BOOLEAN	TRUE
+  
+  #define MIN_CHAR	((CHAR)'\0')
+! #define MAX_CHAR	UCHAR_MAX
+  
+! #ifndef FLT_MIN
+! #error missing float
+! #endif
+  
++ #define MIN_REAL	FLT_MIN
++ #define MAX_REAL	FLT_MAX
++ #define MIN_LONGREAL	DBL_MAX
++ #define MAX_LONGREAL	DBL_MIN
++ 
+  #define ODD(x)		((BOOLEAN)((x) & 01))
+  
+  /*
+***************
+*** 211,226 ****
+   *	Definition of library functions
+   */
+  
+! #ifdef StackAlloc
+! extern char *alloca();
+! #else
+! /* #include "malloc.h"	*/
+! extern char *malloc();
+! extern void free();
+! #endif
+  
+! # ifndef BCOPY
+! extern char *memcpy();
+! # endif
+! extern char *strncpy();
+  extern void exit();
+--- 235,241 ----
+   *	Definition of library functions
+   */
+  
+! #include <stdlib.h>
+  
+! #include <string.h>
+  extern void exit();
+*** /public/gmd/src/reuse/m2c/System.c.~1~	Tue Aug 18 12:08:44 1992
+--- System.c	Fri Sep  8 16:20:56 1995
+***************
+*** 21,31 ****
+  # endif
+  # define tFile int
+  
+- # ifdef m68000
+- # define hz 50
+- # else
+- # define hz 60
+- # endif
+  
+  /* binary IO */
+  
+--- 21,26 ----
+***************
+*** 205,217 ****
+  
+  char * SysAlloc (ByteCount) long ByteCount; { return (char *) malloc ((unsigned) ByteCount); }
+  
+  # include <sys/times.h>
+  
+  long Time ()
+  {
+     struct tms	buffer;
+     (void) times (& buffer);
+!    return (buffer.tms_utime + buffer.tms_stime) * 1000 / hz;
+  }
+  
+  static int	argc;
+--- 200,219 ----
+  
+  char * SysAlloc (ByteCount) long ByteCount; { return (char *) malloc ((unsigned) ByteCount); }
+  
++ #include <time.h>
+  # include <sys/times.h>
+  
++ #ifdef sun
++ #ifndef CLK_TCK
++ #define CLK_TCK 60
++ #endif
++ #endif
++ 
+  long Time ()
+  {
+     struct tms	buffer;
+     (void) times (& buffer);
+!    return (buffer.tms_utime + buffer.tms_stime) * 1000 / CLK_TCK;
+  }
+  
+  static int	argc;

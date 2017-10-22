@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 
 # From configure.in Id: configure.in
 
@@ -1045,7 +1045,7 @@ if test "$MTCCPP" = none; then
 fi
 
 OLDPATH="$PATH"
-PATH="$PATH:/usr/local/bin:/usr/local/gmd/bin:/public/gmd/bin"
+PATH="$PATH:/usr/local/bin"
 # Extract the first word of "mtc", so it can be a program name with args.
 set dummy mtc; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
@@ -1085,7 +1085,7 @@ fi
 
 
 OLDPATH="$PATH"
-PATH="$PATH:/usr/local/lib/makemake:/usr/local/gmd/lib/makemake:/public/gmd/lib/makemake"
+PATH="$PATH:/usr/local/lib/makemake:/usr/local/bin/makemake"
 # Extract the first word of "GetImports", so it can be a program name with args.
 set dummy GetImports; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
@@ -1131,7 +1131,7 @@ if eval "test \"`echo '$''{'mas_cv_path_reuse_prefix'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   if test "${reuse_prefix+set}" != set; then
-		reuse_prefix=/public/gmd
+		reuse_prefix=/usr/local/lib/mtc
 		if test ! -d $reuse_prefix; then 
 			reuse_prefix=/usr/local
 			if test ! -d $reuse_prefix; then 
@@ -1231,7 +1231,7 @@ EOF
 $MTC $MTCFLAGS mtctest.md 1>&4 2>&5
 if test $? != 0; then
 	rm -f mtctest.*
-	{ echo "configure: error: "Sorry can not find reuse definition modules. Please install them and set MTCFLAGS appropriately."" 1>&2;  };
+#	{ echo "configure: error: "Sorry can not find reuse definition modules. Please install them and set MTCFLAGS appropriately."" 1>&2; exit 1; };
 fi;
 
 rm -f mtctest.*
